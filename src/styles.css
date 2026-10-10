@@ -934,8 +934,8 @@ button {
 
 .about-ai-transition-stage .browser-window-frame {
   --window-fade-radius: -240px;
-  mask-image: radial-gradient(circle at calc(100% - 44px) 54px, transparent var(--window-fade-radius), #000 calc(var(--window-fade-radius) + 240px));
-  -webkit-mask-image: radial-gradient(circle at calc(100% - 44px) 54px, transparent var(--window-fade-radius), #000 calc(var(--window-fade-radius) + 240px));
+  mask-image: radial-gradient(circle at calc(100% - 44px) 54px, transparent max(0px, var(--window-fade-radius)), #000 max(0px, calc(var(--window-fade-radius) + 240px)));
+  -webkit-mask-image: radial-gradient(circle at calc(100% - 44px) 54px, transparent max(0px, var(--window-fade-radius)), #000 max(0px, calc(var(--window-fade-radius) + 240px)));
 }
 
 .ux-explore-internal-scroll-section {
