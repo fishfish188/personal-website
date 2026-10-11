@@ -1,41 +1,41 @@
 @font-face {
   font-family: "JiangChengYuanTi";
-  src: url("/fonts/JiangChengYuanTi-300.ttf") format("truetype");
+  src: url("/fonts/JiangChengYuanTi-300.woff2") format("woff2");
   font-weight: 300;
   font-display: swap;
 }
 
 @font-face {
   font-family: "JiangChengYuanTi";
-  src: url("/fonts/JiangChengYuanTi-400.ttf") format("truetype");
+  src: url("/fonts/JiangChengYuanTi-400.woff2") format("woff2");
   font-weight: 400;
   font-display: swap;
 }
 
 @font-face {
   font-family: "JiangChengYuanTi";
-  src: url("/fonts/JiangChengYuanTi-500.ttf") format("truetype");
+  src: url("/fonts/JiangChengYuanTi-500.woff2") format("woff2");
   font-weight: 500;
   font-display: swap;
 }
 
 @font-face {
   font-family: "JiangChengYuanTi";
-  src: url("/fonts/JiangChengYuanTi-600.ttf") format("truetype");
+  src: url("/fonts/JiangChengYuanTi-600.woff2") format("woff2");
   font-weight: 600;
   font-display: swap;
 }
 
 @font-face {
   font-family: "JiangChengYuanTi";
-  src: url("/fonts/JiangChengYuanTi-700.ttf") format("truetype");
+  src: url("/fonts/JiangChengYuanTi-700.woff2") format("woff2");
   font-weight: 700;
   font-display: swap;
 }
 
 @font-face {
   font-family: "Baloo2";
-  src: url("/fonts/Baloo2-Bold.ttf") format("truetype");
+  src: url("/fonts/Baloo2-Bold.woff2") format("woff2");
   font-weight: 700;
   font-display: swap;
 }
@@ -81,6 +81,45 @@ a {
 img {
   display: block;
   user-select: none;
+}
+
+.custom-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10000;
+  width: 60px;
+  height: 60px;
+  pointer-events: none;
+}
+
+.custom-cursor img {
+  position: absolute;
+  inset: 0;
+  width: 60px;
+  height: 60px;
+}
+
+.custom-cursor .cursor-hand,
+.custom-cursor[data-hand="true"] .cursor-default {
+  visibility: hidden;
+}
+
+.custom-cursor[data-hand="true"] .cursor-hand {
+  visibility: visible;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  html.custom-cursor-ready,
+  html.custom-cursor-ready * {
+    cursor: none !important;
+  }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .custom-cursor {
+    display: none;
+  }
 }
 
 main {
@@ -672,24 +711,128 @@ main {
 
 .figma-button {
   display: grid;
+  padding: 0;
+  border: 0;
+  background: transparent;
   width: 216px;
   height: 56px;
   place-items: center;
-  border: 2px solid var(--ink);
   border-radius: 16px;
   color: var(--ink);
   font-size: 28px;
   font-weight: 600;
   line-height: 28px;
-  transition: background 160ms ease, transform 160ms ease;
+  cursor: pointer;
+  transition: color 160ms ease;
 }
 
-.figma-button:hover {
-  background: rgba(255, 227, 193, 0.55);
+.home-button-surface {
+  position: absolute;
+  inset: 0;
+  border: 2px solid #284051;
+  border-radius: inherit;
+  transform-origin: center center;
+  transition: background-color 160ms ease, box-shadow 160ms ease;
 }
 
-.figma-button:active {
-  transform: translateY(1px);
+.home-button-label {
+  position: relative;
+  pointer-events: none;
+}
+
+.resume-download-dialog {
+  pointer-events: auto;
+  width: min(420px, calc(100vw - 40px));
+  padding: 28px;
+  border: 1px solid var(--ink);
+  border-radius: 16px;
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+}
+
+.resume-download-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.28);
+}
+
+.resume-download-dialog h2 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 32px;
+}
+
+.resume-download-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.resume-download-dialog :is(button, a) {
+  padding: 9px 18px;
+  border: 1px solid var(--ink);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ink);
+  font-size: 16px;
+  line-height: 22px;
+  cursor: pointer;
+}
+
+.resume-download-dialog .resume-download-confirm {
+  background: #fa7c29;
+  color: #fff;
+}
+
+html.custom-cursor-ready .resume-download-dialog,
+html.custom-cursor-ready .resume-download-dialog * {
+  cursor: auto !important;
+}
+
+html.custom-cursor-ready .resume-download-dialog :is(button, a) {
+  cursor: pointer !important;
+}
+
+.figma-button:is(:hover, :focus-visible) {
+  color: #ffffff;
+}
+
+.figma-button:is(:hover, :focus-visible) .home-button-surface {
+  background: #fa7c29;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.home-type-accessible {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.home-type-text {
+  white-space: nowrap;
+}
+
+.home-type-cursor {
+  display: inline-block;
+  width: 3px;
+  height: 0.65em;
+  margin-left: 3px;
+  background: currentColor;
+  animation: home-type-cursor-blink 1s steps(2, end) infinite;
+}
+
+@keyframes home-type-cursor-blink {
+  to { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-type-cursor {
+    animation: none;
+  }
 }
 
 button {
@@ -719,6 +862,8 @@ button {
   width: 627px;
   height: 16px;
   align-items: center;
+  justify-content: flex-end;
+  text-align: right;
   gap: 96px;
   color: var(--ink);
   font-size: 16px;
@@ -729,16 +874,24 @@ button {
   display: flex;
   gap: 32px;
   font-weight: 500;
+  flex-shrink: 0;
+  text-align: right;
 }
 
 .menu a:first-child,
-.language strong {
+.language .selected {
   color: var(--accent);
   font-weight: 700;
 }
 
 .language {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--ink);
+  white-space: nowrap;
   font-weight: 700;
+  cursor: pointer;
 }
 
 .section-title {
@@ -832,6 +985,125 @@ button {
   font-weight: 600;
 }
 
+.menu a:is(:hover, :focus-visible),
+.left-navigation a:is(:hover, :focus-visible) {
+  color: #fa7c29;
+  font-weight: 600;
+}
+
+.menu a,
+.left-navigation a {
+  display: inline-grid;
+}
+
+.menu a {
+  position: relative;
+}
+
+.menu a > span {
+  position: absolute;
+  right: 0;
+  white-space: nowrap;
+}
+
+.menu a > span,
+.left-navigation a > span,
+.menu a::after,
+.left-navigation a::after {
+  grid-area: 1 / 1;
+}
+
+.menu a::after,
+.left-navigation a::after {
+  content: attr(data-label);
+  font-weight: 600;
+  visibility: hidden;
+}
+
+.menu a:first-child::after {
+  font-weight: 700;
+}
+
+.menu a::after {
+  content: attr(data-baseline-label);
+}
+
+html[data-language="en"] .menu a::after {
+  content: attr(data-label);
+}
+
+html[data-language="en"] .frame-shell .section-title {
+  font-size: 80px;
+  white-space: nowrap;
+}
+
+html[data-language="en"] .frame-shell :is(.section-title, .contact-title) {
+  text-transform: uppercase;
+}
+
+html[data-language="en"] .frame-shell :is([data-layer="title-关于我"], [data-layer="title-ai"], [data-layer="title-ux/ui"]) {
+  font-size: 72px;
+}
+
+html[data-language="en"] .frame-shell [data-layer="title-ai"] {
+  left: 290px !important;
+  width: 700px !important;
+}
+
+html[data-language="en"] .frame-shell .more-label,
+html[data-language="en"] .frame-shell .click-hint span {
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+html[data-language="en"] .frame-shell .window-title {
+  width: 420px;
+  font-size: 32px;
+  white-space: nowrap;
+}
+
+html[data-language="en"] .frame-shell .small-folder2 > .folder-label {
+  left: 0;
+  width: 155px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+html[data-language="en"] .frame-shell .contact-title {
+  width: 240px;
+}
+
+html[data-language="en"] .frame-shell .home-button-label {
+  font-size: 26px;
+}
+
+html[data-language="en"] .frame-shell .about-detail-section > .text-layer {
+  text-align: left !important;
+}
+
+html[data-language="en"] .frame-shell .about-detail-section > .text-layer[style*="font-size: 28px"] {
+  width: 240px !important;
+}
+
+html[data-language="en"] .frame-shell .about-detail-section > .text-layer[style*="font-size: 18px"],
+html[data-language="en"] .frame-shell .about-detail-section > .text-layer[style*="font-size: 16px"] {
+  font-size: 14px !important;
+  line-height: 20px !important;
+}
+
+html[data-language="en"] .frame-shell .work > .text-layer[style*="top: 52px"] {
+  font-size: 12px !important;
+}
+
+html[data-language="en"] .frame-shell .education > .text-layer[style*="font-size: 16px"] {
+  width: 350px !important;
+}
+
+html[data-language="en"] .frame-shell .skill > .text-layer[style*="font-size: 18px"] {
+  font-size: 13px !important;
+  white-space: nowrap;
+}
+
 .giant-screen {
   left: -144px;
   top: -102px;
@@ -885,6 +1157,11 @@ button {
   left: 0;
   top: 0;
   width: 84px;
+}
+
+.click-hint.arrow3 span {
+  width: 112px;
+  white-space: nowrap;
 }
 
 .click-hint svg,
@@ -983,7 +1260,7 @@ button {
   font-size: 36px;
   font-weight: 600;
   line-height: 36px;
-  text-align: center;
+  text-align: left;
 }
 
 .ux-explore-project {
@@ -1237,6 +1514,37 @@ button {
 
 .contact-line.tel {
   top: 238px;
+}
+
+.contact-copy {
+  position: relative;
+  display: block;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.contact-line .contact-copy-tooltip {
+  position: absolute;
+  left: calc(100% + 12px);
+  top: 10px;
+  padding: 5px 8px;
+  border-radius: 4px;
+  background: var(--ink);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.contact-copy:is(:hover, :focus-visible) .contact-copy-tooltip {
+  opacity: 1;
 }
 
 .qr-code {

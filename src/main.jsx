@@ -1,9 +1,11 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
+import { createPortal } from 'react-dom';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './styles.css';
 import peopleMotionStill from './people-motion-still.png';
+import resumePdf from './resume-operations.pdf';
 import PaperStack from './PaperStack';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -14,18 +16,18 @@ const assets = {
   arrow1: `${CDN}/arrow1.svg`,
   arrow2: `${CDN}/arrow2.svg`,
   arrow3: `${CDN}/arrow3.svg`,
-  bgHome: `${CDN}/bg-home.png`,
+  bgHome: `${CDN}/bg-home.webp`,
   bgRectangle: `${CDN}/BG-rectangle.png`,
   aiComputer: `${CDN}/ai-computer.png`,
   coffee: `${CDN}/coffee.png`,
-  computerScreen: `${CDN}/computer-screen.png`,
+  computerScreen: `${CDN}/computer-screen.webp`,
   flow: `${CDN}/flow.png`,
   folder: `${CDN}/folder.png`,
-  folder1: `${CDN}/folder1.png`,
-  folderPage2: `${CDN}/folder-page2.png`,
-  folderPage3: `${CDN}/folder-page3.png`,
-  folderPage4: `${CDN}/folder-page4.png`,
-  folderPage5: `${CDN}/folder-page5.png`,
+  folder1: `${CDN}/folder1.webp`,
+  folderPage2: `${CDN}/folder-page2.webp`,
+  folderPage3: `${CDN}/folder-page3.webp`,
+  folderPage4: `${CDN}/folder-page4.webp`,
+  folderPage5: `${CDN}/folder-page5.webp`,
   iconClose: `${CDN}/icon-close.svg`,
   iconRight: `${CDN}/icon-right.svg`,
   iconDown: `${CDN}/icon-down.svg`,
@@ -47,18 +49,18 @@ const assets = {
   point4: `${CDN}/point4.svg`,
   iphone: `${CDN}/iphone.png`,
   iphone2: `${CDN}/iphone2.png`,
-  keyboard: `${CDN}/keyboard.png`,
+  keyboard: `${CDN}/keyboard.webp`,
   leave: `${CDN}/leave.png`,
   message: `${CDN}/message.png`,
   notebook: `${CDN}/notebook.png`,
   paper: `${CDN}/paper.png`,
-  paper2: `${CDN}/paper2.png`,
+  paper2: `${CDN}/paper2.webp`,
   penCup: `${CDN}/pen-cup.png`,
-  beautyThumbnail: `${CDN}/beatuy-thumbnail.png`,
-  posterThumbnail1: `${CDN}/poster-thumbnail1.png`,
-  posterThumbnail2: `${CDN}/poster-thumbnail2.png`,
-  brandThumbnail: `${CDN}/brand-thumbnail.png`,
-  ipThumbnail: `${CDN}/IP-thumbnail.png`,
+  beautyThumbnail: `${CDN}/beatuy-thumbnail.webp`,
+  posterThumbnail1: `${CDN}/poster-thumbnail1.webp`,
+  posterThumbnail2: `${CDN}/poster-thumbnail2.webp`,
+  brandThumbnail: `${CDN}/brand-thumbnail.webp`,
+  ipThumbnail: `${CDN}/IP-thumbnail.webp`,
   chart: `${CDN}/chart.png`,
   userJourney: `${CDN}/user%20journey.png`,
   prd: `${CDN}/prd.png`,
@@ -188,7 +190,7 @@ const assets = {
   waterfall7_4: `${CDN}/waterfall7-4.jpg`,
   waterfall7_5: `${CDN}/waterfall7-5.jpg`,
   window: `${CDN}/window.png`,
-  posterTopBg: `${CDN}/poster-top-bg.jpg`,
+  posterTopBg: `${CDN}/poster-top-bg.webp`,
   xhsTopBg: `${CDN}/xhs-top-bg.jpg`,
   watermelon1_1: `${CDN}/watermelon1-1.jpg`,
   watermelon1_2: `${CDN}/watermelon1-2.jpg`,
@@ -224,6 +226,45 @@ const assets = {
 };
 
 const navItems = ['首页', '关于我', 'AI/运营', 'UX/UI', '个人探索', '联系我'];
+const englishNavigation = ['Home', 'About', 'AI / Ops', 'UX / UI', 'Explore', 'Contact'];
+const LanguageContext = createContext(null);
+const PrimaryTextContext = createContext(false);
+const englishText = {
+  '关于我': 'About Me',
+  'AI/运营': 'AI / Operations',
+  'UX/UI项目': 'UX / UI Projects',
+  '个人探索': 'Personal Exploration',
+  '下载简历': 'Download CV',
+  '联系我': 'Contact Me',
+  '点击探索更多': 'Explore more',
+  '继续滚动查看': 'Scroll to explore',
+  '账号笔记': 'Content Notes',
+  '摄影随拍': 'Photography',
+  '颐养生活消费季': 'Senior Living Campaign',
+  '项目更新中...': 'Coming soon...',
+  '邮箱': 'Email',
+  '联系电话': 'Phone',
+  '打开AI/运营2-1': 'Open AI / Operations project',
+  '打开AI/运营2-2': 'Open design portfolio',
+  '工作经历': 'Experience',
+  '中国联通温州市分公司': 'China Unicom, Wenzhou',
+  '产品运营/交互设计': 'Product Ops / UX Design',
+  '2023.01-至今': 'Jan 2023 - Present',
+  '教育经历': 'Education',
+  '北京林业大学  艺术设计学院 / 交互设计': 'Beijing Forestry Univ. / Interaction Design',
+  '西华大学      机械工程学院 / 工业设计': 'Xihua University / Industrial Design',
+  '硕士    CET6、校优秀学生干部等': "Master's degree / CET-6 / Student leadership award",
+  '学士    GPA：3.56（1/87）': "Bachelor's degree / GPA 3.56 / Rank 1 of 87",
+  '技能': 'Skills',
+  '软件': 'Tools',
+  '界面设计/网页设计/需求调研/活动运营与策划/品牌设计/运营图设计...': 'UI & Web Design / User Research / Campaigns / Branding / Visual Content',
+  '3年+产品运营经验，擅长用户洞察与产品内容策划执行，通过数据驱动与AB测试推动体验优化与增长，具备视觉设计与内容生产能力，可快速迁移至品牌内容策划与新媒体运营方向。': '3+ years in product operations, with strengths in user research, content planning, data-driven optimization and A/B testing. Visual design and content production skills support brand storytelling and social media operations.',
+  '负责公司toG/toB项目如「互联网+养老项目」、「秋开校园促销H5」等产品运营及交互设计；主导产品转化提升、视觉设计改版、结合用户需求优化页面体验，能结合AI工具规范工作流提升效率；同时负责其他内部业务需求的相关设计支援，如部门宣传片策划、运营图设计、展会驾驶舱、产品图主视觉等内容。': 'Product operations and UX design for government and business projects, including elderly-care services and campus campaigns. Improved conversion, refreshed visuals and optimized user journeys, using AI-assisted workflows. Also created campaign visuals, promotional videos and exhibition dashboards.',
+};
+
+function primaryText(value, english) {
+  return english && typeof value === 'string' ? englishText[value] || value : value;
+}
 
 const pageMap = [
   { id: 'home', frameName: 'home' },
@@ -243,6 +284,52 @@ function px(value) {
   return `${value}px`;
 }
 
+function CustomCursor() {
+  const cursorRef = useRef(null);
+
+  useEffect(() => {
+    const cursor = cursorRef.current;
+    const pointer = window.matchMedia('(hover: hover) and (pointer: fine)');
+    const clickable = 'a[href], button:not(:disabled), [role="button"], select, summary, .paper-stack-card';
+    const hide = () => { cursor.hidden = true; };
+    const move = (event) => {
+      if (!pointer.matches || event.pointerType === 'touch' || !document.documentElement.classList.contains('custom-cursor-ready')) return;
+      const hand = Boolean(event.target.closest(clickable));
+      cursor.dataset.hand = String(hand);
+      cursor.style.transform = `translate3d(${event.clientX - (hand ? 15 : 14)}px, ${event.clientY - (hand ? 7 : 9)}px, 0)`;
+      cursor.hidden = event.target.tagName === 'IFRAME';
+    };
+    const leave = (event) => { if (!event.relatedTarget) hide(); };
+    const updatePointer = () => { if (!pointer.matches) hide(); };
+    document.addEventListener('pointermove', move);
+    document.addEventListener('pointerover', move);
+    document.addEventListener('pointerout', leave);
+    window.addEventListener('blur', hide);
+    pointer.addEventListener('change', updatePointer);
+    return () => {
+      document.removeEventListener('pointermove', move);
+      document.removeEventListener('pointerover', move);
+      document.removeEventListener('pointerout', leave);
+      window.removeEventListener('blur', hide);
+      pointer.removeEventListener('change', updatePointer);
+      document.documentElement.classList.remove('custom-cursor-ready');
+    };
+  }, []);
+
+  const ready = () => {
+    if ([...cursorRef.current.querySelectorAll('img')].every((image) => image.complete && image.naturalWidth)) {
+      document.documentElement.classList.add('custom-cursor-ready');
+    }
+  };
+
+  return (
+    <div ref={cursorRef} className="custom-cursor" hidden aria-hidden="true">
+      <img className="cursor-default" src={`${CDN}/default-click.webp`} alt="" onLoad={ready} />
+      <img className="cursor-hand" src={`${CDN}/hand-click.webp`} alt="" onLoad={ready} />
+    </div>
+  );
+}
+
 function computerTweenVars({ left, top, width, height }) {
   const base = { left: 295, top: 153, width: 684, height: 484 };
 
@@ -259,14 +346,16 @@ function rectTweenVars({ left, top, width, height }, base) {
 }
 
 function Layer({ name, className = '', style, children, as: Tag = 'div', ...props }) {
+  const english = useContext(PrimaryTextContext);
   return (
-    <Tag className={`layer ${name} ${className}`} style={style} data-layer={name} {...props}>
+    <Tag className={`layer ${name} ${className}`} style={style} data-layer={name} {...props} aria-label={primaryText(props['aria-label'], english)}>
       {children}
     </Tag>
   );
 }
 
 function ImageLayer({ name, src, className = '', style, alt, ...props }) {
+  const english = useContext(PrimaryTextContext);
   return (
     <img
       className={`layer image-layer ${name} ${className}`}
@@ -276,14 +365,16 @@ function ImageLayer({ name, src, className = '', style, alt, ...props }) {
       data-layer={name}
       draggable="false"
       {...props}
+      aria-label={primaryText(props['aria-label'], english)}
     />
   );
 }
 
 function TextLayer({ name, children, style, className = '' }) {
+  const english = useContext(PrimaryTextContext);
   return (
     <div className={`layer text-layer ${name} ${className}`} style={style} data-layer={name}>
-      {children}
+      {primaryText(children, english)}
     </div>
   );
 }
@@ -301,6 +392,7 @@ function DesignFrame({ frameName, id, children }) {
 }
 
 function TopNavigation() {
+  const { language, toggleLanguage } = useContext(LanguageContext);
   return (
     <>
       <TextLayer name="name" style={{ left: 40, top: 34, fontSize: 18, lineHeight: '18px' }}>
@@ -308,25 +400,85 @@ function TopNavigation() {
       </TextLayer>
       <Layer name="navigation">
         <Layer name="menu">
-          {['首页', '关于我', 'AI/运营', 'UX/UI项目', '个人探索', '联系我'].map((item) => (
-            <a key={item} href={`#${targetForNav(item === 'UX/UI项目' ? 'UX/UI' : item)}`}>
-              {item}
+          {navItems.map((item, index) => (
+            <a key={item} href={`#${targetForNav(item)}`} data-baseline-label={item === 'UX/UI' ? 'UX/UI项目' : item} data-label={language === 'en' ? englishNavigation[index] : item === 'UX/UI' ? 'UX/UI项目' : item}>
+              <span>{language === 'en' ? englishNavigation[index] : item === 'UX/UI' ? 'UX/UI项目' : item}</span>
             </a>
           ))}
         </Layer>
-        <span className="language">
-          <strong>中</strong>/EN
-        </span>
+        <button className="language" type="button" onClick={toggleLanguage} aria-label={language === 'en' ? 'Switch to Chinese' : '切换为英文'}>
+          <span className={language === 'zh' ? 'selected' : ''}>中</span>/<span className={language === 'en' ? 'selected' : ''}>EN</span>
+        </button>
       </Layer>
     </>
   );
 }
 
-function ButtonFrame({ name, label, left }) {
+function ButtonFrame({ name, label, left, onClick }) {
+  const { language } = useContext(LanguageContext);
+  const buttonRef = useRef(null);
+  const hoverRef = useRef(null);
+  const isContact = name.includes('contact');
+  const Tag = isContact ? 'a' : 'button';
+
+  useEffect(() => {
+    const ctx = gsap.context((self) => {
+      const surface = buttonRef.current.querySelector('.home-button-surface');
+      const text = buttonRef.current.querySelector('.home-button-label');
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      self.add('animate', (hovered) => {
+        gsap.killTweensOf([surface, text]);
+        const size = { scaleX: hovered ? 224 / 216 : 1, scaleY: hovered ? 58 / 56 : 1 };
+        if (reducedMotion) {
+          gsap.set(surface, { ...size, y: hovered ? -5 : 0 });
+          gsap.set(text, { y: hovered ? -5 : 0 });
+          return;
+        }
+
+        if (hovered) {
+          gsap.timeline()
+            .to(surface, { ...size, y: -9, duration: 0.18, ease: 'power2.out' }, 0)
+            .to(text, { y: -9, duration: 0.18, ease: 'power2.out' }, 0)
+            .to([surface, text], { y: -5, duration: 0.4, ease: 'elastic.out(0.5, 0.4)' });
+        } else {
+          gsap.to(surface, { ...size, y: 0, duration: 0.3, ease: 'power2.out' });
+          gsap.to(text, { y: 0, duration: 0.3, ease: 'power2.out' });
+        }
+      });
+    }, buttonRef);
+    hoverRef.current = ctx;
+    return () => {
+      hoverRef.current = null;
+      ctx.revert();
+    };
+  }, []);
+
   return (
-    <a className={`layer figma-button ${name}`} style={{ left, top: 424 }} href={name.includes('contact') ? '#explore-contact' : '#'}>
-      {label}
-    </a>
+    <Tag ref={buttonRef} className={`layer figma-button ${name}`} style={{ left, top: 424 }} href={isContact ? '#explore-contact' : undefined} type={isContact ? undefined : 'button'} onClick={onClick}
+      onPointerEnter={(event) => { if (event.pointerType !== 'touch') hoverRef.current?.animate(true); }}
+      onPointerLeave={() => hoverRef.current?.animate(buttonRef.current.matches(':focus-visible'))}
+      onFocus={() => hoverRef.current?.animate(true)}
+      onBlur={() => hoverRef.current?.animate(buttonRef.current.matches(':hover'))}>
+      <span className="home-button-surface" aria-hidden="true" />
+      <span className="home-button-label">{primaryText(label, language === 'en')}</span>
+    </Tag>
+  );
+}
+
+function ResumeDownloadDialog({ dialogRef }) {
+  const { language } = useContext(LanguageContext);
+  const english = language === 'en';
+  return createPortal(
+    <dialog ref={dialogRef} className="resume-download-dialog" aria-labelledby="resume-download-title">
+      <h2 id="resume-download-title">{english ? 'Download the resume?' : '是否确认下载'}</h2>
+      <div className="resume-download-actions">
+        <button type="button" autoFocus onClick={() => dialogRef.current.close()}>{english ? 'Cancel' : '取消'}</button>
+        <a href={resumePdf} download="余奕苗-简历-运营.pdf" className="resume-download-confirm" onClick={() => dialogRef.current.close()}>
+          {english ? 'Confirm download' : '确认'}
+        </a>
+      </div>
+    </dialog>, document.body
   );
 }
 
@@ -341,6 +493,36 @@ function FullComputer({ variant = 'home', style, showKeyboard = true }) {
 }
 
 function HomeComputer() {
+  const copyRef = useRef(null);
+  const downloadDialogRef = useRef(null);
+  const [typingStarted, setTypingStarted] = useState(false);
+  const [typedCharacters, setTypedCharacters] = useState(0);
+  const welcome = 'welcome';
+  const channel = 'My Channel';
+  const totalCharacters = welcome.length + channel.length;
+
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setTypedCharacters(totalCharacters);
+      return undefined;
+    }
+    const observer = new IntersectionObserver((entries) => {
+      if (entries.some((entry) => entry.isIntersecting) && window.scrollY < 1000) {
+        setTypingStarted(true);
+        observer.disconnect();
+      }
+    }, { threshold: 0.1 });
+    observer.observe(copyRef.current);
+    return () => observer.disconnect();
+  }, [totalCharacters]);
+
+  useEffect(() => {
+    if (!typingStarted || typedCharacters >= totalCharacters) return undefined;
+    const delay = typedCharacters === 0 ? 250 : typedCharacters === welcome.length ? 180 : 75;
+    const timer = setTimeout(() => setTypedCharacters((count) => count + 1), delay);
+    return () => clearTimeout(timer);
+  }, [typingStarted, typedCharacters, totalCharacters, welcome.length]);
+
   return (
     <div className="home-about-transition-layer">
       <div className="home-about-transition-stage" style={{ marginLeft: 0, transform: 'translateX(-50%)' }}>
@@ -348,16 +530,25 @@ function HomeComputer() {
         <TextLayer name="title-关于我" className="section-title home-about-title" style={{ left: 430, top: 307, width: 420 }}>
           关于我
         </TextLayer>
-        <div className="home-about-overlay-content">
-          <TextLayer name="welcome" style={{ left: 403, top: 256, fontSize: 60, lineHeight: '60px' }}>
-            welcome
+        <div ref={copyRef} className="home-about-overlay-content">
+          <TextLayer name="welcome" style={{ left: 403, top: 248, fontSize: 60, lineHeight: '60px' }}>
+            <span className="home-type-accessible">{welcome}</span>
+            <span className="home-type-text" aria-hidden="true">
+              {welcome.slice(0, typedCharacters)}
+              {typingStarted && typedCharacters < welcome.length ? <span className="home-type-cursor" /> : null}
+            </span>
           </TextLayer>
-          <TextLayer name="My Channel" style={{ left: 403, top: 320, fontSize: 95, lineHeight: '95px' }}>
-            My Channel
+          <TextLayer name="My Channel" style={{ left: 403, top: 312, fontSize: 95, lineHeight: '95px' }}>
+            <span className="home-type-accessible">{channel}</span>
+            <span className="home-type-text" aria-hidden="true">
+              {channel.slice(0, Math.max(0, typedCharacters - welcome.length))}
+              {typingStarted && typedCharacters >= welcome.length && typedCharacters < totalCharacters ? <span className="home-type-cursor" /> : null}
+            </span>
           </TextLayer>
-          <ButtonFrame name="button-download" label="下载简历" left={411} />
+          <ButtonFrame name="button-download" label="下载简历" left={411} onClick={() => downloadDialogRef.current.showModal()} />
           <ButtonFrame name="button-contact" label="联系我" left={672} />
         </div>
+        <ResumeDownloadDialog dialogRef={downloadDialogRef} />
       </div>
     </div>
   );
@@ -380,13 +571,14 @@ function OnlyHomeFrame() {
 }
 
 function LeftNavigation({ active, className = '' }) {
+  const { language } = useContext(LanguageContext);
   return (
-    <nav className={`layer left-navigation ${className}`} data-layer="left-navigation" aria-label="左侧页面导航">
+    <nav className={`layer left-navigation ${className}`} data-layer="left-navigation" aria-label={language === 'en' ? 'Page navigation' : '左侧页面导航'}>
       <div className="left-navigation-hove">
         <div className="left-navigation-rectangle-hover" />
-        {navItems.map((item) => (
-          <a className={active === item ? 'active' : ''} key={item} href={`#${targetForNav(item)}`}>
-            {item}
+        {navItems.map((item, index) => (
+          <a className={active === item ? 'active' : ''} key={item} href={`#${targetForNav(item)}`} data-label={language === 'en' ? englishNavigation[index] : item}>
+            <span>{language === 'en' ? englishNavigation[index] : item}</span>
           </a>
         ))}
       </div>
@@ -404,12 +596,13 @@ function targetForNav(item) {
 }
 
 function ArrowHint({ name, label, x, y, arrowX = 0, arrowY = 16, flip = false }) {
+  const english = useContext(PrimaryTextContext);
   const arrowSrc = name === 'arrow1' ? assets.arrow1 : name === 'arrow2' ? assets.arrow2 : name === 'arrow3' ? assets.arrow3 : null;
   const arrowSize = name === 'arrow2' ? { width: 94, height: 37.28 } : { width: 67, height: 22 };
 
   return (
     <Layer name={name} className="click-hint" style={{ left: x, top: y }}>
-      <span>{label}</span>
+      <span>{primaryText(label, english)}</span>
       {arrowSrc ? (
         <img
           className={`click-hint-arrow ${flip ? 'flip' : ''}`}
@@ -609,7 +802,38 @@ function AboutTailTemporaryContent() {
   );
 }
 
+function CopyContactValue({ value, english }) {
+  const [status, setStatus] = useState('idle');
+  const resetRef = useRef(null);
+
+  useEffect(() => () => window.clearTimeout(resetRef.current), []);
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(value);
+      setStatus('copied');
+    } catch {
+      setStatus('failed');
+    }
+    window.clearTimeout(resetRef.current);
+    resetRef.current = window.setTimeout(() => setStatus('idle'), 2000);
+  };
+  const message = status === 'copied'
+    ? (english ? 'Copied' : '已复制')
+    : status === 'failed'
+      ? (english ? 'Copy failed' : '复制失败')
+      : (english ? 'Click to copy' : '点击复制');
+
+  return (
+    <button type="button" className="contact-copy" onClick={copy} aria-label={`${english ? 'Copy' : '复制'} ${value}`}>
+      <strong>{value}</strong>
+      <span className="contact-copy-tooltip" role="status" aria-live="polite">{message}</span>
+    </button>
+  );
+}
+
 function TransitionAboutAi({ onOpenProject, onOpenFolder, onOpenUxUiSecond, onOpenExploreSecond, onOpenExploreWaterfall }) {
+  const english = useContext(PrimaryTextContext);
   const sectionRef = useRef(null);
   const stageRef = useRef(null);
 
@@ -695,12 +919,53 @@ function TransitionAboutAi({ onOpenProject, onOpenFolder, onOpenUxUiSecond, onOp
         .to(turbulence, { attr: { baseFrequency: '0.018 0.03' }, duration: 3, ease: 'sine.inOut' }, 0)
         .to(displacement, { attr: { scale: 12 }, duration: 3, ease: 'sine.inOut' }, 0);
       const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const software = detail.querySelector('.software');
+      const softwareIcons = Array.from(software.querySelectorAll('.image-layer')).sort((a, b) => a.offsetLeft - b.offsetLeft);
+      let softwareWasVisible = false;
+      const softwareMotion = gsap.timeline({ paused: true, repeat: -1, yoyo: true });
+      const softwareEntrance = gsap.timeline({ paused: true, onComplete: () => { if (softwareWasVisible) softwareMotion.resume(); } });
+      if (!reducedMotion) gsap.set(softwareIcons, { autoAlpha: 0, y: 12, scale: 0.35 });
+      [52, 118].forEach((top, row) => {
+        const rowIcons = softwareIcons.filter((icon) => icon.offsetTop === top);
+        if (!reducedMotion) {
+          softwareEntrance.fromTo(rowIcons, { autoAlpha: 0, y: 12, scale: 0.35 }, {
+            autoAlpha: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.4,
+            stagger: 0.09,
+            ease: 'back.out(2.6)',
+            immediateRender: false,
+          }, row * 1.05);
+        }
+        softwareMotion.fromTo(rowIcons, { y: 0, scale: 1 }, {
+          y: -5,
+          scale: 1.035,
+          duration: 1.7,
+          stagger: 0.12,
+          ease: 'sine.inOut',
+          immediateRender: false,
+        }, row * 0.55);
+      });
       const updateStage = (self) => {
         const active = self.scroll() >= self.start;
         gsap.set(section, { clipPath: active ? 'none' : 'inset(0 0 100% 0)' });
         const wordVisible = active && Number(gsap.getProperty(wordCloud, 'opacity')) > 0 && Number(gsap.getProperty(temporaryContent, 'opacity')) > 0;
         if (wordVisible && !reducedMotion) wordMotion.resume();
         else wordMotion.pause();
+        const softwareVisible = active && Number(gsap.getProperty(software, 'opacity')) > 0 && Number(gsap.getProperty(temporaryContent, 'opacity')) > 0;
+        if (softwareVisible && !reducedMotion) {
+          if (!softwareWasVisible) {
+            softwareMotion.pause().progress(0);
+            softwareEntrance.restart();
+          }
+          softwareWasVisible = true;
+          if (softwareEntrance.progress() === 1) softwareMotion.resume();
+        } else {
+          softwareWasVisible = false;
+          softwareEntrance.pause();
+          softwareMotion.pause();
+        }
       };
       const master = gsap.timeline({
         defaults: { ease: 'none' },
@@ -783,6 +1048,7 @@ function TransitionAboutAi({ onOpenProject, onOpenFolder, onOpenUxUiSecond, onOp
 
       master.add(aboutReveal, 0).add(tl, 1.6);
       master.addLabel('about-first-screen', 0)
+        .addLabel('about-introduction-visible', 1.2)
         .addLabel('about-reveal-complete', 1.6)
         .addLabel('ai-first-screen', 2.6)
         .addLabel('ux-first-screen', 3.6)
@@ -830,7 +1096,7 @@ function TransitionAboutAi({ onOpenProject, onOpenFolder, onOpenUxUiSecond, onOp
             <ImageLayer name="default1" src={assets.uxDefault1} style={{ left: 95, top: 35, width: 150, height: 150 }} />
             <TextLayer name="项目更新中" className="ux-explore-project-title" style={{ left: 15, top: 216 }}>项目更新中...</TextLayer>
           </Layer>
-          <ArrowHint name="arrow3" label="点击此处" x={879} y={583} arrowY={10} />
+          <ArrowHint name="arrow3" label="继续滚动查看" x={879} y={583} arrowY={10} />
           <button
             type="button"
             className="layer more-label project-open-trigger"
@@ -838,7 +1104,7 @@ function TransitionAboutAi({ onOpenProject, onOpenFolder, onOpenUxUiSecond, onOp
             onClick={onOpenProject}
             data-layer="点击探索更多"
           >
-            点击探索更多
+            {primaryText('点击探索更多', english)}
           </button>
           <button
             type="button"
@@ -846,7 +1112,7 @@ function TransitionAboutAi({ onOpenProject, onOpenFolder, onOpenUxUiSecond, onOp
             style={{ left: 253, top: 384, width: 67, height: 22 }}
             onClick={onOpenProject}
             data-layer="arrow1-trigger"
-            aria-label="打开AI/运营2-1"
+            aria-label={primaryText('打开AI/运营2-1', english)}
           >
             <img src={assets.arrow1} alt="arrow1" draggable="false" />
           </button>
@@ -858,12 +1124,12 @@ function TransitionAboutAi({ onOpenProject, onOpenFolder, onOpenUxUiSecond, onOp
             <ImageLayer name="message" src={assets.message} />
             <TextLayer name="联系我" className="contact-title">联系我</TextLayer>
             <Layer name="mail" className="contact-line mail">
-              <span>邮箱</span>
-              <strong>monsters_y@163.com</strong>
+              <span>{primaryText('邮箱', english)}</span>
+              <CopyContactValue value="monsters_y@163.com" english={english} />
             </Layer>
             <Layer name="tel" className="contact-line tel">
-              <span>联系电话</span>
-              <strong>13506516670</strong>
+              <span>{primaryText('联系电话', english)}</span>
+              <CopyContactValue value="13506516670" english={english} />
             </Layer>
             <div className="qr-code" data-layer="QR code" />
           </Layer>
@@ -1000,12 +1266,19 @@ function AiOperationProjectCanvas() {
   );
 }
 
+function ProjectCloseButton({ onClose }) {
+  const { language } = useContext(LanguageContext);
+  return (
+    <button className="project-modal-close" type="button" onClick={onClose} aria-label={language === 'en' ? 'Close project' : '关闭项目'}>
+      <img src={assets.iconClose} alt="" draggable="false" />
+    </button>
+  );
+}
+
 function AiOperationProjectPage({ onClose }) {
   return (
     <section className="spa-project-page" data-frame="AI/运营2-1" aria-label="AI/运营2-1">
-      <button className="project-modal-close" type="button" onClick={onClose} aria-label="关闭AI/运营2-1">
-        <img src={assets.iconClose} alt="关闭" draggable="false" />
-      </button>
+      <ProjectCloseButton onClose={onClose} />
       <AiOperationProjectCanvas />
     </section>
   );
@@ -1040,9 +1313,7 @@ function FolderTitle({ number, title, style }) {
 function AiOperationFolderPage({ onClose, onOpenBrand, onOpenPoster, onOpenCoffee }) {
   return (
     <section className="spa-project-page project-folder-page" data-frame="AI/运营2-2" aria-label="AI/运营2-2">
-      <button className="project-modal-close" type="button" onClick={onClose} aria-label="关闭AI/运营2-2">
-        <img src={assets.iconClose} alt="关闭" draggable="false" />
-      </button>
+      <ProjectCloseButton onClose={onClose} />
       <ModalCanvas>
         <FolderSection name="folder5" imageName="folder-page5" src={assets.folderPage5} style={{ left: 0, top: 169, width: 1280, height: 548 }} zIndex={1}>
           <ModalImage name="IP-thumbnail" src={assets.ipThumbnail} style={{ left: 476, top: -9.91, width: 245, height: 313, transform: 'rotate(4deg)' }} />
@@ -1127,9 +1398,7 @@ function PosterOperationPage({ onClose }) {
 
   return (
     <section className="spa-project-page poster-operation-page" data-frame="AI/运营3-2" aria-label="AI/运营3-2">
-      <button className="project-modal-close" type="button" onClick={onClose} aria-label="关闭AI/运营3-2">
-        <img src={assets.iconClose} alt="关闭" draggable="false" />
-      </button>
+      <ProjectCloseButton onClose={onClose} />
       <div className="brand-page-scroll poster-page-scroll">
         <div className="brand-page-viewport poster-page-viewport" style={{ height: px(totalHeight * scale) }}>
           <div className="brand-page-frame poster-page-frame" style={{ transform: `translateX(-50%) scale(${scale})`, height: totalHeight }}>
@@ -1256,9 +1525,7 @@ function BrandOperationPage({ onClose }) {
 
   return (
     <section className="spa-project-page brand-operation-page" data-frame="AI/运营3-1" aria-label="AI/运营3-1">
-      <button className="project-modal-close" type="button" onClick={onClose} aria-label="关闭AI/运营3-1">
-        <img src={assets.iconClose} alt="关闭" draggable="false" />
-      </button>
+      <ProjectCloseButton onClose={onClose} />
       <div className="brand-page-scroll">
         <div className="brand-page-viewport" style={{ height: px(totalHeight * scale), background: '#fbfbf9' }}>
           <div className="brand-page-frame" style={{ transform: `translateX(-50%) scale(${scale})`, height: totalHeight }}>
@@ -1654,7 +1921,7 @@ function TransitionAiUx({ onOpenProject, onOpenFolder, onOpenUxUiSecond }) {
             <ImageLayer name="default1" src={assets.uxDefault1} style={{ left: 95, top: 35, width: 150, height: 150 }} />
             <TextLayer name="项目更新中" className="ux-explore-project-title" style={{ left: 15, top: 216 }}>项目更新中...</TextLayer>
           </Layer>
-          <ArrowHint name="arrow3" label="点击此处" x={879} y={583} arrowY={10} />
+          <ArrowHint name="arrow3" label="继续滚动查看" x={879} y={583} arrowY={10} />
           <button
             type="button"
             className="layer more-label project-open-trigger"
@@ -1794,7 +2061,7 @@ function TransitionUxExplore({ onOpenUxUiSecond }) {
             <ImageLayer name="default1" src={assets.uxDefault1} style={{ left: 95, top: 35, width: 150, height: 150 }} />
             <TextLayer name="项目更新中" className="ux-explore-project-title" style={{ left: 15, top: 216 }}>项目更新中...</TextLayer>
           </Layer>
-          <ArrowHint name="arrow3" label="点击此处" x={879} y={583} arrowY={10} />
+          <ArrowHint name="arrow3" label="继续滚动查看" x={879} y={583} arrowY={10} />
         </div>
       </div>
     </section>
@@ -1850,7 +2117,7 @@ function ExploreSecondPage({ onClose }) {
   ];
 
   return <section className="project-modal explore-second-page" aria-label="个人探索2-1">
-    <button className="project-modal-close" type="button" onClick={onClose} aria-label="关闭个人探索2-1"><img src={assets.iconClose} alt="关闭" draggable="false" /></button>
+    <ProjectCloseButton onClose={onClose} />
     <div className="brand-page-scroll explore-second-scroll"><div className="brand-page-viewport" style={{ height: px(totalHeight * scale) }}><div className="brand-page-frame explore-second-frame" style={{ transform: `translateX(-50%) scale(${scale})`, height: totalHeight }}>
       <BrandImage name="xhs-top-bg" src={assets.xhsTopBg} style={{ left: 0, top: 0, width: 1280, height: 526 }} />
       <TextLayer name="0-1起号方法论" className="xhs-hero-title" style={{ left: 112, top: 235 }}>0-1起号方法论</TextLayer>
@@ -1954,9 +2221,7 @@ function ExploreWaterfallPage({ onClose }) {
 
   return (
     <section className="spa-project-page explore-waterfall-page" data-frame="个人探索2-2" aria-label="个人探索2-2">
-      <button className="project-modal-close" type="button" onClick={onClose} aria-label="关闭个人探索2-2">
-        <img src={assets.iconClose} alt="关闭" draggable="false" />
-      </button>
+      <ProjectCloseButton onClose={onClose} />
       <div className="brand-page-scroll personal-waterfall-scroll">
         <div className="brand-page-viewport" style={{ height: px(totalHeight * scale) }}>
           <div ref={frameRef} className="brand-page-frame personal-waterfall-frame" style={{ transform: `translateX(-50%) scale(${scale})`, height: totalHeight }}>
@@ -1993,9 +2258,7 @@ function CoffeeBrandOperationPage({ onClose }) {
 
   return (
     <section className="spa-project-page coffee-operation-page" data-frame="AI/运营3-3" aria-label="AI/运营3-3">
-      <button className="project-modal-close" type="button" onClick={onClose} aria-label="关闭AI/运营3-3">
-        <img src={assets.iconClose} alt="关闭" draggable="false" />
-      </button>
+      <ProjectCloseButton onClose={onClose} />
       <div className="brand-page-scroll coffee-page-scroll">
         <div className="brand-page-viewport coffee-page-viewport" style={{ height: px(totalHeight * scale) }}>
           <div className="brand-page-frame coffee-page-frame" style={{ transform: `translateX(-50%) scale(${scale})`, height: totalHeight }}>
@@ -2102,7 +2365,7 @@ function UxUiSecondPage({ onClose }) {
 
   return (
     <section className="spa-project-page ux-ui-second-page" data-frame="UX/UI 2-1" aria-label="UX/UI 2-1">
-      <button className="project-modal-close" type="button" onClick={onClose} aria-label="关闭UX/UI 2-1"><img src={assets.iconClose} alt="关闭" draggable="false" /></button>
+      <ProjectCloseButton onClose={onClose} />
       <div className="brand-page-scroll ux-ui-page-scroll">
         <div className="brand-page-viewport ux-ui-page-viewport" style={{ height: px(totalHeight * scale) }}>
           <div className="brand-page-frame ux-ui-page-frame" style={{ transform: `translateX(-50%) scale(${scale})`, height: totalHeight }}>
@@ -2157,6 +2420,10 @@ function UxUiSecondPage({ onClose }) {
 }
 
 function App() {
+  const [language, setLanguage] = useState(() => {
+    try { return localStorage.getItem('portfolio-language') === 'en' ? 'en' : 'zh'; }
+    catch { return 'zh'; }
+  });
   const [isAiOperationPageOpen, setIsAiOperationPageOpen] = useState(false);
   const [isAiOperationFolderOpen, setIsAiOperationFolderOpen] = useState(false);
   const [isAiOperationBrandOpen, setIsAiOperationBrandOpen] = useState(false);
@@ -2165,6 +2432,15 @@ function App() {
   const [isUxUiSecondOpen, setIsUxUiSecondOpen] = useState(false);
   const [isExploreSecondOpen, setIsExploreSecondOpen] = useState(false);
   const [isExploreWaterfallOpen, setIsExploreWaterfallOpen] = useState(false);
+
+  useEffect(() => {
+    document.documentElement.lang = language === 'en' ? 'en' : 'zh-CN';
+    document.documentElement.dataset.language = language;
+    document.title = language === 'en' ? 'YUYIMIAO | Portfolio' : '个人作品集';
+    document.querySelector('meta[name="description"]').content = language === 'en' ? 'YUYIMIAO portfolio: product operations, UX/UI design and personal exploration.' : '个人作品集网站';
+    try { localStorage.setItem('portfolio-language', language); }
+    catch { /* Language switching still works when storage is unavailable. */ }
+  }, [language]);
 
   useEffect(() => {
     if (!isAiOperationPageOpen && !isAiOperationFolderOpen && !isAiOperationBrandOpen && !isAiOperationPosterOpen && !isAiOperationCoffeeOpen && !isUxUiSecondOpen && !isExploreSecondOpen && !isExploreWaterfallOpen) return undefined;
@@ -2191,7 +2467,10 @@ function App() {
   };
 
   return (
+    <LanguageContext.Provider value={{ language, toggleLanguage: () => setLanguage((value) => value === 'zh' ? 'en' : 'zh') }}>
     <main>
+      <CustomCursor />
+      <PrimaryTextContext.Provider value={language === 'en'}>
       {pages.map((Page, index) => (
         <Page
           key={Page.name || pageMap[index].id}
@@ -2202,6 +2481,7 @@ function App() {
           onOpenExploreWaterfall={() => setIsExploreWaterfallOpen(true)}
         />
       ))}
+      </PrimaryTextContext.Provider>
       {isAiOperationPageOpen ? <AiOperationProjectPage onClose={closeAiOperationProject} /> : null}
       {isAiOperationFolderOpen ? (
         <AiOperationFolderPage
@@ -2218,6 +2498,7 @@ function App() {
       {isExploreSecondOpen ? <ExploreSecondPage onClose={() => setIsExploreSecondOpen(false)} /> : null}
       {isExploreWaterfallOpen ? <ExploreWaterfallPage onClose={() => setIsExploreWaterfallOpen(false)} /> : null}
     </main>
+    </LanguageContext.Provider>
   );
 }
 
