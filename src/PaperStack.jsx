@@ -23,7 +23,7 @@ function releaseVelocity(samples, time) {
   return { x: (last.x - first.x) / elapsed, y: (last.y - first.y) / elapsed };
 }
 
-export default function PaperStack({ children }) {
+export default function PaperStack({ children, onPreview }) {
   const papers = React.Children.toArray(children).reverse();
   const [activeIndex, setActiveIndex] = useState(0);
   const [dragging, setDragging] = useState(false);
@@ -154,6 +154,7 @@ export default function PaperStack({ children }) {
     dragRef.current = {
       index, id: event.pointerId, startX: event.clientX, startY: event.clientY,
       scale: canvasScale, homeX: values.x.get(), homeY: values.y.get(),
+      previewTarget: event.target.closest('[data-paper-preview]'), moved: false,
       samples: [{ x: 0, y: 0, time: event.timeStamp }], idle: null, progress: 0,
     };
     animate(values.lift, reduceMotion ? 1 : 1.035, spring('press'));
@@ -166,6 +167,7 @@ export default function PaperStack({ children }) {
     if (!drag || event.pointerId !== drag.id) return;
     const x = (event.clientX - drag.startX) / drag.scale;
     const y = (event.clientY - drag.startY) / drag.scale;
+    if (Math.hypot(x, y) > 6) drag.moved = true;
     const values = valuesFor(drag.index);
     values.x.set(drag.homeX + tether(x, SIDE_REACH));
     values.y.set(drag.homeY + tether(y, 60));
@@ -198,6 +200,13 @@ export default function PaperStack({ children }) {
     dragRef.current = null;
     event.currentTarget.releasePointerCapture(event.pointerId);
     setDragging(false);
+    const distance = Math.hypot(event.clientX - drag.startX, event.clientY - drag.startY) / drag.scale;
+    if (event.type === 'pointerup' && drag.previewTarget && !drag.moved && distance <= 6) {
+      placeAll();
+      drag.previewTarget.focus({ preventScroll: true });
+      onPreview?.({ src: drag.previewTarget.dataset.previewSrc, title: drag.previewTarget.dataset.previewTitle });
+      return;
+    }
     const direction = x < 0 ? 1 : -1;
     const next = activeRef.current + direction;
     if (event.type === 'pointerup' && (Math.abs(x) > 90 || flick) && next >= 0 && next < papers.length) {
@@ -222,16 +231,22 @@ export default function PaperStack({ children }) {
 
   return (
     <div ref={rootRef} className="draggable-paper-stack" data-layer="project-paper-stack" tabIndex={0} role="group" aria-label="项目过程卡片" aria-busy={switching}
+      onClick={event => {
+        if (event.detail !== 0) return;
+        const preview = event.target.closest('[data-paper-preview]');
+        if (preview) onPreview?.({ src: preview.dataset.previewSrc, title: preview.dataset.previewTitle });
+      }}
       onKeyDown={event => {
         if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
         event.preventDefault();
+        event.currentTarget.focus({ preventScroll: true });
         if (!dragRef.current) changeCard(event.key === 'ArrowLeft' ? 1 : -1);
       }}>
       {papers.map((paper, index) => {
         const values = valuesFor(index);
         const isTop = index === activeIndex;
         return (
-          <motion.div key={paper.key || index} className="paper-stack-card" data-top={isTop ? '' : undefined} data-paper={paper.props['data-layer'] || paper.props.name || '用户痛点2'} aria-hidden={!isTop}
+          <motion.div key={paper.key || index} className="paper-stack-card" data-top={isTop ? '' : undefined} data-paper={paper.props['data-layer'] || paper.props.name || '用户痛点2'} aria-hidden={!isTop} inert={!isTop}
             onPointerDown={event => handleDown(event, index)} onPointerMove={handleMove} onPointerUp={handleUp} onPointerCancel={handleUp}
             style={{ x: values.x, y: values.y, rotate: values.rotate, scale: values.scale, opacity: values.opacity, zIndex: values.z,
               originX: 0.9, originY: 0.9, pointerEvents: isTop ? 'auto' : 'none', cursor: isTop && dragging ? 'grabbing' : 'grab' }}>

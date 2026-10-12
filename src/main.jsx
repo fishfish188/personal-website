@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { createContext, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import { createRoot } from 'react-dom/client';
 import { createPortal } from 'react-dom';
 import { gsap } from 'gsap';
@@ -7,6 +7,9 @@ import './styles.css';
 import peopleMotionStill from './people-motion-still.png';
 import resumePdf from './resume-operations.pdf';
 import PaperStack from './PaperStack';
+import ProjectImagePreview from './ProjectImagePreview';
+import LoadingScreen from './LoadingScreen';
+import { createDemoPreloader, createImagePreloader, demoResources, primaryResourceStages, stagesToPreload } from './resourcePreloading';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -62,7 +65,7 @@ const assets = {
   brandThumbnail: `${CDN}/brand-thumbnail.webp`,
   ipThumbnail: `${CDN}/IP-thumbnail.webp`,
   chart: `${CDN}/chart.png`,
-  userJourney: `${CDN}/user%20journey.png`,
+  userJourney: `${CDN}/user-journey.png`,
   prd: `${CDN}/prd.png`,
   wireframe: `${CDN}/wireframe.png`,
   design: `${CDN}/design.png`,
@@ -226,6 +229,42 @@ const assets = {
 };
 
 const navItems = ['首页', '关于我', 'AI/运营', 'UX/UI', '个人探索', '联系我'];
+const homeLoadingImages = [assets.bgHome, assets.bgRectangle, assets.computerScreen, assets.keyboard];
+const imagePreloader = createImagePreloader();
+const demoPreloader = createDemoPreloader();
+const StagedResourcesContext = createContext(null);
+const projectEntryImages = {
+  ai: [assets.paper2, assets.iphone2, assets.iconClose],
+  folder: [assets.folder1, assets.folderPage2, assets.folderPage3, assets.folderPage4, assets.folderPage5, assets.beautyThumbnail, assets.posterThumbnail1, assets.posterThumbnail2, assets.brandThumbnail, assets.ipThumbnail, assets.iconClose],
+  brand: [assets.beautyTopBg, assets.iconClose],
+  poster: [assets.posterTopBg, assets.iconClose],
+  coffee: [assets.brandTopBg, assets.iconClose],
+  ux: [assets.uxNourishTopBg, assets.iconClose],
+  notes: [assets.xhsTopBg, assets.iconClose],
+  photography: [assets.waterfall1_1, assets.waterfall2_1, assets.waterfall3_1, assets.waterfall4_1, assets.waterfall5_1, assets.waterfall6_1, assets.waterfall7_1, assets.iconClose],
+};
+const preloadProject = (name) => {
+  if (demoResources[name]) demoPreloader.preload(demoResources[name]);
+  return imagePreloader.preload(projectEntryImages[name], { priority: true });
+};
+const projectIntent = (name) => ({ onPointerEnter: () => preloadProject(name), onFocus: () => preloadProject(name) });
+
+function preloadPrimaryGroup(name, root = document.querySelector('.about-ai-transition-stage'), priority = false) {
+  const group = primaryResourceStages.find((stage) => stage.name === name);
+  if (!root || !group) return;
+  const images = [...root.querySelectorAll(group.selector)]
+    .flatMap((element) => element.matches('img') ? [element] : [...element.querySelectorAll('img')]);
+  const sources = images.map((image) => image.dataset.resourceSrc).filter(Boolean);
+  if (name === 'about') sources.push(assets.peopleMotion);
+  imagePreloader.preload(sources, { priority });
+  if (name === 'ai') Object.values(demoResources).forEach((demo) => demoPreloader.preload(demo));
+}
+
+function preloadNavigationTarget(id) {
+  const group = { about: 'about', 'about-ai': 'ai', 'ai-ux': 'ux', explore: 'ux', 'explore-contact': 'contact' }[id];
+  if (group) preloadPrimaryGroup(group, undefined, true);
+}
+
 const englishNavigation = ['Home', 'About', 'AI / Ops', 'UX / UI', 'Explore', 'Contact'];
 const LanguageContext = createContext(null);
 const PrimaryTextContext = createContext(false);
@@ -354,10 +393,19 @@ function Layer({ name, className = '', style, children, as: Tag = 'div', ...prop
   );
 }
 
+function ResourceImage({ src, alt = '', ...props }) {
+  const resources = useContext(StagedResourcesContext);
+  const settled = useSyncExternalStore(
+    (listener) => resources ? resources.subscribe(src, listener) : () => {},
+    () => !resources || homeLoadingImages.includes(src) || resources.isSettled(src),
+  );
+  return <img {...props} src={settled ? src : undefined} alt={settled ? alt : ''} data-resource-src={src} decoding="async" />;
+}
+
 function ImageLayer({ name, src, className = '', style, alt, ...props }) {
   const english = useContext(PrimaryTextContext);
   return (
-    <img
+    <ResourceImage
       className={`layer image-layer ${name} ${className}`}
       style={style}
       src={src}
@@ -401,7 +449,7 @@ function TopNavigation() {
       <Layer name="navigation">
         <Layer name="menu">
           {navItems.map((item, index) => (
-            <a key={item} href={`#${targetForNav(item)}`} data-baseline-label={item === 'UX/UI' ? 'UX/UI项目' : item} data-label={language === 'en' ? englishNavigation[index] : item === 'UX/UI' ? 'UX/UI项目' : item}>
+            <a key={item} href={`#${targetForNav(item)}`} onPointerEnter={() => preloadNavigationTarget(targetForNav(item))} onFocus={() => preloadNavigationTarget(targetForNav(item))} onClick={() => preloadNavigationTarget(targetForNav(item))} data-baseline-label={item === 'UX/UI' ? 'UX/UI项目' : item} data-label={language === 'en' ? englishNavigation[index] : item === 'UX/UI' ? 'UX/UI项目' : item}>
               <span>{language === 'en' ? englishNavigation[index] : item === 'UX/UI' ? 'UX/UI项目' : item}</span>
             </a>
           ))}
@@ -486,13 +534,13 @@ function FullComputer({ variant = 'home', style, showKeyboard = true }) {
   return (
     <Layer name="full-computer" className={`full-computer ${variant}`} style={style}>
       <Layer name="screen" className="screen-shape" />
-      <ImageLayer name="computer-screen" src={assets.computerScreen} />
-      {showKeyboard ? <ImageLayer name="keyboard" src={assets.keyboard} /> : null}
+      <ImageLayer name="computer-screen" src={assets.computerScreen} fetchPriority={variant === 'home' ? 'high' : 'auto'} />
+      {showKeyboard ? <ImageLayer name="keyboard" src={assets.keyboard} fetchPriority={variant === 'home' ? 'high' : 'auto'} /> : null}
     </Layer>
   );
 }
 
-function HomeComputer() {
+function HomeComputer({ ready }) {
   const copyRef = useRef(null);
   const downloadDialogRef = useRef(null);
   const [typingStarted, setTypingStarted] = useState(false);
@@ -502,6 +550,7 @@ function HomeComputer() {
   const totalCharacters = welcome.length + channel.length;
 
   useEffect(() => {
+    if (!ready) return undefined;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       setTypedCharacters(totalCharacters);
       return undefined;
@@ -514,7 +563,7 @@ function HomeComputer() {
     }, { threshold: 0.1 });
     observer.observe(copyRef.current);
     return () => observer.disconnect();
-  }, [totalCharacters]);
+  }, [ready, totalCharacters]);
 
   useEffect(() => {
     if (!typingStarted || typedCharacters >= totalCharacters) return undefined;
@@ -561,9 +610,9 @@ function OnlyHomeFrame() {
     <div className="onlyhome-group" data-frame="onlyhome">
       <div className="home-about-fixed-stage" style={{ transform: `translateX(-50%) scale(${scale})` }}>
         <Layer name="bg-home">
-          <ImageLayer name="BG" src={assets.bgHome} />
+          <ImageLayer name="BG" src={assets.bgHome} fetchPriority="high" />
         </Layer>
-        <ImageLayer name="BG-rectangle" src={assets.bgRectangle} style={{ left: 0, top: 0, width: 1280, height: 720 }} />
+        <ImageLayer name="BG-rectangle" src={assets.bgRectangle} fetchPriority="high" style={{ left: 0, top: 0, width: 1280, height: 720 }} />
         <TopNavigation />
       </div>
     </div>
@@ -577,7 +626,7 @@ function LeftNavigation({ active, className = '' }) {
       <div className="left-navigation-hove">
         <div className="left-navigation-rectangle-hover" />
         {navItems.map((item, index) => (
-          <a className={active === item ? 'active' : ''} key={item} href={`#${targetForNav(item)}`} data-label={language === 'en' ? englishNavigation[index] : item}>
+          <a className={active === item ? 'active' : ''} key={item} href={`#${targetForNav(item)}`} onPointerEnter={() => preloadNavigationTarget(targetForNav(item))} onFocus={() => preloadNavigationTarget(targetForNav(item))} onClick={() => preloadNavigationTarget(targetForNav(item))} data-label={language === 'en' ? englishNavigation[index] : item}>
             <span>{language === 'en' ? englishNavigation[index] : item}</span>
           </a>
         ))}
@@ -604,7 +653,7 @@ function ArrowHint({ name, label, x, y, arrowX = 0, arrowY = 16, flip = false })
     <Layer name={name} className="click-hint" style={{ left: x, top: y }}>
       <span>{primaryText(label, english)}</span>
       {arrowSrc ? (
-        <img
+        <ResourceImage
           className={`click-hint-arrow ${flip ? 'flip' : ''}`}
           style={{ left: arrowX, top: arrowY }}
           src={arrowSrc}
@@ -623,7 +672,7 @@ function ArrowHint({ name, label, x, y, arrowX = 0, arrowY = 16, flip = false })
   );
 }
 
-function Home() {
+function Home({ ready }) {
   const sectionRef = useRef(null);
   const stageRef = useRef(null);
 
@@ -685,7 +734,7 @@ function Home() {
       <div ref={stageRef} className="home-about-pin-viewport">
         <div className="figma-frame home-about-animation-stage">
           <OnlyHomeFrame />
-          <HomeComputer />
+          <HomeComputer ready={ready} />
           <LeftNavigation active="关于我" className="home-about-left-navigation" />
         </div>
       </div>
@@ -723,6 +772,7 @@ function DeskObjectLayers({ onOpenProject, onOpenFolder }) {
         role="button"
         tabIndex={0}
         aria-label="打开AI/运营2-2"
+        {...projectIntent('folder')}
       />
       <ImageLayer name="coffee" src={assets.coffee} style={{ left: 938, top: 0, width: 302, height: 238 }} />
       <ImageLayer name="leave" src={assets.leave} style={{ left: 396, top: 0, width: 223, height: 177 }} />
@@ -734,6 +784,7 @@ function DeskObjectLayers({ onOpenProject, onOpenFolder }) {
         type="button"
         onClick={onOpenProject}
         aria-label="打开AI/运营2-1"
+        {...projectIntent('ai')}
       >
         <ImageLayer name="iphone" src={assets.iphone} style={{ left: 0, top: 0, width: 213, height: 310, zIndex: 2 }} />
         <ImageLayer name="paper" src={assets.paper} style={{ left: 129, top: 32, width: 195, height: 218, zIndex: 1 }} />
@@ -754,7 +805,7 @@ function AboutTailTemporaryContent() {
           </filter>
         </defs>
       </svg>
-      <ImageLayer name="people-motion" src={playing ? assets.peopleMotion : peopleMotionStill} style={{ left: 22, top: 31, width: 560, height: 560, pointerEvents: 'auto' }} onMouseEnter={() => setPlaying(true)} onMouseLeave={() => setPlaying(false)} />
+      <ImageLayer name="people-motion" src={playing ? assets.peopleMotion : peopleMotionStill} style={{ left: 22, top: 31, width: 560, height: 560, pointerEvents: 'auto' }} onMouseEnter={() => { imagePreloader.preload([assets.peopleMotion], { priority: true }); setPlaying(true); }} onMouseLeave={() => setPlaying(false)} />
       <ImageLayer name="word-cloud" src={assets.wordCloud} style={{ left: 281, top: 65, width: 357, height: 193, filter: 'url(#about-word-cloud-turbulence)' }} />
       <Layer name="detail" className="about-frame-detail" style={{ left: 648, top: -262, width: 545, height: 957 }}>
         <Layer name="introduction" className="about-detail-section" style={{ left: 0, top: 0, width: 530, height: 81 }}>
@@ -832,10 +883,30 @@ function CopyContactValue({ value, english }) {
   );
 }
 
-function TransitionAboutAi({ onOpenProject, onOpenFolder, onOpenUxUiSecond, onOpenExploreSecond, onOpenExploreWaterfall }) {
+function TransitionAboutAi({ ready, onOpenProject, onOpenFolder, onOpenUxUiSecond, onOpenExploreSecond, onOpenExploreWaterfall }) {
   const english = useContext(PrimaryTextContext);
   const sectionRef = useRef(null);
   const stageRef = useRef(null);
+  const resourceTriggerRef = useRef(null);
+  const preloadingEnabledRef = useRef(false);
+  const requestedGroupsRef = useRef(new Set());
+
+  const preloadAt = (distance) => {
+    if (!preloadingEnabledRef.current) return;
+    stagesToPreload(distance).forEach(({ name }, index) => {
+      if (requestedGroupsRef.current.has(name)) return;
+      requestedGroupsRef.current.add(name);
+      preloadPrimaryGroup(name, stageRef.current, index === 0);
+    });
+  };
+
+  useEffect(() => {
+    if (!ready) return undefined;
+    preloadingEnabledRef.current = true;
+    preloadNavigationTarget(window.location.hash.slice(1));
+    preloadAt((resourceTriggerRef.current?.progress || 0) * 6700);
+    return () => { preloadingEnabledRef.current = false; };
+  }, [ready]);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -948,6 +1019,7 @@ function TransitionAboutAi({ onOpenProject, onOpenFolder, onOpenUxUiSecond, onOp
         }, row * 0.55);
       });
       const updateStage = (self) => {
+        preloadAt(self.progress * 6700);
         const active = self.scroll() >= self.start;
         gsap.set(section, { clipPath: active ? 'none' : 'inset(0 0 100% 0)' });
         const wordVisible = active && Number(gsap.getProperty(wordCloud, 'opacity')) > 0 && Number(gsap.getProperty(temporaryContent, 'opacity')) > 0;
@@ -1055,12 +1127,14 @@ function TransitionAboutAi({ onOpenProject, onOpenFolder, onOpenUxUiSecond, onOp
         .addLabel('ux-reveal-complete', 4.7)
         .addLabel('explore-first-screen', 5.7)
         .addLabel('contact-first-screen', 6.7);
+      resourceTriggerRef.current = master.scrollTrigger;
     }, stage);
 
-    return () => ctx.revert();
+    return () => { resourceTriggerRef.current = null; ctx.revert(); };
   }, []);
 
   return (
+    <StagedResourcesContext.Provider value={imagePreloader}>
     <section id="about" ref={sectionRef} className="about-ai-scroll-section frame-shell" data-frame="转场“关于我-AI/运营”">
       <div id="about-ai" className="about-ai-anchor" aria-hidden="true" />
       <div id="ai-ux" className="about-ai-ux-anchor" aria-hidden="true" />
@@ -1087,7 +1161,7 @@ function TransitionAboutAi({ onOpenProject, onOpenFolder, onOpenUxUiSecond, onOp
             <Folder name="small-folder1" style={{ left: 329, top: 242 }} label="账号笔记" onClick={onOpenExploreSecond} />
             <Folder name="small-folder2" style={{ left: 580, top: 242 }} label="摄影随拍" onClick={onOpenExploreWaterfall} interactiveOpen />
           </BrowserWindowFrame>
-          <Layer name="project1" className="ux-explore-project project1" style={{ left: 95, top: 148 }} onClick={onOpenUxUiSecond} role="button" tabIndex={0} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') onOpenUxUiSecond?.(); }}>
+          <Layer name="project1" className="ux-explore-project project1" style={{ left: 95, top: 148 }} {...projectIntent('ux')} onClick={onOpenUxUiSecond} role="button" tabIndex={0} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') onOpenUxUiSecond?.(); }}>
             <ImageLayer name="styleA" src={assets.uxStyleA} style={{ left: 12, top: 12, width: 328, height: 184 }} />
             <TextLayer name="颐养生活消费季" className="ux-explore-project-title" style={{ left: 16, top: 216 }}>颐养生活消费季</TextLayer>
           </Layer>
@@ -1103,6 +1177,7 @@ function TransitionAboutAi({ onOpenProject, onOpenFolder, onOpenUxUiSecond, onOp
             style={{ left: 231, top: 369 }}
             onClick={onOpenProject}
             data-layer="点击探索更多"
+            {...projectIntent('ai')}
           >
             {primaryText('点击探索更多', english)}
           </button>
@@ -1113,8 +1188,9 @@ function TransitionAboutAi({ onOpenProject, onOpenFolder, onOpenUxUiSecond, onOp
             onClick={onOpenProject}
             data-layer="arrow1-trigger"
             aria-label={primaryText('打开AI/运营2-1', english)}
+            {...projectIntent('ai')}
           >
-            <img src={assets.arrow1} alt="arrow1" draggable="false" />
+            <ResourceImage src={assets.arrow1} alt="arrow1" draggable="false" />
           </button>
           <TextLayer name="点击探索更多" className="more-label" style={{ left: 1002, top: 445 }}>
             点击探索更多
@@ -1141,6 +1217,7 @@ function TransitionAboutAi({ onOpenProject, onOpenFolder, onOpenUxUiSecond, onOp
         </div>
       </div>
     </section>
+    </StagedResourcesContext.Provider>
   );
 }
 
@@ -1156,11 +1233,20 @@ function ModalText({ name, className = '', style, children }) {
   );
 }
 
-function ModalCanvas({ children }) {
-  const scale = useCanvasScale();
+function ModalCanvas({ children, fitViewport = false }) {
+  const canvasScale = useCanvasScale();
+  const [fitScale, setFitScale] = useState(1);
+  useLayoutEffect(() => {
+    if (!fitViewport) return undefined;
+    const updateScale = () => setFitScale(Math.min(1, window.innerWidth / 1280, window.innerHeight / 717));
+    updateScale();
+    window.addEventListener('resize', updateScale);
+    return () => window.removeEventListener('resize', updateScale);
+  }, [fitViewport]);
+  const scale = fitViewport ? fitScale : canvasScale;
 
   return (
-    <div className="project-modal-canvas" style={{ height: px(717 * scale) }}>
+    <div className="project-modal-canvas" style={{ width: fitViewport ? px(1280 * scale) : undefined, height: px(717 * scale) }}>
       <div className="project-modal-frame" style={{ transform: `translateX(-50%) scale(${scale})` }}>
         {children}
       </div>
@@ -1168,7 +1254,7 @@ function ModalCanvas({ children }) {
   );
 }
 
-function ProjectPaper({ name, className = '', index, stage, step, image, imageClass, topLayer = false, ...props }) {
+function ProjectPaper({ name, className = '', index, stage, step, image, imageClass, children, topLayer = false, ...props }) {
   return (
     <div {...props} className={`modal-layer project-paper ${topLayer ? 'top-paper' : 'stack-paper'} ${className}`} data-layer={name}>
       <ModalImage name="paper" src={assets.paper2} className="project-paper-image" style={{ left: 0, top: 0, width: 518, height: 398 }} />
@@ -1178,9 +1264,27 @@ function ProjectPaper({ name, className = '', index, stage, step, image, imageCl
         <span aria-hidden="true">›</span>
         {step}
       </ModalText>
-      {image ? <img className={`paper-preview ${imageClass || ''}`} src={image} alt={name} draggable="false" /> : null}
+      {image ? <button type="button" className={`paper-preview paper-preview-trigger ${imageClass || ''}`} data-paper-preview="" data-preview-src={image} data-preview-title={name} aria-label={`放大${name}图片`}>
+        <img src={image} alt={name} draggable="false" />
+      </button> : null}
+      {children}
     </div>
   );
+}
+
+function FunctionMappingChart() {
+  const rows = [
+    ['痛点', '主要产品功能映射'],
+    ['不知道有什么可尝试', '“测一测”适合什么兴趣+兴趣推荐'],
+    ['担心投入过高浪费钱', '费用分级（入门档/进阶档）+ 分阶段装备推荐'],
+    ['教程资源分散', '精选教程链接（B站/小红书/抖音）+用户自主添加'],
+    ['跟踪反馈', '状态追踪（想尝试→进行中→已体验）+ 轻量打卡'],
+  ];
+  return <div className="function-chart" data-layer="function-chart" role="table" aria-label="主要产品功能映射">
+    {rows.map((row, index) => <div className="function-chart-row" role="row" key={row[0]}>
+      {row.map((text) => <span role={index === 0 ? 'columnheader' : 'cell'} key={text}>{text}</span>)}
+    </div>)}
+  </div>;
 }
 
 function PainPointTwoPaper(props) {
@@ -1212,15 +1316,29 @@ function PainPointTwoPaper(props) {
   );
 }
 
-function AiOperationProjectCanvas() {
+function AiOperationProjectCanvas({ onPreview }) {
+  const demoScale = 234 / demoResources.ai.width;
+  const [demoLoaded, setDemoLoaded] = useState(false);
+  const [demoScrollbarWidth, setDemoScrollbarWidth] = useState(0);
+  useLayoutEffect(() => {
+    // Cross-origin content cannot be styled here; clip only its native scrollbar gutter.
+    const probe = document.createElement('div');
+    probe.style.cssText = 'position:absolute;visibility:hidden;width:100px;height:100px;overflow:scroll;';
+    document.body.appendChild(probe);
+    setDemoScrollbarWidth(probe.offsetWidth - probe.clientWidth || 16);
+    probe.remove();
+  }, []);
   return (
-    <ModalCanvas>
+    <ModalCanvas fitViewport>
       <ModalImage name="ai-computer" src={assets.aiComputer} style={{ left: -146, top: -226, width: 385, height: 412 }} />
       <ModalImage name="notebook" src={assets.notebook} style={{ left: -85, top: 541, width: 300, height: 203 }} />
       <div className="modal-layer vibe-coding" data-layer="vibe-coding">
-        <ModalImage name="iphone" src={assets.iphone2} style={{ left: 190, top: 79, width: 284, height: 560 }} />
+        <div className="modal-layer interest-demo-screen" data-layer="html" style={{ left: 215, top: 100, width: 234, height: 513, overflow: 'hidden', zIndex: 1 }}>
+          <iframe className="interest-demo-preview" src={demoResources.ai.src} title="兴趣探索 Demo" onLoad={() => setDemoLoaded(true)} style={{ display: 'block', width: demoResources.ai.width + demoScrollbarWidth, height: 513 / demoScale, border: 0, transform: `scale(${demoScale})`, transformOrigin: 'top left', opacity: demoLoaded ? 1 : 0 }} />
+        </div>
+        <ModalImage name="iphone" src={assets.iphone2} style={{ left: 190, top: 79, width: 284, height: 560, zIndex: 2, pointerEvents: 'none' }} />
         <div className="modal-layer paper-deck" data-layer="paper-deck">
-          <PaperStack>
+          <PaperStack onPreview={onPreview}>
           <ProjectPaper name="demo" className="stack-card stack-card-9" index="3" stage="高保真设计" step="STEP 2 DEMO制作" image={assets.demo} />
           <ProjectPaper name="设计风格" className="stack-card stack-card-8" index="3" stage="高保真设计" step="STEP 1 设计风格确定" image={assets.design} />
           <ProjectPaper name="线框图" className="stack-card stack-card-7" index="2" stage="原型设计" step="STEP 2 ASCII线框图" image={assets.wireframe} />
@@ -1228,7 +1346,10 @@ function AiOperationProjectCanvas() {
           <ProjectPaper name="用户旅程" className="stack-card stack-card-5" index="1" stage="产品分析" step="STEP 4 用户旅程图" image={assets.userJourney} imageClass="journey-preview" />
           <ProjectPaper name="功能架构" className="stack-card stack-card-4" index="1" stage="产品分析" step="STEP 3 主要功能模块架构图" image={assets.chart} imageClass="chart-preview" />
           <ProjectPaper name="功能流程" className="stack-card stack-card-3" index="1" stage="产品分析" step="STEP 3 主要功能流程图" image={assets.flow} imageClass="flow-preview" />
-          <ProjectPaper name="功能映射" className="stack-card stack-card-2" index="1" stage="产品分析" step="STEP 2 功能映射" image={assets.chart} imageClass="chart-preview" />
+          <ProjectPaper name="功能映射" className="stack-card stack-card-2" index="1" stage="产品分析" step="STEP 2 功能映射">
+            <FunctionMappingChart />
+            <ModalImage name="icon-down" src={assets.iconDown} style={{ left: 253, top: 349, width: 12, height: 12 }} />
+          </ProjectPaper>
           <PainPointTwoPaper />
           <div className="modal-layer project-paper top-paper pain-paper" data-layer="用户痛点1">
             <ModalImage name="paper" src={assets.paper2} className="project-paper-image" style={{ left: 0, top: 0, width: 518, height: 398 }} />
@@ -1276,21 +1397,24 @@ function ProjectCloseButton({ onClose }) {
 }
 
 function AiOperationProjectPage({ onClose }) {
+  const [preview, setPreview] = useState(null);
   return (
-    <section className="spa-project-page" data-frame="AI/运营2-1" aria-label="AI/运营2-1">
+    <section className="spa-project-page ai-operation-project-page" data-frame="AI/运营2-1" aria-label="AI/运营2-1">
       <ProjectCloseButton onClose={onClose} />
-      <AiOperationProjectCanvas />
+      <AiOperationProjectCanvas onPreview={setPreview} />
+      {preview ? <ProjectImagePreview image={preview} onClose={() => setPreview(null)} /> : null}
     </section>
   );
 }
 
-function FolderSection({ name, imageName = name, src, style, zIndex, onClick, children }) {
+function FolderSection({ name, imageName = name, src, style, zIndex, onClick, preload, children }) {
   return (
     <div
       className={`modal-layer folder-section ${name}-group ${onClick ? 'folder-section-clickable' : ''}`}
       data-layer={name}
       style={{ ...style, zIndex }}
       onClick={onClick}
+      {...(preload ? projectIntent(preload) : {})}
       role={onClick ? 'button' : undefined}
       tabIndex={onClick ? 0 : undefined}
       onKeyDown={onClick ? (event) => { if (event.key === 'Enter' || event.key === ' ') onClick(event); } : undefined}
@@ -1319,16 +1443,16 @@ function AiOperationFolderPage({ onClose, onOpenBrand, onOpenPoster, onOpenCoffe
           <ModalImage name="IP-thumbnail" src={assets.ipThumbnail} style={{ left: 476, top: -9.91, width: 245, height: 313, transform: 'rotate(4deg)' }} />
           <FolderTitle number="04" title="IP形象设计" style={{ left: 118, top: 52, gap: 16 }} />
         </FolderSection>
-        <FolderSection name="folder4" imageName="folder-page4" src={assets.folderPage4} style={{ left: 0, top: 244, width: 1280, height: 473 }} zIndex={2} onClick={onOpenCoffee}>
+        <FolderSection name="folder4" imageName="folder-page4" src={assets.folderPage4} style={{ left: 0, top: 244, width: 1280, height: 473 }} zIndex={2} onClick={onOpenCoffee} preload="coffee">
           <ModalImage name="brand-thumbnail" src={assets.brandThumbnail} style={{ left: 311, top: 44, width: 388, height: 234 }} />
           <FolderTitle number="03" title="品牌运营设计" style={{ left: 844, top: 54 }} />
         </FolderSection>
-        <FolderSection name="folder3" imageName="folder-page3" src={assets.folderPage3} style={{ left: 0, top: 342, width: 1280, height: 375 }} zIndex={3} onClick={onOpenPoster}>
+        <FolderSection name="folder3" imageName="folder-page3" src={assets.folderPage3} style={{ left: 0, top: 342, width: 1280, height: 375 }} zIndex={3} onClick={onOpenPoster} preload="poster">
           <ModalImage name="poster-thumbnail1" src={assets.posterThumbnail1} style={{ left: 459, top: 80.41, width: 271, height: 321, transform: 'rotate(-10deg)' }} />
           <ModalImage name="poster-thumbnail2" src={assets.posterThumbnail2} style={{ left: 741.77, top: 0, width: 262, height: 341, transform: 'rotate(12deg)' }} />
           <FolderTitle number="02" title="活动海报" style={{ left: 181, top: 47 }} />
         </FolderSection>
-        <FolderSection name="folder2" imageName="folder-page2" src={assets.folderPage2} style={{ left: 0, top: 432, width: 1280, height: 285 }} zIndex={4} onClick={onOpenBrand}>
+        <FolderSection name="folder2" imageName="folder-page2" src={assets.folderPage2} style={{ left: 0, top: 432, width: 1280, height: 285 }} zIndex={4} onClick={onOpenBrand} preload="brand">
           <ModalImage name="beatuy-thumbnail" src={assets.beautyThumbnail} style={{ left: 299, top: 108, width: 632, height: 318 }} />
           <FolderTitle number="01" title="运营视觉重构" style={{ left: 24, top: 55 }} />
         </FolderSection>
@@ -1469,7 +1593,8 @@ function PosterOperationPage({ onClose }) {
               <iframe
                 className="poster-html-preview"
                 data-layer="html"
-                src="https://lottery-h5.netlify.app"
+                src={demoResources.poster.src}
+                loading="lazy"
                 title="摇奖机项目"
                 style={{ left: 498, top: 97, width: 662, height: 536 }}
               />
@@ -1507,7 +1632,8 @@ function BrandText({ name, children, style, className = '' }) {
 }
 
 function BrandImage({ name, src, style, className = '' }) {
-  return <img className={`brand-layer brand-image ${className}`} data-layer={name} src={src} alt={name} style={style} draggable="false" />;
+  const hero = ['beauty-top-bg', 'poster-top-bg', 'brand-top-bg', 'nourish-top-bg', 'xhs-top-bg'].includes(name);
+  return <img className={`brand-layer brand-image ${className}`} data-layer={name} src={src} alt={name} style={style} draggable="false" loading={hero ? 'eager' : 'lazy'} fetchPriority={hero ? 'high' : 'auto'} decoding="async" />;
 }
 
 function BrandSectionHeading({ number, title, top, titleTop = top + 68, numberLeft = 72 }) {
@@ -1972,7 +2098,7 @@ function Folder({ name, style, label, onClick, interactiveOpen = false }) {
   const src = name.includes('2') ? assets.smallFolder2 : assets.smallFolder1;
 
   return (
-    <Layer name={name} className={`small-folder ${isFolder2 ? 'small-folder2-interactive' : ''}`} style={style} onClick={onClick} role={onClick ? 'button' : undefined} tabIndex={onClick ? 0 : undefined} onKeyDown={onClick ? (event) => { if (event.key === 'Enter' || event.key === ' ') onClick(); } : undefined}>
+    <Layer name={name} className={`small-folder ${isFolder2 ? 'small-folder2-interactive' : ''}`} style={style} {...(onClick ? projectIntent(name.includes('2') ? 'photography' : 'notes') : {})} onClick={onClick} role={onClick ? 'button' : undefined} tabIndex={onClick ? 0 : undefined} onKeyDown={onClick ? (event) => { if (event.key === 'Enter' || event.key === ' ') onClick(); } : undefined}>
       <ImageLayer name={name} className={isFolder2 ? 'small-folder2-default' : ''} src={src} style={{ left: 0, top: 0, width: 155, height: 126.5 }} />
       {isFolder2 ? (
         <>
@@ -2083,8 +2209,8 @@ function Explore({ onOpenExploreSecond }) {
   );
 }
 
-function XhsNav({ active }) {
-  return <div className="xhs-nav">{['确定账号定位', '对标博主账号拆解', '内容规划', '笔记发布', '数据复盘'].map((item, index) => <React.Fragment key={item}><div className={index === active ? 'active' : ''}>{item}</div>{index < 4 ? <img src={assets.iconDown} alt="" /> : null}</React.Fragment>)}</div>;
+function XhsNav({ active, onSelect }) {
+  return <nav className="xhs-nav" aria-label="账号笔记章节导航">{['确定账号定位', '对标博主账号拆解', '内容规划', '笔记发布', '数据复盘'].map((item, index) => <React.Fragment key={item}><button type="button" className={`xhs-nav-item ${index === active ? 'active' : ''}`} disabled={index === 4} aria-controls={index < 4 ? `xhs-section-${'bcde'[index]}` : undefined} aria-current={index === active ? 'location' : undefined} onClick={() => onSelect(index)}>{item}</button>{index < 4 ? <img src={assets.iconDown} alt="" /> : null}</React.Fragment>)}</nav>;
 }
 
 function XhsTable({ className = '', firstHeader = '', headers, rows }) {
@@ -2094,6 +2220,35 @@ function XhsTable({ className = '', firstHeader = '', headers, rows }) {
 function ExploreSecondPage({ onClose }) {
   const scale = useCanvasScale();
   const totalHeight = 3524;
+  const scrollRef = useRef(null);
+  const sectionRefs = useRef([]);
+  const [activeSection, setActiveSection] = useState(0);
+
+  useLayoutEffect(() => {
+    const scroll = scrollRef.current;
+    const sectionTops = sectionRefs.current.map((section) => section.offsetTop * scale);
+    let previousActive = -1;
+    const updateNavigation = () => {
+      let active = 0;
+      sectionTops.forEach((top, index) => { if (top <= scroll.scrollTop + 37) active = index; });
+      if (active !== previousActive) {
+        previousActive = active;
+        setActiveSection(active);
+      }
+    };
+    updateNavigation();
+    scroll.addEventListener('scroll', updateNavigation, { passive: true });
+    return () => scroll.removeEventListener('scroll', updateNavigation);
+  }, [scale]);
+
+  const scrollToSection = (index) => {
+    const section = sectionRefs.current[index];
+    if (!section) return;
+    scrollRef.current.scrollTo({
+      top: section.offsetTop * scale - 36,
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',
+    });
+  };
   const directionRows = [
     ['定位', '轻体验城市探索', '成长型实验记录', '……'],
     ['一句话简介', '出行不只有打卡，更有节奏、体感和情绪设计。', '记录一个“三分钟热度”，如何收获每一次实践的快乐与收获。', '……'],
@@ -2118,13 +2273,14 @@ function ExploreSecondPage({ onClose }) {
 
   return <section className="project-modal explore-second-page" aria-label="个人探索2-1">
     <ProjectCloseButton onClose={onClose} />
-    <div className="brand-page-scroll explore-second-scroll"><div className="brand-page-viewport" style={{ height: px(totalHeight * scale) }}><div className="brand-page-frame explore-second-frame" style={{ transform: `translateX(-50%) scale(${scale})`, height: totalHeight }}>
+    <div className="brand-page-scroll explore-second-scroll" ref={scrollRef}><div className="brand-page-viewport" style={{ height: px(totalHeight * scale) }}><div className="brand-page-frame explore-second-frame" style={{ transform: `translateX(-50%) scale(${scale})`, height: totalHeight }}>
       <BrandImage name="xhs-top-bg" src={assets.xhsTopBg} style={{ left: 0, top: 0, width: 1280, height: 526 }} />
       <TextLayer name="0-1起号方法论" className="xhs-hero-title" style={{ left: 112, top: 235 }}>0-1起号方法论</TextLayer>
-      <section className="xhs-section xhs-section-b"><XhsNav active={0} /><BrandImage name="prompt11" src={assets.xhsPrompt11} style={{ left: 245.09, top: 0, width: 914.74, height: 216 }} /><div className="xhs-down">……</div><img className="xhs-big-down" src={assets.iconDown} alt="" /><XhsTable className="xhs-direction-table" headers={['方向一', '方向二', '方向三']} rows={directionRows} /></section>
-      <section className="xhs-section xhs-section-c"><XhsNav active={1} /><XhsTable className="xhs-blogger-table" firstHeader="博主账号" headers={['@木木花下班后', '@罗OK不想上班', '@凑活活']} rows={bloggerRows} /></section>
-      <section className="xhs-section xhs-section-d"><XhsNav active={2} /><XhsTable className="xhs-content-table" firstHeader="体验生活" headers={['吃喝探店', '自我成长']} rows={contentRows} /></section>
-      <section className="xhs-section xhs-section-e"><XhsNav active={3} /><div className="xhs-placeholder-column" /><div className="xhs-placeholder-column" /><div className="xhs-placeholder-column" /></section>
+      <div className="xhs-nav-track"><XhsNav active={activeSection} onSelect={scrollToSection} /></div>
+      <section id="xhs-section-b" className="xhs-section xhs-section-b" ref={(node) => { sectionRefs.current[0] = node; }}><BrandImage name="prompt11" src={assets.xhsPrompt11} style={{ left: 245.09, top: 0, width: 914.74, height: 216 }} /><div className="xhs-down">……</div><img className="xhs-big-down" src={assets.iconDown} alt="" /><XhsTable className="xhs-direction-table" headers={['方向一', '方向二', '方向三']} rows={directionRows} /></section>
+      <section id="xhs-section-c" className="xhs-section xhs-section-c" ref={(node) => { sectionRefs.current[1] = node; }}><XhsTable className="xhs-blogger-table" firstHeader="博主账号" headers={['@木木花下班后', '@罗OK不想上班', '@凑活活']} rows={bloggerRows} /></section>
+      <section id="xhs-section-d" className="xhs-section xhs-section-d" ref={(node) => { sectionRefs.current[2] = node; }}><XhsTable className="xhs-content-table" firstHeader="体验生活" headers={['吃喝探店', '自我成长']} rows={contentRows} /></section>
+      <section id="xhs-section-e" className="xhs-section xhs-section-e" ref={(node) => { sectionRefs.current[3] = node; }}><div className="xhs-placeholder-column" /><div className="xhs-placeholder-column" /><div className="xhs-placeholder-column" /></section>
     </div></div></div>
   </section>;
 }
@@ -2420,6 +2576,8 @@ function UxUiSecondPage({ onClose }) {
 }
 
 function App() {
+  const [homeResourcesReady, setHomeResourcesReady] = useState(false);
+  const [loadingComplete, setLoadingComplete] = useState(false);
   const [language, setLanguage] = useState(() => {
     try { return localStorage.getItem('portfolio-language') === 'en' ? 'en' : 'zh'; }
     catch { return 'zh'; }
@@ -2432,6 +2590,12 @@ function App() {
   const [isUxUiSecondOpen, setIsUxUiSecondOpen] = useState(false);
   const [isExploreSecondOpen, setIsExploreSecondOpen] = useState(false);
   const [isExploreWaterfallOpen, setIsExploreWaterfallOpen] = useState(false);
+
+  useEffect(() => {
+    if (!loadingComplete) return undefined;
+    const frame = requestAnimationFrame(() => ScrollTrigger.refresh());
+    return () => cancelAnimationFrame(frame);
+  }, [loadingComplete]);
 
   useEffect(() => {
     document.documentElement.lang = language === 'en' ? 'en' : 'zh-CN';
@@ -2459,6 +2623,7 @@ function App() {
   );
 
   const openAiOperationProject = () => {
+    preloadProject('ai');
     setIsAiOperationPageOpen(true);
   };
 
@@ -2468,17 +2633,19 @@ function App() {
 
   return (
     <LanguageContext.Provider value={{ language, toggleLanguage: () => setLanguage((value) => value === 'zh' ? 'en' : 'zh') }}>
-    <main>
+    {!loadingComplete ? <LoadingScreen images={homeLoadingImages} onReady={setHomeResourcesReady} onComplete={setLoadingComplete} /> : null}
+    <main data-loading={!homeResourcesReady} inert={!loadingComplete}>
       <CustomCursor />
       <PrimaryTextContext.Provider value={language === 'en'}>
       {pages.map((Page, index) => (
         <Page
           key={Page.name || pageMap[index].id}
+          ready={loadingComplete}
           onOpenProject={openAiOperationProject}
-          onOpenFolder={() => setIsAiOperationFolderOpen(true)}
-          onOpenUxUiSecond={() => setIsUxUiSecondOpen(true)}
-          onOpenExploreSecond={() => setIsExploreSecondOpen(true)}
-          onOpenExploreWaterfall={() => setIsExploreWaterfallOpen(true)}
+          onOpenFolder={() => { preloadProject('folder'); setIsAiOperationFolderOpen(true); }}
+          onOpenUxUiSecond={() => { preloadProject('ux'); setIsUxUiSecondOpen(true); }}
+          onOpenExploreSecond={() => { preloadProject('notes'); setIsExploreSecondOpen(true); }}
+          onOpenExploreWaterfall={() => { preloadProject('photography'); setIsExploreWaterfallOpen(true); }}
         />
       ))}
       </PrimaryTextContext.Provider>
@@ -2486,9 +2653,9 @@ function App() {
       {isAiOperationFolderOpen ? (
         <AiOperationFolderPage
           onClose={() => setIsAiOperationFolderOpen(false)}
-          onOpenBrand={() => setIsAiOperationBrandOpen(true)}
-          onOpenPoster={() => setIsAiOperationPosterOpen(true)}
-          onOpenCoffee={() => setIsAiOperationCoffeeOpen(true)}
+          onOpenBrand={() => { preloadProject('brand'); setIsAiOperationBrandOpen(true); }}
+          onOpenPoster={() => { preloadProject('poster'); setIsAiOperationPosterOpen(true); }}
+          onOpenCoffee={() => { preloadProject('coffee'); setIsAiOperationCoffeeOpen(true); }}
         />
       ) : null}
       {isAiOperationBrandOpen ? <BrandOperationPage onClose={() => setIsAiOperationBrandOpen(false)} /> : null}
