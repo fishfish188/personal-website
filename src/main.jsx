@@ -1231,20 +1231,11 @@ function ModalText({ name, className = '', style, children }) {
   );
 }
 
-function ModalCanvas({ children, fitViewport = false }) {
-  const canvasScale = useCanvasScale();
-  const [fitScale, setFitScale] = useState(1);
-  useLayoutEffect(() => {
-    if (!fitViewport) return undefined;
-    const updateScale = () => setFitScale(Math.min(1, window.innerWidth / 1280, window.innerHeight / 717));
-    updateScale();
-    window.addEventListener('resize', updateScale);
-    return () => window.removeEventListener('resize', updateScale);
-  }, [fitViewport]);
-  const scale = fitViewport ? fitScale : canvasScale;
+function ModalCanvas({ children }) {
+  const scale = useCanvasScale();
 
   return (
-    <div className="project-modal-canvas" style={{ width: fitViewport ? px(1280 * scale) : undefined, height: px(717 * scale) }}>
+    <div className="project-modal-canvas" style={{ height: px(717 * scale) }}>
       <div className="project-modal-frame" style={{ transform: `translateX(-50%) scale(${scale})` }}>
         {children}
       </div>
@@ -1318,7 +1309,7 @@ function AiOperationProjectCanvas({ onPreview }) {
   const demoScale = 236 / demoResources.ai.width;
   const [demoLoaded, setDemoLoaded] = useState(false);
   return (
-    <ModalCanvas fitViewport>
+    <ModalCanvas>
       <ModalImage name="ai-computer" src={assets.aiComputer} style={{ left: -146, top: -226, width: 385, height: 412 }} />
       <ModalImage name="notebook" src={assets.notebook} style={{ left: -85, top: 541, width: 300, height: 203 }} />
       <div className="modal-layer vibe-coding" data-layer="vibe-coding">

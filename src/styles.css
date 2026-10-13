@@ -1579,12 +1579,6 @@ html[data-language="en"] .frame-shell .skill > .text-layer[style*="font-size: 18
   background: var(--paper);
 }
 
-.spa-project-page.ai-operation-project-page {
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-}
-
 .spa-project-page.brand-operation-page {
   background: #fbfbf9 !important;
 }
