@@ -4,7 +4,6 @@ import { createPortal } from 'react-dom';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './styles.css';
-import peopleMotionStill from './people-motion-still.png';
 import resumePdf from './resume-operations.pdf';
 import PaperStack from './PaperStack';
 import ProjectImagePreview from './ProjectImagePreview';
@@ -50,13 +49,13 @@ const assets = {
   point2: `${CDN}/point2.svg`,
   point3: `${CDN}/point3.svg`,
   point4: `${CDN}/point4.svg`,
-  iphone: `${CDN}/iphone.png`,
+  iphone: `${CDN}/iphone.webp`,
   iphone2: `${CDN}/iphone2.png`,
   keyboard: `${CDN}/keyboard.webp`,
   leave: `${CDN}/leave.png`,
   message: `${CDN}/message.png`,
   notebook: `${CDN}/notebook.png`,
-  paper: `${CDN}/paper.png`,
+  paper: `${CDN}/paper.webp`,
   paper2: `${CDN}/paper2.webp`,
   penCup: `${CDN}/pen-cup.png`,
   beautyThumbnail: `${CDN}/beatuy-thumbnail.webp`,
@@ -794,7 +793,6 @@ function DeskObjectLayers({ onOpenProject, onOpenFolder }) {
 }
 
 function AboutTailTemporaryContent() {
-  const [playing, setPlaying] = useState(false);
   return (
     <div className="about-tail-temporary-content" data-layer="about-tail-temporary-content">
       <svg width="0" height="0" aria-hidden="true">
@@ -805,7 +803,7 @@ function AboutTailTemporaryContent() {
           </filter>
         </defs>
       </svg>
-      <ImageLayer name="people-motion" src={playing ? assets.peopleMotion : peopleMotionStill} style={{ left: 22, top: 31, width: 560, height: 560, pointerEvents: 'auto' }} onMouseEnter={() => { imagePreloader.preload([assets.peopleMotion], { priority: true }); setPlaying(true); }} onMouseLeave={() => setPlaying(false)} />
+      <ImageLayer name="people-motion" src={assets.peopleMotion} style={{ left: 22, top: 31, width: 560, height: 560 }} />
       <ImageLayer name="word-cloud" src={assets.wordCloud} style={{ left: 281, top: 65, width: 357, height: 193, filter: 'url(#about-word-cloud-turbulence)' }} />
       <Layer name="detail" className="about-frame-detail" style={{ left: 648, top: -262, width: 545, height: 957 }}>
         <Layer name="introduction" className="about-detail-section" style={{ left: 0, top: 0, width: 530, height: 81 }}>
@@ -1317,24 +1315,15 @@ function PainPointTwoPaper(props) {
 }
 
 function AiOperationProjectCanvas({ onPreview }) {
-  const demoScale = 234 / demoResources.ai.width;
+  const demoScale = 236 / demoResources.ai.width;
   const [demoLoaded, setDemoLoaded] = useState(false);
-  const [demoScrollbarWidth, setDemoScrollbarWidth] = useState(0);
-  useLayoutEffect(() => {
-    // Cross-origin content cannot be styled here; clip only its native scrollbar gutter.
-    const probe = document.createElement('div');
-    probe.style.cssText = 'position:absolute;visibility:hidden;width:100px;height:100px;overflow:scroll;';
-    document.body.appendChild(probe);
-    setDemoScrollbarWidth(probe.offsetWidth - probe.clientWidth || 16);
-    probe.remove();
-  }, []);
   return (
     <ModalCanvas fitViewport>
       <ModalImage name="ai-computer" src={assets.aiComputer} style={{ left: -146, top: -226, width: 385, height: 412 }} />
       <ModalImage name="notebook" src={assets.notebook} style={{ left: -85, top: 541, width: 300, height: 203 }} />
       <div className="modal-layer vibe-coding" data-layer="vibe-coding">
-        <div className="modal-layer interest-demo-screen" data-layer="html" style={{ left: 215, top: 100, width: 234, height: 513, overflow: 'hidden', zIndex: 1 }}>
-          <iframe className="interest-demo-preview" src={demoResources.ai.src} title="兴趣探索 Demo" onLoad={() => setDemoLoaded(true)} style={{ display: 'block', width: demoResources.ai.width + demoScrollbarWidth, height: 513 / demoScale, border: 0, transform: `scale(${demoScale})`, transformOrigin: 'top left', opacity: demoLoaded ? 1 : 0 }} />
+        <div className="modal-layer interest-demo-screen" data-layer="html" style={{ left: 214, top: 100, width: 236, height: 513, overflow: 'hidden', zIndex: 1 }}>
+          <iframe className="interest-demo-preview" src={demoResources.ai.src} title="兴趣探索 Demo" onLoad={() => setDemoLoaded(true)} style={{ display: 'block', width: demoResources.ai.width, height: 513 / demoScale, border: 0, transform: `scale(${demoScale})`, transformOrigin: 'top left', opacity: demoLoaded ? 1 : 0 }} />
         </div>
         <ModalImage name="iphone" src={assets.iphone2} style={{ left: 190, top: 79, width: 284, height: 560, zIndex: 2, pointerEvents: 'none' }} />
         <div className="modal-layer paper-deck" data-layer="paper-deck">
