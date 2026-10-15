@@ -2642,6 +2642,38 @@ html[data-language="en"] .frame-shell .skill > .text-layer[style*="font-size: 18
 
 .coffee-page-frame {
   color: #284051;
+  overflow: clip;
+}
+
+.coffee-scene-stack {
+  position: absolute;
+  left: 0;
+  top: 4282px;
+  width: 1280px;
+}
+
+.coffee-scene-section {
+  position: sticky;
+  top: calc(var(--coffee-viewport-height, 100vh) - var(--coffee-scene-height));
+  width: 1280px;
+  overflow: hidden;
+  background: #fffbf6;
+}
+
+.coffee-section-h {
+  position: relative;
+  top: 0;
+}
+
+.coffee-scene-content {
+  position: absolute;
+  inset: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .coffee-scene-section:not(.coffee-section-h) > .coffee-scene-content {
+    will-change: transform;
+  }
 }
 
 .coffee-section-a,
@@ -4031,7 +4063,6 @@ html .project-image-preview .project-image-preview-content[data-dragging] { curs
   width: 159px;
   box-sizing: border-box;
   border-radius: 4px;
-  background: #fff;
 }
 
 .personal-waterfall-card img {

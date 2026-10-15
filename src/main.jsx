@@ -2390,12 +2390,58 @@ function CoffeeStepCard({ className, title, children }) {
 
 function CoffeeBrandOperationPage({ onClose }) {
   const scale = useCanvasScale();
-  const totalHeight = 9645;
+  const scrollRef = useRef(null);
+  const holdDistance = 200;
+  let totalHeight = 4282;
+  const sceneLayout = [
+    ['D', 'coffeescene2', assets.coffeeScene2, 717],
+    ['E', 'coffeescene3', assets.coffeeScene3, 1606],
+    ['F', 'coffeescene4', assets.coffeeScene4, 1606],
+    ['G', 'coffeescene5', assets.coffeeScene5, 717],
+    ['H', 'coffeescene6', assets.coffeeScene6, 717],
+  ].map(([section, name, src, height], index) => {
+    const top = totalHeight;
+    totalHeight += height + (index < 4 ? holdDistance : 0);
+    return { section, name, src, height, top };
+  });
+
+  useLayoutEffect(() => {
+    const scroller = scrollRef.current;
+    const updateViewport = () => scroller.style.setProperty('--coffee-viewport-height', px(scroller.clientHeight / scale));
+    updateViewport();
+    const observer = new ResizeObserver(updateViewport);
+    observer.observe(scroller);
+    const media = gsap.matchMedia();
+    media.add('(prefers-reduced-motion: no-preference)', () => {
+      const scenes = [...scroller.querySelectorAll('.coffee-scene-section')];
+      scenes.slice(0, -1).forEach((scene, index) => {
+        const nextTop = Number(scenes[index + 1].dataset.scrollTop) * scale;
+        // Native sticky holds the section; the image alone gets a small, immediate drift.
+        gsap.to(scene.querySelector('.coffee-scene-content'), {
+          y: -48,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: scroller.querySelector('.coffee-page-frame'),
+            scroller,
+            start: () => nextTop - scroller.clientHeight,
+            end: nextTop,
+            scrub: true,
+            invalidateOnRefresh: true,
+          },
+        });
+      });
+    });
+    return () => {
+      observer.disconnect();
+      media.revert();
+      scroller.style.removeProperty('--coffee-viewport-height');
+    };
+  }, [scale]);
 
   return (
     <section className="spa-project-page coffee-operation-page" data-frame="AI/运营3-3" aria-label="AI/运营3-3">
       <ProjectCloseButton onClose={onClose} />
-      <div className="brand-page-scroll coffee-page-scroll">
+      <div className="brand-page-scroll coffee-page-scroll" ref={scrollRef}>
         <div className="brand-page-viewport coffee-page-viewport" style={{ height: px(totalHeight * scale) }}>
           <div className="brand-page-frame coffee-page-frame" style={{ transform: `translateX(-50%) scale(${scale})`, height: totalHeight }}>
             <BrandImage name="brand-top-bg" src={assets.brandTopBg} style={{ left: 0, top: 0, width: 1280, height: 717 }} />
@@ -2449,11 +2495,19 @@ function CoffeeBrandOperationPage({ onClose }) {
               <BrandImage name="bag" src={assets.coffeeBag} style={{ left: 723, top: 709, width: 351.75, height: 497 }} />
             </section>
 
-            {[
-              ['coffeescene2', assets.coffeeScene2, 4282, 717], ['coffeescene3', assets.coffeeScene3, 4999, 1606],
-              ['coffeescene4', assets.coffeeScene4, 6605, 1606], ['coffeescene5', assets.coffeeScene5, 8211, 717], ['coffeescene6', assets.coffeeScene6, 8928, 717],
-            ].map(([name, src, top, height]) => <BrandImage key={name} name={name} src={src} style={{ left: 0, top, width: 1280, height }} />)}
-            <div className="coffee-scene-label" style={{ top: 4322 }}><img src={assets.iconRight} alt="" />场景应用</div>
+            <div className="coffee-scene-stack">
+              {sceneLayout.map(({ section, name, src, height, top }, index) => (
+                <React.Fragment key={name}>
+                  <section className={`coffee-scene-section coffee-section-${section.toLowerCase()}`} data-layer={`section${section}`} data-scroll-top={top} aria-label={`场景应用 ${section}`} style={{ height, '--coffee-scene-height': px(height), zIndex: index + 1 }}>
+                    <div className="coffee-scene-content">
+                      <BrandImage name={name} src={src} style={{ left: 0, top: 0, width: 1280, height }} />
+                      {index === 0 ? <div className="coffee-scene-label" style={{ top: 40 }}><img src={assets.iconRight} alt="" />场景应用</div> : null}
+                    </div>
+                  </section>
+                  {index < sceneLayout.length - 1 ? <div aria-hidden="true" style={{ height: holdDistance }} /> : null}
+                </React.Fragment>
+              ))}
+            </div>
           </div>
         </div>
       </div>
