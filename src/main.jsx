@@ -103,6 +103,9 @@ const assets = {
   uxPrompt9: `${CDN}/prompt9.png`,
   uxPrompt10: `${CDN}/prompt10.png`,
   xhsPrompt11: `${CDN}/prompt11.png`,
+  xhsNote1: `${CDN}/note1.jpg`,
+  xhsNote2: `${CDN}/note2.jpg`,
+  xhsNote3: `${CDN}/note3.jpg`,
   uxPsEdit: `${CDN}/ps-edit.jpg`,
   uxStandee: `${CDN}/standee.jpg`,
   uxStoreScene: `${CDN}/store-scene.jpg`,
@@ -160,6 +163,9 @@ const assets = {
   photoThumbnail1: `${CDN}/photo-thumbnail1.png`,
   photoThumbnail2: `${CDN}/photo-thumbnail2.png`,
   photoThumbnail3: `${CDN}/photo-thumbnail3.png`,
+  xhsThumbnail1: `${CDN}/xhs-thumbnail1.png`,
+  xhsThumbnail2: `${CDN}/xhs-thumbnail2.png`,
+  xhsThumbnail3: `${CDN}/xhs-thumbnail3.png`,
   waterfall1_1: `${CDN}/waterfall1-1.jpg`,
   waterfall1_2: `${CDN}/waterfall1-2.jpg`,
   waterfall1_3: `${CDN}/waterfall1-3.jpg`,
@@ -1156,7 +1162,7 @@ function TransitionAboutAi({ ready, onOpenProject, onOpenFolder, onOpenUxUiSecon
             <TextLayer name="title-个人探索" className="window-title" style={{ left: 329, top: 136 }}>
               个人探索
             </TextLayer>
-            <Folder name="small-folder1" style={{ left: 329, top: 242 }} label="账号笔记" onClick={onOpenExploreSecond} />
+            <Folder name="small-folder1" style={{ left: 329, top: 242 }} label="账号笔记" onClick={onOpenExploreSecond} interactiveOpen />
             <Folder name="small-folder2" style={{ left: 580, top: 242 }} label="摄影随拍" onClick={onOpenExploreWaterfall} interactiveOpen />
           </BrowserWindowFrame>
           <Layer name="project1" className="ux-explore-project project1" style={{ left: 95, top: 148 }} {...projectIntent('ux')} onClick={onOpenUxUiSecond} role="button" tabIndex={0} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') onOpenUxUiSecond?.(); }}>
@@ -2074,21 +2080,23 @@ function BrowserWindowFrame({ className = '', style, children }) {
 }
 
 function Folder({ name, style, label, onClick, interactiveOpen = false }) {
-  const isFolder2 = name === 'small-folder2' && interactiveOpen;
+  const thumbnailPrefix = name.includes('2') ? 'photo' : 'xhs';
   const src = name.includes('2') ? assets.smallFolder2 : assets.smallFolder1;
 
   return (
-    <Layer name={name} className={`small-folder ${isFolder2 ? 'small-folder2-interactive' : ''}`} style={style} {...(onClick ? projectIntent(name.includes('2') ? 'photography' : 'notes') : {})} onClick={onClick} role={onClick ? 'button' : undefined} tabIndex={onClick ? 0 : undefined} onKeyDown={onClick ? (event) => { if (event.key === 'Enter' || event.key === ' ') onClick(); } : undefined}>
-      <ImageLayer name={name} className={isFolder2 ? 'small-folder2-default' : ''} src={src} style={{ left: 0, top: 0, width: 155, height: 126.5 }} />
-      {isFolder2 ? (
+    <Layer name={name} className={`small-folder ${interactiveOpen ? 'small-folder2-interactive' : ''}`} style={style} {...(onClick ? projectIntent(name.includes('2') ? 'photography' : 'notes') : {})} onClick={onClick} role={onClick ? 'button' : undefined} tabIndex={onClick ? 0 : undefined} onKeyDown={onClick ? (event) => { if (event.key === 'Enter' || event.key === ' ') onClick(); } : undefined}>
+      <ImageLayer name={name} className={interactiveOpen ? 'small-folder2-default' : ''} src={src} style={{ left: 0, top: 0, width: 155, height: 126.5 }} />
+      {interactiveOpen ? (
         <>
-          <ImageLayer name="small-folder2-front" className="small-folder2-open-front" src={assets.smallFolder2Front} />
+          <ImageLayer name={`${name}-front`} className="small-folder2-open-front" src={assets.smallFolder2Front} />
           <div className="small-folder2-photo-stack">
-            <ImageLayer name="photo-thumbnail1" className="small-folder2-photo photo-thumbnail1" src={assets.photoThumbnail1} />
-            <ImageLayer name="photo-thumbnail2" className="small-folder2-photo photo-thumbnail2" src={assets.photoThumbnail2} />
-            <ImageLayer name="photo-thumbnail3" className="small-folder2-photo photo-thumbnail3" src={assets.photoThumbnail3} />
+            {[1, 2, 3].map((index) => thumbnailPrefix === 'xhs' && index === 2 ? (
+              <Layer key={index} name="xhs-thumbnail2" className="small-folder2-photo photo-thumbnail2 xhs-thumbnail2-crop">
+                <ImageLayer name="xhs-thumbnail2-image" src={assets.xhsThumbnail2} style={{ left: -4, top: -4, width: 98, height: 128 }} />
+              </Layer>
+            ) : <ImageLayer key={index} name={`${thumbnailPrefix}-thumbnail${index}`} className={`small-folder2-photo photo-thumbnail${index}`} src={assets[`${thumbnailPrefix}Thumbnail${index}`]} />)}
           </div>
-          <ImageLayer name="small-folder2-back" className="small-folder2-open-back" src={assets.smallFolder2Back} />
+          <ImageLayer name={`${name}-back`} className="small-folder2-open-back" src={assets.smallFolder2Back} />
         </>
       ) : null}
       {label ? <TextLayer name={label} className="folder-label">{label}</TextLayer> : null}
@@ -2179,7 +2187,7 @@ function Explore({ onOpenExploreSecond }) {
     <DesignFrame id="explore" frameName="个人探索">
       <FullComputer variant="explore" style={{ left: -225, top: -94, width: 1730, height: 1115 }} />
       <BrowserWindowFrame style={{ left: 32, top: 36 }}>
-        <Folder name="small-folder1" style={{ left: 329, top: 242 }} label="账号笔记" onClick={onOpenExploreSecond} />
+        <Folder name="small-folder1" style={{ left: 329, top: 242 }} label="账号笔记" onClick={onOpenExploreSecond} interactiveOpen />
         <TextLayer name="title-个人探索" className="window-title" style={{ left: 329, top: 136 }}>
           个人探索
         </TextLayer>
@@ -2260,7 +2268,11 @@ function ExploreSecondPage({ onClose }) {
       <section id="xhs-section-b" className="xhs-section xhs-section-b" ref={(node) => { sectionRefs.current[0] = node; }}><BrandImage name="prompt11" src={assets.xhsPrompt11} style={{ left: 245.09, top: 0, width: 914.74, height: 216 }} /><div className="xhs-down">……</div><img className="xhs-big-down" src={assets.iconDown} alt="" /><XhsTable className="xhs-direction-table" headers={['方向一', '方向二', '方向三']} rows={directionRows} /></section>
       <section id="xhs-section-c" className="xhs-section xhs-section-c" ref={(node) => { sectionRefs.current[1] = node; }}><XhsTable className="xhs-blogger-table" firstHeader="博主账号" headers={['@木木花下班后', '@罗OK不想上班', '@凑活活']} rows={bloggerRows} /></section>
       <section id="xhs-section-d" className="xhs-section xhs-section-d" ref={(node) => { sectionRefs.current[2] = node; }}><XhsTable className="xhs-content-table" firstHeader="体验生活" headers={['吃喝探店', '自我成长']} rows={contentRows} /></section>
-      <section id="xhs-section-e" className="xhs-section xhs-section-e" ref={(node) => { sectionRefs.current[3] = node; }}><div className="xhs-placeholder-column" /><div className="xhs-placeholder-column" /><div className="xhs-placeholder-column" /></section>
+      <section id="xhs-section-e" className="xhs-section xhs-section-e" ref={(node) => { sectionRefs.current[3] = node; }}>
+        <BrandImage name="note1" src={assets.xhsNote1} style={{ left: 244, top: 0, width: 292, height: 635 }} />
+        <BrandImage name="note2" src={assets.xhsNote2} style={{ left: 556, top: 0, width: 292, height: 635 }} />
+        <BrandImage name="note3" src={assets.xhsNote3} style={{ left: 868, top: 0, width: 292, height: 635 }} />
+      </section>
     </div></div></div>
   </section>;
 }
