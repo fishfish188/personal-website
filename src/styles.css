@@ -1368,10 +1368,6 @@ html[data-language="en"] .frame-shell .skill > .text-layer[style*="font-size: 18
   transform: translateY(80px);
 }
 
-.xhs-thumbnail2-crop {
-  overflow: hidden;
-}
-
 .photo-thumbnail3 {
   z-index: 1;
   width: 126px;

@@ -2090,11 +2090,7 @@ function Folder({ name, style, label, onClick, interactiveOpen = false }) {
         <>
           <ImageLayer name={`${name}-front`} className="small-folder2-open-front" src={assets.smallFolder2Front} />
           <div className="small-folder2-photo-stack">
-            {[1, 2, 3].map((index) => thumbnailPrefix === 'xhs' && index === 2 ? (
-              <Layer key={index} name="xhs-thumbnail2" className="small-folder2-photo photo-thumbnail2 xhs-thumbnail2-crop">
-                <ImageLayer name="xhs-thumbnail2-image" src={assets.xhsThumbnail2} style={{ left: -4, top: -4, width: 98, height: 128 }} />
-              </Layer>
-            ) : <ImageLayer key={index} name={`${thumbnailPrefix}-thumbnail${index}`} className={`small-folder2-photo photo-thumbnail${index}`} src={assets[`${thumbnailPrefix}Thumbnail${index}`]} />)}
+            {[1, 2, 3].map((index) => <ImageLayer key={index} name={`${thumbnailPrefix}-thumbnail${index}`} className={`small-folder2-photo photo-thumbnail${index}`} src={assets[`${thumbnailPrefix}Thumbnail${index}`]} />)}
           </div>
           <ImageLayer name={`${name}-back`} className="small-folder2-open-back" src={assets.smallFolder2Back} />
         </>
