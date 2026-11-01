@@ -1,14 +1,8 @@
-import React, { createContext, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { createPortal } from 'react-dom';
-import { gsap } from 'gsap';
+import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './styles.css';
-import resumePdf from './resume-operations.pdf';
-import PaperStack from './PaperStack';
-import ProjectImagePreview from './ProjectImagePreview';
-import LoadingScreen from './LoadingScreen';
-import { createDemoPreloader, createImagePreloader, demoResources, primaryResourceStages, stagesToPreload } from './resourcePreloading';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -18,18 +12,18 @@ const assets = {
   arrow1: `${CDN}/arrow1.svg`,
   arrow2: `${CDN}/arrow2.svg`,
   arrow3: `${CDN}/arrow3.svg`,
-  bgHome: `${CDN}/bg-home.webp`,
+  bgHome: `${CDN}/bg-home.png`,
   bgRectangle: `${CDN}/BG-rectangle.png`,
   aiComputer: `${CDN}/ai-computer.png`,
   coffee: `${CDN}/coffee.png`,
-  computerScreen: `${CDN}/computer-screen.webp`,
+  computerScreen: `${CDN}/computer-screen.png`,
   flow: `${CDN}/flow.png`,
   folder: `${CDN}/folder.png`,
-  folder1: `${CDN}/folder1.webp`,
-  folderPage2: `${CDN}/folder-page2.webp`,
-  folderPage3: `${CDN}/folder-page3.webp`,
-  folderPage4: `${CDN}/folder-page4.webp`,
-  folderPage5: `${CDN}/folder-page5.webp`,
+  folder1: `${CDN}/folder1.png`,
+  folderPage2: `${CDN}/folder-page2.png`,
+  folderPage3: `${CDN}/folder-page3.png`,
+  folderPage4: `${CDN}/folder-page4.png`,
+  folderPage5: `${CDN}/folder-page5.png`,
   iconClose: `${CDN}/icon-close.svg`,
   iconRight: `${CDN}/icon-right.svg`,
   iconDown: `${CDN}/icon-down.svg`,
@@ -49,28 +43,28 @@ const assets = {
   point2: `${CDN}/point2.svg`,
   point3: `${CDN}/point3.svg`,
   point4: `${CDN}/point4.svg`,
-  iphone: `${CDN}/iphone.webp`,
+  iphone: `${CDN}/iphone.png`,
   iphone2: `${CDN}/iphone2.png`,
-  keyboard: `${CDN}/keyboard.webp`,
+  keyboard: `${CDN}/keyboard.png`,
   leave: `${CDN}/leave.png`,
   message: `${CDN}/message.png`,
   notebook: `${CDN}/notebook.png`,
-  paper: `${CDN}/paper.webp`,
-  paper2: `${CDN}/paper2.webp`,
+  paper: `${CDN}/paper.png`,
+  paper2: `${CDN}/paper2.png`,
   penCup: `${CDN}/pen-cup.png`,
-  beautyThumbnail: `${CDN}/beatuy-thumbnail.webp`,
-  posterThumbnail1: `${CDN}/poster-thumbnail1.webp`,
-  posterThumbnail2: `${CDN}/poster-thumbnail2.webp`,
-  brandThumbnail: `${CDN}/brand-thumbnail.webp`,
-  ipThumbnail: `${CDN}/IP-thumbnail.webp`,
+  beautyThumbnail: `${CDN}/beatuy-thumbnail.png`,
+  posterThumbnail1: `${CDN}/poster-thumbnail1.png`,
+  posterThumbnail2: `${CDN}/poster-thumbnail2.png`,
+  brandThumbnail: `${CDN}/brand-thumbnail.png`,
+  ipThumbnail: `${CDN}/IP-thumbnail.png`,
   chart: `${CDN}/chart.png`,
-  userJourney: `${CDN}/user-journey.png`,
+  userJourney: `${CDN}/user%20journey.png`,
   prd: `${CDN}/prd.png`,
   wireframe: `${CDN}/wireframe.png`,
   design: `${CDN}/design.png`,
   demo: `${CDN}/demo.png`,
-  beautyTopBg: `${CDN}/beauty-top-bg.webp`,
-  brandTopBg: `${CDN}/brand-top-bg.webp`,
+  brandTopBg: `${CDN}/brand-top-bg.png`,
+  coffeeBrandTopBg: `${CDN}/brand-top-bg.gif`,
   coffeeBag: `${CDN}/bag.png`,
   coffeePaper: `${CDN}/brand-paper.jpg`,
   coffeeCup: `${CDN}/cup.png`,
@@ -103,9 +97,6 @@ const assets = {
   uxPrompt9: `${CDN}/prompt9.png`,
   uxPrompt10: `${CDN}/prompt10.png`,
   xhsPrompt11: `${CDN}/prompt11.png`,
-  xhsNote1: `${CDN}/note1.jpg`,
-  xhsNote2: `${CDN}/note2.jpg`,
-  xhsNote3: `${CDN}/note3.jpg`,
   uxPsEdit: `${CDN}/ps-edit.jpg`,
   uxStandee: `${CDN}/standee.jpg`,
   uxStoreScene: `${CDN}/store-scene.jpg`,
@@ -163,9 +154,6 @@ const assets = {
   photoThumbnail1: `${CDN}/photo-thumbnail1.png`,
   photoThumbnail2: `${CDN}/photo-thumbnail2.png`,
   photoThumbnail3: `${CDN}/photo-thumbnail3.png`,
-  xhsThumbnail1: `${CDN}/xhs-thumbnail1.png`,
-  xhsThumbnail2: `${CDN}/xhs-thumbnail2.png`,
-  xhsThumbnail3: `${CDN}/xhs-thumbnail3.png`,
   waterfall1_1: `${CDN}/waterfall1-1.jpg`,
   waterfall1_2: `${CDN}/waterfall1-2.jpg`,
   waterfall1_3: `${CDN}/waterfall1-3.jpg`,
@@ -198,7 +186,7 @@ const assets = {
   waterfall7_4: `${CDN}/waterfall7-4.jpg`,
   waterfall7_5: `${CDN}/waterfall7-5.jpg`,
   window: `${CDN}/window.png`,
-  posterTopBg: `${CDN}/poster-top-bg.webp`,
+  posterTopBg: `${CDN}/poster-top-bg.jpg`,
   xhsTopBg: `${CDN}/xhs-top-bg.jpg`,
   watermelon1_1: `${CDN}/watermelon1-1.jpg`,
   watermelon1_2: `${CDN}/watermelon1-2.jpg`,
@@ -221,94 +209,18 @@ const assets = {
   posterFishing: `${CDN}/fishing.jpg`,
   posterFoodmap: `${CDN}/foodmap.jpg`,
   posterMusic: `${CDN}/music.jpg`,
-  watermelonGif: `${CDN}/watermelon.webp`,
-  colaGif: `${CDN}/cola.webp`,
-  chairGif: `${CDN}/chair.webp`,
-  flowerGif: `${CDN}/flower.webp`,
-  cityFoodGif: `${CDN}/city-food.webp`,
+  watermelonGif: `${CDN}/watermelon%20gif.gif`,
+  colaGif: `${CDN}/cola%20gif.gif`,
+  chairGif: `${CDN}/chair%20gif.gif`,
+  flowerGif: `${CDN}/flower%20gif.gif`,
+  cityFoodGif: `${CDN}/cityfood%20gif.gif`,
   arrow4: `${CDN}/arrow4.svg`,
   arrow5: `${CDN}/arrow5.svg`,
-  arrow6: `${CDN}/arrow6.svg`,
   wordCloud: `${CDN}/word-cloud.png`,
   peopleMotion: `${CDN}/people-motion.gif`,
 };
 
 const navItems = ['首页', '关于我', 'AI/运营', 'UX/UI', '个人探索', '联系我'];
-const homeLoadingImages = [assets.bgHome, assets.bgRectangle, assets.computerScreen, assets.keyboard];
-const imagePreloader = createImagePreloader();
-const demoPreloader = createDemoPreloader();
-const StagedResourcesContext = createContext(null);
-const projectEntryImages = {
-  ai: [assets.paper2, assets.iphone2, assets.iconClose],
-  folder: [assets.folder1, assets.folderPage2, assets.folderPage3, assets.folderPage4, assets.folderPage5, assets.beautyThumbnail, assets.posterThumbnail1, assets.posterThumbnail2, assets.brandThumbnail, assets.ipThumbnail, assets.iconClose],
-  brand: [assets.beautyTopBg, assets.iconClose],
-  poster: [assets.posterTopBg, assets.iconClose],
-  coffee: [assets.brandTopBg, assets.iconClose],
-  ux: [assets.uxNourishTopBg, assets.iconClose],
-  notes: [assets.xhsTopBg, assets.iconClose],
-  photography: [assets.waterfall1_1, assets.waterfall2_1, assets.waterfall3_1, assets.waterfall4_1, assets.waterfall5_1, assets.waterfall6_1, assets.waterfall7_1, assets.iconClose],
-};
-const preloadProject = (name) => {
-  if (demoResources[name]) demoPreloader.preload(demoResources[name]);
-  return imagePreloader.preload(projectEntryImages[name], { priority: true });
-};
-const projectIntent = (name) => ({ onPointerEnter: () => preloadProject(name), onFocus: () => preloadProject(name) });
-
-function preloadPrimaryGroup(name, root = document.querySelector('.about-ai-transition-stage'), priority = false) {
-  const group = primaryResourceStages.find((stage) => stage.name === name);
-  if (!root || !group) return;
-  const images = [...root.querySelectorAll(group.selector)]
-    .flatMap((element) => element.matches('img') ? [element] : [...element.querySelectorAll('img')]);
-  const sources = images.map((image) => image.dataset.resourceSrc).filter(Boolean);
-  if (name === 'about') sources.push(assets.peopleMotion);
-  imagePreloader.preload(sources, { priority });
-  if (name === 'ai') Object.values(demoResources).forEach((demo) => demoPreloader.preload(demo));
-}
-
-function preloadNavigationTarget(id) {
-  const group = { about: 'about', 'about-ai': 'ai', 'ai-ux': 'ux', explore: 'ux', 'explore-contact': 'contact' }[id];
-  if (group) preloadPrimaryGroup(group, undefined, true);
-}
-
-const englishNavigation = ['Home', 'About', 'AI / Ops', 'UX / UI', 'Explore', 'Contact'];
-const LanguageContext = createContext(null);
-const PrimaryTextContext = createContext(false);
-const englishText = {
-  '关于我': 'About Me',
-  'AI/运营': 'AI / Operations',
-  'UX/UI项目': 'UX / UI Projects',
-  '个人探索': 'Personal Exploration',
-  '下载简历': 'Download CV',
-  '联系我': 'Contact Me',
-  '点击探索更多': 'Explore more',
-  '继续滚动查看': 'Scroll to explore',
-  '账号笔记': 'Content Notes',
-  '摄影随拍': 'Photography',
-  '颐养生活消费季': 'Senior Living Campaign',
-  '项目更新中...': 'Coming soon...',
-  '邮箱': 'Email',
-  '联系电话': 'Phone',
-  '打开AI/运营2-1': 'Open AI / Operations project',
-  '打开AI/运营2-2': 'Open design portfolio',
-  '工作经历': 'Experience',
-  '中国联通温州市分公司': 'China Unicom, Wenzhou',
-  '产品运营/交互设计': 'Product Ops / UX Design',
-  '2023.01-至今': 'Jan 2023 - Present',
-  '教育经历': 'Education',
-  '北京林业大学  艺术设计学院 / 交互设计': 'Beijing Forestry Univ. / Interaction Design',
-  '西华大学      机械工程学院 / 工业设计': 'Xihua University / Industrial Design',
-  '硕士    CET6、校优秀学生干部等': "Master's degree / CET-6 / Student leadership award",
-  '学士    GPA：3.56（1/87）': "Bachelor's degree / GPA 3.56 / Rank 1 of 87",
-  '技能': 'Skills',
-  '软件': 'Tools',
-  '界面设计/网页设计/需求调研/活动运营与策划/品牌设计/运营图设计...': 'UI & Web Design / User Research / Campaigns / Branding / Visual Content',
-  '3年+产品运营经验，擅长用户洞察与产品内容策划执行，通过数据驱动与AB测试推动体验优化与增长，具备视觉设计与内容生产能力，可快速迁移至品牌内容策划与新媒体运营方向。': '3+ years in product operations, with strengths in user research, content planning, data-driven optimization and A/B testing. Visual design and content production skills support brand storytelling and social media operations.',
-  '负责公司toG/toB项目如「互联网+养老项目」、「秋开校园促销H5」等产品运营及交互设计；主导产品转化提升、视觉设计改版、结合用户需求优化页面体验，能结合AI工具规范工作流提升效率；同时负责其他内部业务需求的相关设计支援，如部门宣传片策划、运营图设计、展会驾驶舱、产品图主视觉等内容。': 'Product operations and UX design for government and business projects, including elderly-care services and campus campaigns. Improved conversion, refreshed visuals and optimized user journeys, using AI-assisted workflows. Also created campaign visuals, promotional videos and exhibition dashboards.',
-};
-
-function primaryText(value, english) {
-  return english && typeof value === 'string' ? englishText[value] || value : value;
-}
 
 const pageMap = [
   { id: 'home', frameName: 'home' },
@@ -328,89 +240,17 @@ function px(value) {
   return `${value}px`;
 }
 
-function CustomCursor() {
-  const cursorRef = useRef(null);
-
-  useEffect(() => {
-    const cursor = cursorRef.current;
-    const pointer = window.matchMedia('(hover: hover) and (pointer: fine)');
-    const clickable = 'a[href], button:not(:disabled), [role="button"], select, summary, .paper-stack-card';
-    const hide = () => { cursor.hidden = true; };
-    const move = (event) => {
-      if (!pointer.matches || event.pointerType === 'touch' || !document.documentElement.classList.contains('custom-cursor-ready')) return;
-      const hand = Boolean(event.target.closest(clickable));
-      cursor.dataset.hand = String(hand);
-      cursor.style.transform = `translate3d(${event.clientX - (hand ? 15 : 14)}px, ${event.clientY - (hand ? 7 : 9)}px, 0)`;
-      cursor.hidden = event.target.tagName === 'IFRAME';
-    };
-    const leave = (event) => { if (!event.relatedTarget) hide(); };
-    const updatePointer = () => { if (!pointer.matches) hide(); };
-    document.addEventListener('pointermove', move);
-    document.addEventListener('pointerover', move);
-    document.addEventListener('pointerout', leave);
-    window.addEventListener('blur', hide);
-    pointer.addEventListener('change', updatePointer);
-    return () => {
-      document.removeEventListener('pointermove', move);
-      document.removeEventListener('pointerover', move);
-      document.removeEventListener('pointerout', leave);
-      window.removeEventListener('blur', hide);
-      pointer.removeEventListener('change', updatePointer);
-      document.documentElement.classList.remove('custom-cursor-ready');
-    };
-  }, []);
-
-  const ready = () => {
-    if ([...cursorRef.current.querySelectorAll('img')].every((image) => image.complete && image.naturalWidth)) {
-      document.documentElement.classList.add('custom-cursor-ready');
-    }
-  };
-
-  return (
-    <div ref={cursorRef} className="custom-cursor" hidden aria-hidden="true">
-      <img className="cursor-default" src={`${CDN}/default-click.webp`} alt="" onLoad={ready} />
-      <img className="cursor-hand" src={`${CDN}/hand-click.webp`} alt="" onLoad={ready} />
-    </div>
-  );
-}
-
-function computerTweenVars({ left, top, width, height }) {
-  const base = { left: 295, top: 153, width: 684, height: 484 };
-
-  return rectTweenVars({ left, top, width, height }, base);
-}
-
-function rectTweenVars({ left, top, width, height }, base) {
-  return {
-    x: left - base.left + (width - base.width) / 2,
-    y: top - base.top + (height - base.height) / 2,
-    scaleX: width / base.width,
-    scaleY: height / base.height,
-  };
-}
-
 function Layer({ name, className = '', style, children, as: Tag = 'div', ...props }) {
-  const english = useContext(PrimaryTextContext);
   return (
-    <Tag className={`layer ${name} ${className}`} style={style} data-layer={name} {...props} aria-label={primaryText(props['aria-label'], english)}>
+    <Tag className={`layer ${name} ${className}`} style={style} data-layer={name} {...props}>
       {children}
     </Tag>
   );
 }
 
-function ResourceImage({ src, alt = '', ...props }) {
-  const resources = useContext(StagedResourcesContext);
-  const settled = useSyncExternalStore(
-    (listener) => resources ? resources.subscribe(src, listener) : () => {},
-    () => !resources || homeLoadingImages.includes(src) || resources.isSettled(src),
-  );
-  return <img {...props} src={settled ? src : undefined} alt={settled ? alt : ''} data-resource-src={src} decoding="async" />;
-}
-
 function ImageLayer({ name, src, className = '', style, alt, ...props }) {
-  const english = useContext(PrimaryTextContext);
   return (
-    <ResourceImage
+    <img
       className={`layer image-layer ${name} ${className}`}
       style={style}
       src={src}
@@ -418,16 +258,14 @@ function ImageLayer({ name, src, className = '', style, alt, ...props }) {
       data-layer={name}
       draggable="false"
       {...props}
-      aria-label={primaryText(props['aria-label'], english)}
     />
   );
 }
 
 function TextLayer({ name, children, style, className = '' }) {
-  const english = useContext(PrimaryTextContext);
   return (
     <div className={`layer text-layer ${name} ${className}`} style={style} data-layer={name}>
-      {primaryText(children, english)}
+      {children}
     </div>
   );
 }
@@ -445,7 +283,6 @@ function DesignFrame({ frameName, id, children }) {
 }
 
 function TopNavigation() {
-  const { language, toggleLanguage } = useContext(LanguageContext);
   return (
     <>
       <TextLayer name="name" style={{ left: 40, top: 34, fontSize: 18, lineHeight: '18px' }}>
@@ -453,156 +290,106 @@ function TopNavigation() {
       </TextLayer>
       <Layer name="navigation">
         <Layer name="menu">
-          {navItems.map((item, index) => (
-            <a key={item} href={`#${targetForNav(item)}`} onPointerEnter={() => preloadNavigationTarget(targetForNav(item))} onFocus={() => preloadNavigationTarget(targetForNav(item))} onClick={() => preloadNavigationTarget(targetForNav(item))} data-baseline-label={item === 'UX/UI' ? 'UX/UI项目' : item} data-label={language === 'en' ? englishNavigation[index] : item === 'UX/UI' ? 'UX/UI项目' : item}>
-              <span>{language === 'en' ? englishNavigation[index] : item === 'UX/UI' ? 'UX/UI项目' : item}</span>
+          {['首页', '关于我', 'AI/运营', 'UX/UI项目', '个人探索', '联系我'].map((item) => (
+            <a key={item} href={`#${targetForNav(item === 'UX/UI项目' ? 'UX/UI' : item)}`}>
+              {item}
             </a>
           ))}
         </Layer>
-        <button className="language" type="button" onClick={toggleLanguage} aria-label={language === 'en' ? 'Switch to Chinese' : '切换为英文'}>
-          <span className={language === 'zh' ? 'selected' : ''}>中</span>/<span className={language === 'en' ? 'selected' : ''}>EN</span>
-        </button>
+        <span className="language">
+          <strong>中</strong>/EN
+        </span>
       </Layer>
     </>
   );
 }
 
-function ButtonFrame({ name, label, left, onClick }) {
-  const { language } = useContext(LanguageContext);
-  const buttonRef = useRef(null);
-  const hoverRef = useRef(null);
-  const isContact = name.includes('contact');
-  const Tag = isContact ? 'a' : 'button';
-
-  useEffect(() => {
-    const ctx = gsap.context((self) => {
-      const surface = buttonRef.current.querySelector('.home-button-surface');
-      const text = buttonRef.current.querySelector('.home-button-label');
-      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-      self.add('animate', (hovered) => {
-        gsap.killTweensOf([surface, text]);
-        const size = { scaleX: hovered ? 224 / 216 : 1, scaleY: hovered ? 58 / 56 : 1 };
-        if (reducedMotion) {
-          gsap.set(surface, { ...size, y: hovered ? -5 : 0 });
-          gsap.set(text, { y: hovered ? -5 : 0 });
-          return;
-        }
-
-        if (hovered) {
-          gsap.timeline()
-            .to(surface, { ...size, y: -9, duration: 0.18, ease: 'power2.out' }, 0)
-            .to(text, { y: -9, duration: 0.18, ease: 'power2.out' }, 0)
-            .to([surface, text], { y: -5, duration: 0.4, ease: 'elastic.out(0.5, 0.4)' });
-        } else {
-          gsap.to(surface, { ...size, y: 0, duration: 0.3, ease: 'power2.out' });
-          gsap.to(text, { y: 0, duration: 0.3, ease: 'power2.out' });
-        }
-      });
-    }, buttonRef);
-    hoverRef.current = ctx;
-    return () => {
-      hoverRef.current = null;
-      ctx.revert();
-    };
-  }, []);
-
+function ButtonFrame({ name, label, left }) {
   return (
-    <Tag ref={buttonRef} className={`layer figma-button ${name}`} style={{ left, top: 424 }} href={isContact ? '#explore-contact' : undefined} type={isContact ? undefined : 'button'} onClick={onClick}
-      onPointerEnter={(event) => { if (event.pointerType !== 'touch') hoverRef.current?.animate(true); }}
-      onPointerLeave={() => hoverRef.current?.animate(buttonRef.current.matches(':focus-visible'))}
-      onFocus={() => hoverRef.current?.animate(true)}
-      onBlur={() => hoverRef.current?.animate(buttonRef.current.matches(':hover'))}>
-      <span className="home-button-surface" aria-hidden="true" />
-      <span className="home-button-label">{primaryText(label, language === 'en')}</span>
-    </Tag>
+    <a className={`layer figma-button ${name}`} style={{ left, top: 424 }} href={name.includes('contact') ? '#explore-contact' : '#'}>
+      {label}
+    </a>
   );
 }
 
-function ResumeDownloadDialog({ dialogRef }) {
-  const { language } = useContext(LanguageContext);
-  const english = language === 'en';
-  return createPortal(
-    <dialog ref={dialogRef} className="resume-download-dialog" aria-labelledby="resume-download-title">
-      <h2 id="resume-download-title">{english ? 'Download the resume?' : '是否确认下载'}</h2>
-      <div className="resume-download-actions">
-        <button type="button" autoFocus onClick={() => dialogRef.current.close()}>{english ? 'Cancel' : '取消'}</button>
-        <a href={resumePdf} download="余奕苗-简历-运营.pdf" className="resume-download-confirm" onClick={() => dialogRef.current.close()}>
-          {english ? 'Confirm download' : '确认'}
-        </a>
-      </div>
-    </dialog>, document.body
-  );
-}
-
-function FullComputer({ variant = 'home', style, showKeyboard = true }) {
+function FullComputer({ variant = 'home', style }) {
   return (
     <Layer name="full-computer" className={`full-computer ${variant}`} style={style}>
       <Layer name="screen" className="screen-shape" />
-      <ImageLayer name="computer-screen" src={assets.computerScreen} fetchPriority={variant === 'home' ? 'high' : 'auto'} />
-      {showKeyboard ? <ImageLayer name="keyboard" src={assets.keyboard} fetchPriority={variant === 'home' ? 'high' : 'auto'} /> : null}
+      <ImageLayer name="computer-screen" src={assets.computerScreen} />
+      <ImageLayer name="keyboard" src={assets.keyboard} />
     </Layer>
   );
 }
 
-function HomeComputer({ ready }) {
-  const copyRef = useRef(null);
-  const downloadDialogRef = useRef(null);
-  const [typingStarted, setTypingStarted] = useState(false);
-  const [typedCharacters, setTypedCharacters] = useState(0);
-  const welcome = 'welcome';
-  const channel = 'My Channel';
-  const totalCharacters = welcome.length + channel.length;
+function HomeAboutComputerTransition() {
+  const layerRef = useRef(null);
 
-  useEffect(() => {
-    if (!ready) return undefined;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      setTypedCharacters(totalCharacters);
-      return undefined;
-    }
-    const observer = new IntersectionObserver((entries) => {
-      if (entries.some((entry) => entry.isIntersecting) && window.scrollY < 1000) {
-        setTypingStarted(true);
-        observer.disconnect();
-      }
-    }, { threshold: 0.1 });
-    observer.observe(copyRef.current);
-    return () => observer.disconnect();
-  }, [ready, totalCharacters]);
+  useLayoutEffect(() => {
+    const layer = layerRef.current;
+    const computer = layer?.querySelector('.full-computer');
+    const onlyHome = document.querySelector('.onlyhome-group');
+    if (!layer || !computer) return undefined;
 
-  useEffect(() => {
-    if (!typingStarted || typedCharacters >= totalCharacters) return undefined;
-    const delay = typedCharacters === 0 ? 250 : typedCharacters === welcome.length ? 180 : 75;
-    const timer = setTimeout(() => setTypedCharacters((count) => count + 1), delay);
-    return () => clearTimeout(timer);
-  }, [typingStarted, typedCharacters, totalCharacters, welcome.length]);
+    const keyframes = [
+      { width: 684, height: 484, left: 295, top: 153 },
+      { width: 912, height: 645, left: 180, top: 72 },
+      { width: 1076, height: 761, left: 98, top: 14 },
+      { width: 1287, height: 909, left: -7, top: -60 },
+      { width: 1499, height: 970, left: -120, top: -36 },
+    ];
+
+    const context = gsap.context(() => {
+      gsap.set(computer, { ...keyframes[0], transformOrigin: '50% 50%' });
+
+      const timeline = gsap.timeline({
+        scrollTrigger: {
+          start: 'top top',
+          end: '+=717',
+          scrub: true,
+          invalidateOnRefresh: true,
+        },
+      });
+
+      const homeContent = gsap.utils.toArray('.home-about-fade-content');
+      const aboutNavigation = gsap.utils.toArray('.home-about-left-navigation');
+      const hiddenAboutComputerLayers = layer.querySelectorAll('.full-computer .screen-shape, .full-computer .keyboard');
+      gsap.set(aboutNavigation, { autoAlpha: 0 });
+      timeline.to(homeContent, { autoAlpha: 0, duration: 0.25, ease: 'none' }, 0);
+      timeline.set(aboutNavigation, { autoAlpha: 1 }, 1);
+      timeline.set(hiddenAboutComputerLayers, { autoAlpha: 0 }, 1);
+      timeline.to(onlyHome, { autoAlpha: 0, duration: 0.25, ease: 'none' }, 0.5);
+
+      keyframes.slice(1).forEach((frame, index) => {
+        timeline.to(computer, { ...frame, duration: 0.25, ease: 'none' }, index * 0.25);
+      });
+
+      ScrollTrigger.create({
+        start: 'top top',
+        end: '+=1802',
+        onLeave: () => gsap.set(layer, { autoAlpha: 0 }),
+        onEnterBack: () => gsap.set(layer, { autoAlpha: 1 }),
+      });
+    }, layer);
+
+    return () => context.revert();
+  }, []);
 
   return (
-    <div className="home-about-transition-layer">
-      <div className="home-about-transition-stage" style={{ marginLeft: 0, transform: 'translateX(-50%)' }}>
+      <div ref={layerRef} className="home-about-transition-layer">
+      <div className="home-about-transition-stage" style={{ marginLeft: -640 }}>
         <FullComputer variant="home" />
-        <TextLayer name="title-关于我" className="section-title home-about-title" style={{ left: 430, top: 307, width: 420 }}>
-          关于我
-        </TextLayer>
-        <div ref={copyRef} className="home-about-overlay-content">
-          <TextLayer name="welcome" style={{ left: 403, top: 248, fontSize: 60, lineHeight: '60px' }}>
-            <span className="home-type-accessible">{welcome}</span>
-            <span className="home-type-text" aria-hidden="true">
-              {welcome.slice(0, typedCharacters)}
-              {typingStarted && typedCharacters < welcome.length ? <span className="home-type-cursor" /> : null}
-            </span>
+        <div className="home-about-overlay-content">
+          <TextLayer name="welcome" className="home-about-fade-content" style={{ left: 403, top: 256, fontSize: 60, lineHeight: '60px' }}>
+            welcome
           </TextLayer>
-          <TextLayer name="My Channel" style={{ left: 403, top: 312, fontSize: 95, lineHeight: '95px' }}>
-            <span className="home-type-accessible">{channel}</span>
-            <span className="home-type-text" aria-hidden="true">
-              {channel.slice(0, Math.max(0, typedCharacters - welcome.length))}
-              {typingStarted && typedCharacters >= welcome.length && typedCharacters < totalCharacters ? <span className="home-type-cursor" /> : null}
-            </span>
+          <TextLayer name="My Channel" className="home-about-fade-content" style={{ left: 403, top: 320, fontSize: 95, lineHeight: '95px' }}>
+            My Channel
           </TextLayer>
-          <ButtonFrame name="button-download" label="下载简历" left={411} onClick={() => downloadDialogRef.current.showModal()} />
-          <ButtonFrame name="button-contact" label="联系我" left={672} />
+          <ButtonFrame name="button-download home-about-fade-content" label="下载简历" left={411} />
+          <ButtonFrame name="button-contact home-about-fade-content" label="联系我" left={672} />
         </div>
-        <ResumeDownloadDialog dialogRef={downloadDialogRef} />
+        <LeftNavigation active="关于我" className="home-about-about-content home-about-left-navigation" />
       </div>
     </div>
   );
@@ -615,9 +402,9 @@ function OnlyHomeFrame() {
     <div className="onlyhome-group" data-frame="onlyhome">
       <div className="home-about-fixed-stage" style={{ transform: `translateX(-50%) scale(${scale})` }}>
         <Layer name="bg-home">
-          <ImageLayer name="BG" src={assets.bgHome} fetchPriority="high" />
+          <ImageLayer name="BG" src={assets.bgHome} />
         </Layer>
-        <ImageLayer name="BG-rectangle" src={assets.bgRectangle} fetchPriority="high" style={{ left: 0, top: 0, width: 1280, height: 720 }} />
+        <ImageLayer name="BG-rectangle" src={assets.bgRectangle} style={{ left: 0, top: 0, width: 1280, height: 720 }} />
         <TopNavigation />
       </div>
     </div>
@@ -625,14 +412,13 @@ function OnlyHomeFrame() {
 }
 
 function LeftNavigation({ active, className = '' }) {
-  const { language } = useContext(LanguageContext);
   return (
-    <nav className={`layer left-navigation ${className}`} data-layer="left-navigation" aria-label={language === 'en' ? 'Page navigation' : '左侧页面导航'}>
+    <nav className={`layer left-navigation ${className}`} data-layer="left-navigation" aria-label="左侧页面导航">
       <div className="left-navigation-hove">
         <div className="left-navigation-rectangle-hover" />
-        {navItems.map((item, index) => (
-          <a className={active === item ? 'active' : ''} key={item} href={`#${targetForNav(item)}`} onPointerEnter={() => preloadNavigationTarget(targetForNav(item))} onFocus={() => preloadNavigationTarget(targetForNav(item))} onClick={() => preloadNavigationTarget(targetForNav(item))} data-label={language === 'en' ? englishNavigation[index] : item}>
-            <span>{language === 'en' ? englishNavigation[index] : item}</span>
+        {navItems.map((item) => (
+          <a className={active === item ? 'active' : ''} key={item} href={`#${targetForNav(item)}`}>
+            {item}
           </a>
         ))}
       </div>
@@ -650,15 +436,14 @@ function targetForNav(item) {
 }
 
 function ArrowHint({ name, label, x, y, arrowX = 0, arrowY = 16, flip = false }) {
-  const english = useContext(PrimaryTextContext);
   const arrowSrc = name === 'arrow1' ? assets.arrow1 : name === 'arrow2' ? assets.arrow2 : name === 'arrow3' ? assets.arrow3 : null;
   const arrowSize = name === 'arrow2' ? { width: 94, height: 37.28 } : { width: 67, height: 22 };
 
   return (
     <Layer name={name} className="click-hint" style={{ left: x, top: y }}>
-      <span>{primaryText(label, english)}</span>
+      <span>{label}</span>
       {arrowSrc ? (
-        <ResourceImage
+        <img
           className={`click-hint-arrow ${flip ? 'flip' : ''}`}
           style={{ left: arrowX, top: arrowY }}
           src={arrowSrc}
@@ -677,85 +462,119 @@ function ArrowHint({ name, label, x, y, arrowX = 0, arrowY = 16, flip = false })
   );
 }
 
-function Home({ ready }) {
-  const sectionRef = useRef(null);
-  const stageRef = useRef(null);
+function Home() {
+  return (
+    <DesignFrame id="home" frameName="home">
+    </DesignFrame>
+  );
+}
 
-  useEffect(() => {
-    const section = sectionRef.current;
-    const stage = stageRef.current;
-    if (!section || !stage) return undefined;
+function About() {
+  const overflowRef = useRef(null);
 
-    const ctx = gsap.context(() => {
-      const fullComputer = stage.querySelector('.full-computer.home');
-      const homeBackground = stage.querySelector('.onlyhome-group');
-      const homeCopy = stage.querySelectorAll('.welcome, .My.Channel, .button-download, .button-contact');
-      const aboutTitle = stage.querySelector('.home-about-title');
-      const leftNavigation = stage.querySelector('.home-about-left-navigation');
-      const screen = stage.querySelector('.screen-shape');
-      const keyboard = stage.querySelector('.keyboard');
+  useLayoutEffect(() => {
+    const scope = overflowRef.current;
+    if (!scope) return undefined;
 
-      gsap.set(fullComputer, { transformOrigin: 'center center', x: 0, y: 0, scaleX: 1, scaleY: 1 });
-      gsap.set([aboutTitle, leftNavigation], { autoAlpha: 0 });
-      gsap.set([homeBackground, homeCopy, screen, keyboard], { autoAlpha: 1 });
+    const revealTargets = [
+      scope.querySelector('.about-detail-people'),
+      scope.querySelector('.about-detail-word-cloud'),
+      scope.querySelector('.about-detail-content'),
+    ].filter(Boolean);
+    const overflowTitle = scope.querySelector('.about-overflow-title');
 
-      const tl = gsap.timeline({
-        defaults: { ease: 'none' },
-        scrollTrigger: {
-          trigger: section,
-          start: 'top top',
-          end: '+=1000',
-          scrub: 1,
-          snap: {
-            snapTo: [0, 1],
-            directional: false,
-            inertia: false,
-            delay: 0.3,
-            duration: { min: 0.25, max: 0.7 },
-            ease: 'power2.inOut',
-          },
-          pin: stage,
-          pinSpacing: false,
-          invalidateOnRefresh: true,
-        },
+    const context = gsap.context(() => {
+      gsap.set(revealTargets, { autoAlpha: 0, y: 0 });
+      gsap.set(overflowTitle, { autoAlpha: 0 });
+
+      ScrollTrigger.create({
+        trigger: scope,
+        start: 'top top',
+        invalidateOnRefresh: true,
+        onRefresh: (self) => gsap.set(overflowTitle, { autoAlpha: window.scrollY >= self.start ? 1 : 0 }),
+        onEnter: () => gsap.set(overflowTitle, { autoAlpha: 1 }),
+        onEnterBack: () => gsap.set(overflowTitle, { autoAlpha: 1 }),
+        onLeaveBack: () => gsap.set(overflowTitle, { autoAlpha: 0 }),
       });
 
-      tl.to(homeBackground, { autoAlpha: 0, duration: 0.25 }, 0)
-        .to(homeCopy, { autoAlpha: 0, duration: 0.5 }, 0)
-        .to(fullComputer, { ...computerTweenVars({ left: 180, top: 72, width: 912, height: 645 }), duration: 0.25 }, 0)
-        .to(fullComputer, { ...computerTweenVars({ left: 98, top: 14, width: 1076, height: 761 }), duration: 0.25 }, 0.25)
-        .to(fullComputer, { ...computerTweenVars({ left: -7, top: -60, width: 1287, height: 909 }), duration: 0.25 }, 0.5)
-        .to(fullComputer, { ...computerTweenVars({ left: -127, top: -36, width: 1517, height: 978 }), duration: 0.25 }, 0.75)
-        .to(aboutTitle, { autoAlpha: 1, duration: 0.25 }, 0.75)
-        .set([screen, keyboard], { autoAlpha: 0 }, 0.99)
-        .set(leftNavigation, { autoAlpha: 1 }, 0.99);
-    }, stage);
+      gsap.timeline({
+        scrollTrigger: {
+          trigger: scope,
+          start: 'top top',
+          end: '+=720',
+          scrub: 1.2,
+          invalidateOnRefresh: true,
+        },
+      }).to(revealTargets, {
+        autoAlpha: 1,
+        y: 0,
+        duration: 0.55,
+        stagger: 0.22,
+        ease: 'power2.out',
+      });
+    }, scope);
 
-    return () => ctx.revert();
+    return () => context.revert();
   }, []);
 
   return (
-    <section ref={sectionRef} className="home-about-scroll-section frame-shell" id="home" data-frame="home">
-      <div ref={stageRef} className="home-about-pin-viewport">
-        <div className="figma-frame home-about-animation-stage">
-          <OnlyHomeFrame />
-          <HomeComputer ready={ready} />
-          <LeftNavigation active="关于我" className="home-about-left-navigation" />
+    <section className="frame-shell about-page-shell" id="about" data-frame="关于我">
+      <div className="figma-frame about-page-frame">
+        <div ref={overflowRef} className="about-overflow-content">
+          <TextLayer name="title-关于我" className="section-title about-overflow-title" style={{ left: 430, top: 307, width: 420 }}>
+            关于我
+          </TextLayer>
+          <AboutOverflowContent />
         </div>
       </div>
     </section>
   );
 }
 
-function About() {
+function AboutOverflowContent() {
+  const software = ['figma', 'ps', 'ai', 'axure', 'capcut', 'sketch', '墨刀', 'teambition', 'gpt', 'mj', 'jimeng', 'doubao', 'deepseek', 'lovart'];
+
   return (
-    <DesignFrame id="about" frameName="关于我">
-      <ImageLayer name="computer-screen" className="about-computer-screen" src={assets.computerScreen} />
-      <TextLayer name="title-关于我" className="section-title" style={{ left: 430, top: 307, width: 420 }}>
-        关于我
-      </TextLayer>
-      <LeftNavigation active="关于我" />
-    </DesignFrame>
+    <>
+      <ImageLayer name="people-motion" className="about-detail-people" src={assets.peopleMotion} />
+      <ImageLayer name="word-cloud" className="about-detail-word-cloud" src={assets.wordCloud} />
+      <div className="about-detail-content">
+          <TextLayer name="自我介绍" className="about-detail-intro" style={{ left: 0, top: 0, width: 530 }}>
+            3年+产品运营经验，擅长用户洞察与产品内容策划执行，通过数据驱动与AB测试推动体验优化与增长，具备视觉设计与内容生产能力，可快速迁移至品牌内容策划与新媒体运营方向。
+          </TextLayer>
+
+          <AboutDetailSection title="工作经历" top={127}>
+            <div className="about-detail-row"><strong>中国联通温州市分公司</strong><strong>产品运营/交互设计</strong><strong>2023.01-至今</strong></div>
+            <p>负责公司toG/toB项目如「互联网+养老项目」、「秋开校园促销H5」等产品运营及交互设计；主导产品转化提升、视觉设计改版、结合用户需求优化页面体验，能结合AI工具规范工作流提升效率；同时负责其他内部业务需求的相关设计支援，如部门宣传片策划、运营图设计、展会驾驶舱、产品图主视觉等内容。</p>
+          </AboutDetailSection>
+
+          <AboutDetailSection title="教育经历" top={379}>
+            <div className="about-detail-row"><strong>北京林业大学  艺术设计学院 / 交互设计</strong><strong>2019.09—2022.06</strong></div>
+            <span>硕士   CET6、校优秀学生干部等</span>
+            <div className="about-detail-row"><strong>西华大学      机械工程学院 / 工业设计</strong><strong>2015.09—2019.06</strong></div>
+            <span>学士   GPA：3.56（1/87）</span>
+          </AboutDetailSection>
+
+          <AboutDetailSection title="技能" top={601}>
+            <p>界面设计/网页设计/需求调研/活动运营与策划/品牌设计/运营图设计...</p>
+          </AboutDetailSection>
+
+          <AboutDetailSection title="软件" top={717}>
+            <div className="about-detail-software-grid">
+              {software.map((name) => <span key={name}>{name}</span>)}
+            </div>
+          </AboutDetailSection>
+      </div>
+    </>
+  );
+}
+
+function AboutDetailSection({ title, top, children }) {
+  return (
+    <section className="about-detail-section" style={{ top }}>
+      <TextLayer name={title} className="about-detail-section-title">{title}</TextLayer>
+      <div className="about-detail-section-body">{children}</div>
+    </section>
   );
 }
 
@@ -777,7 +596,6 @@ function DeskObjectLayers({ onOpenProject, onOpenFolder }) {
         role="button"
         tabIndex={0}
         aria-label="打开AI/运营2-2"
-        {...projectIntent('folder')}
       />
       <ImageLayer name="coffee" src={assets.coffee} style={{ left: 938, top: 0, width: 302, height: 238 }} />
       <ImageLayer name="leave" src={assets.leave} style={{ left: 396, top: 0, width: 223, height: 177 }} />
@@ -789,7 +607,6 @@ function DeskObjectLayers({ onOpenProject, onOpenFolder }) {
         type="button"
         onClick={onOpenProject}
         aria-label="打开AI/运营2-1"
-        {...projectIntent('ai')}
       >
         <ImageLayer name="iphone" src={assets.iphone} style={{ left: 0, top: 0, width: 213, height: 310, zIndex: 2 }} />
         <ImageLayer name="paper" src={assets.paper} style={{ left: 129, top: 32, width: 195, height: 218, zIndex: 1 }} />
@@ -798,430 +615,48 @@ function DeskObjectLayers({ onOpenProject, onOpenFolder }) {
   );
 }
 
-function AboutTailTemporaryContent() {
+function TransitionAboutAi({ onOpenProject, onOpenFolder }) {
   return (
-    <div className="about-tail-temporary-content" data-layer="about-tail-temporary-content">
-      <svg width="0" height="0" aria-hidden="true">
-        <defs>
-          <filter id="about-word-cloud-turbulence" x="-10%" y="-15%" width="120%" height="130%" colorInterpolationFilters="sRGB">
-            <feTurbulence type="fractalNoise" baseFrequency="0.012 0.022" numOctaves="2" seed="8" result="noise" />
-            <feDisplacementMap in="SourceGraphic" in2="noise" scale="8" xChannelSelector="R" yChannelSelector="G" />
-          </filter>
-        </defs>
-      </svg>
-      <ImageLayer name="people-motion" src={assets.peopleMotion} style={{ left: 22, top: 31, width: 560, height: 560 }} />
-      <ImageLayer name="word-cloud" src={assets.wordCloud} style={{ left: 281, top: 65, width: 357, height: 193, filter: 'url(#about-word-cloud-turbulence)' }} />
-      <Layer name="detail" className="about-frame-detail" style={{ left: 648, top: -262, width: 545, height: 957 }}>
-        <Layer name="introduction" className="about-detail-section" style={{ left: 0, top: 0, width: 530, height: 81 }}>
-          <TextLayer name="introduction" style={{ left: 0, top: 0, width: 530, minHeight: 81, fontSize: 18, fontWeight: 600, lineHeight: '27px', textAlign: 'justify' }}>3年+产品运营经验，擅长用户洞察与产品内容策划执行，通过数据驱动与AB测试推动体验优化与增长，具备视觉设计与内容生产能力，可快速迁移至品牌内容策划与新媒体运营方向。</TextLayer>
-        </Layer>
-        <Layer name="work" className="about-detail-section" style={{ left: 0, top: 127, width: 530, height: 206 }}>
-          <TextLayer name="中国联通温州市分公司" style={{ left: 0, top: 52, width: 180, minHeight: 18, fontSize: 18, fontWeight: 600, lineHeight: '18px', textAlign: 'left' }}>中国联通温州市分公司</TextLayer>
-          <TextLayer name="产品运营/交互设计" style={{ left: 221, top: 52, width: 151, minHeight: 18, fontSize: 18, fontWeight: 600, lineHeight: '18px', textAlign: 'left' }}>产品运营/交互设计</TextLayer>
-          <TextLayer name="2023.01-至今" style={{ left: 417, top: 52, width: 113, minHeight: 18, fontSize: 18, fontWeight: 600, lineHeight: '18px', textAlign: 'left' }}>2023.01-至今</TextLayer>
-          <TextLayer name="工作经历" style={{ left: 0, top: 0, width: 112, minHeight: 28, fontSize: 28, fontWeight: 700, lineHeight: '28px', textAlign: 'left' }}>工作经历</TextLayer>
-          <TextLayer name="负责公司toG/toB项目如「互联网+养老项目」、「秋开校园促销H5」等产品运营及交互设计；主导产品转化提升、视觉设计改版、结合用户需求优化页面体验，能结合AI工具规范工作流提升效率；同时负责其他内部业务需求的相关设计支援，如部门宣传片策划、运营图设计、展会驾驶舱、产品图主视觉等内容。" style={{ left: 0, top: 86, width: 530, minHeight: 120, fontSize: 16, fontWeight: 400, lineHeight: '24px', textAlign: 'justify' }}>负责公司toG/toB项目如「互联网+养老项目」、「秋开校园促销H5」等产品运营及交互设计；主导产品转化提升、视觉设计改版、结合用户需求优化页面体验，能结合AI工具规范工作流提升效率；同时负责其他内部业务需求的相关设计支援，如部门宣传片策划、运营图设计、展会驾驶舱、产品图主视觉等内容。</TextLayer>
-        </Layer>
-        <Layer name="education" className="about-detail-section" style={{ left: 0, top: 379, width: 530, height: 176 }}>
-          <TextLayer name="北京林业大学  艺术设计学院 / 交互设计" style={{ left: 0, top: 52, width: 312, minHeight: 18, fontSize: 18, fontWeight: 600, lineHeight: '18px', textAlign: 'left' }}>北京林业大学  艺术设计学院 / 交互设计</TextLayer>
-          <TextLayer name="西华大学      机械工程学院 / 工业设计" style={{ left: 0, top: 126, width: 292, minHeight: 18, fontSize: 18, fontWeight: 600, lineHeight: '18px', textAlign: 'left' }}>西华大学      机械工程学院 / 工业设计</TextLayer>
-          <TextLayer name="硕士    CET6、校优秀学生干部等" style={{ left: 0, top: 86, width: 224, minHeight: 16, fontSize: 16, fontWeight: 400, lineHeight: '16px', textAlign: 'left' }}>硕士    CET6、校优秀学生干部等</TextLayer>
-          <TextLayer name="2019.09—2022.06" style={{ left: 369, top: 52, width: 161, minHeight: 18, fontSize: 18, fontWeight: 600, lineHeight: '18px', textAlign: 'left' }}>2019.09—2022.06</TextLayer>
-          <TextLayer name="学士    GPA：3.56（1/87）" style={{ left: 0, top: 160, width: 191, minHeight: 16, fontSize: 16, fontWeight: 400, lineHeight: '16px', textAlign: 'left' }}>学士    GPA：3.56（1/87）</TextLayer>
-          <TextLayer name="2015.09—2019.06" style={{ left: 372, top: 126, width: 158, minHeight: 18, fontSize: 18, fontWeight: 600, lineHeight: '18px', textAlign: 'left' }}>2015.09—2019.06</TextLayer>
-          <TextLayer name="教育经历" style={{ left: 0, top: 0, width: 112, minHeight: 28, fontSize: 28, fontWeight: 700, lineHeight: '28px', textAlign: 'left' }}>教育经历</TextLayer>
-        </Layer>
-        <Layer name="skill" className="about-detail-section" style={{ left: 0, top: 601, width: 545, height: 70 }}>
-          <TextLayer name="界面设计/网页设计/需求调研/活动运营与策划/品牌设计/运营图设计..." style={{ left: 0, top: 52, width: 545, minHeight: 18, fontSize: 18, fontWeight: 400, lineHeight: '18px', textAlign: 'left' }}>界面设计/网页设计/需求调研/活动运营与策划/品牌设计/运营图设计...</TextLayer>
-          <TextLayer name="技能" style={{ left: 0, top: 0, width: 56, minHeight: 28, fontSize: 28, fontWeight: 700, lineHeight: '28px', textAlign: 'left' }}>技能</TextLayer>
-        </Layer>
-        <Layer name="software" className="about-detail-section" style={{ left: 1, top: 717, width: 512, height: 168 }}>
-          <TextLayer name="软件" style={{ left: 0, top: 0, width: 56, minHeight: 28, fontSize: 28, fontWeight: 700, lineHeight: '28px', textAlign: 'left' }}>软件</TextLayer>
-          <ImageLayer name="capcut" src={`${CDN}/capcut.png`} style={{ left: 396, top: 52, width: 50, height: 50, borderRadius: '50%' }} />
-          <ImageLayer name="axure" src={`${CDN}/axure.png`} style={{ left: 330, top: 52, width: 50, height: 50, borderRadius: '50%' }} />
-          <ImageLayer name="ai" src={`${CDN}/ai.png`} style={{ left: 198, top: 52, width: 50, height: 50, borderRadius: '50%' }} />
-          <ImageLayer name="ps" src={`${CDN}/ps.png`} style={{ left: 132, top: 52, width: 50, height: 50, borderRadius: '50%' }} />
-          <ImageLayer name="figma" src={`${CDN}/figma.png`} style={{ left: 0, top: 52, width: 50, height: 50, borderRadius: '50%' }} />
-          <ImageLayer name="sketch" src={`${CDN}/sketch.png`} style={{ left: 66, top: 52, width: 50, height: 50, borderRadius: '50%' }} />
-          <ImageLayer name="mock" src={`${CDN}/mock.png`} style={{ left: 264, top: 52, width: 50, height: 50, borderRadius: '50%' }} />
-          <ImageLayer name="teambition" src={`${CDN}/teambition.png`} style={{ left: 462, top: 52, width: 50, height: 50, borderRadius: '50%' }} />
-          <ImageLayer name="jimeng" src={`${CDN}/jimeng.png`} style={{ left: 198, top: 118, width: 50, height: 50, borderRadius: '50%' }} />
-          <ImageLayer name="doubao" src={`${CDN}/doubao.png`} style={{ left: 264, top: 118, width: 50, height: 50, borderRadius: '50%' }} />
-          <ImageLayer name="mj" src={`${CDN}/mj.png`} style={{ left: 132, top: 118, width: 50, height: 50, borderRadius: '50%' }} />
-          <ImageLayer name="gpt" src={`${CDN}/gpt.png`} style={{ left: 0, top: 118, width: 50, height: 50, borderRadius: '50%' }} />
-          <ImageLayer name="deepseek" src={`${CDN}/deepseek.png`} style={{ left: 330, top: 118, width: 50, height: 50, borderRadius: '50%' }} />
-          <ImageLayer name="lovart" src={`${CDN}/lovart.png`} style={{ left: 66, top: 118, width: 50, height: 50, borderRadius: '50%' }} />
-        </Layer>
-      </Layer>
-    </div>
-  );
-}
-
-function CopyContactValue({ value, english }) {
-  const [status, setStatus] = useState('idle');
-  const resetRef = useRef(null);
-
-  useEffect(() => () => window.clearTimeout(resetRef.current), []);
-
-  const copy = async () => {
-    try {
-      await navigator.clipboard.writeText(value);
-      setStatus('copied');
-    } catch {
-      setStatus('failed');
-    }
-    window.clearTimeout(resetRef.current);
-    resetRef.current = window.setTimeout(() => setStatus('idle'), 2000);
-  };
-  const message = status === 'copied'
-    ? (english ? 'Copied' : '已复制')
-    : status === 'failed'
-      ? (english ? 'Copy failed' : '复制失败')
-      : (english ? 'Click to copy' : '点击复制');
-
-  return (
-    <button type="button" className="contact-copy" onClick={copy} aria-label={`${english ? 'Copy' : '复制'} ${value}`}>
-      <strong>{value}</strong>
-      <span className="contact-copy-tooltip" role="status" aria-live="polite">{message}</span>
-    </button>
-  );
-}
-
-function TransitionAboutAi({ ready, onOpenProject, onOpenFolder, onOpenUxUiSecond, onOpenExploreSecond, onOpenExploreWaterfall }) {
-  const english = useContext(PrimaryTextContext);
-  const sectionRef = useRef(null);
-  const stageRef = useRef(null);
-  const resourceTriggerRef = useRef(null);
-  const preloadingEnabledRef = useRef(false);
-  const requestedGroupsRef = useRef(new Set());
-
-  const preloadAt = (distance) => {
-    if (!preloadingEnabledRef.current) return;
-    stagesToPreload(distance).forEach(({ name }, index) => {
-      if (requestedGroupsRef.current.has(name)) return;
-      requestedGroupsRef.current.add(name);
-      preloadPrimaryGroup(name, stageRef.current, index === 0);
-    });
-  };
-
-  useEffect(() => {
-    if (!ready) return undefined;
-    preloadingEnabledRef.current = true;
-    preloadNavigationTarget(window.location.hash.slice(1));
-    preloadAt((resourceTriggerRef.current?.progress || 0) * 6700);
-    return () => { preloadingEnabledRef.current = false; };
-  }, [ready]);
-
-  useEffect(() => {
-    const section = sectionRef.current;
-    const stage = stageRef.current;
-    if (!section || !stage) return undefined;
-
-    const ctx = gsap.context(() => {
-      const fullComputer = stage.querySelector('.full-computer.about-ai-transition');
-      const temporaryContent = stage.querySelector('.about-tail-temporary-content');
-      const aboutTitle = stage.querySelector('.about-internal-title');
-      const people = temporaryContent.querySelector('.people-motion');
-      const wordCloud = temporaryContent.querySelector('.word-cloud');
-      const detail = temporaryContent.querySelector('.about-frame-detail');
-      const detailSections = detail.querySelectorAll('.about-detail-section');
-      const turbulence = temporaryContent.querySelector('feTurbulence');
-      const displacement = temporaryContent.querySelector('feDisplacementMap');
-      const objectLayer = stage.querySelector('.about-ai-object-layer');
-      const objects = objectLayer.querySelectorAll(':scope > .ai-computer, :scope > .notebook, :scope > .pen-cup, :scope > .folder, :scope > .coffee, :scope > .leave, :scope > .project-open-group');
-      const titleAi = stage.querySelector('.title-ai');
-      const titleUx = stage.querySelector('.title-ux\\/ui');
-      const hints = stage.querySelectorAll('.more-label, .image-button, .arrow2');
-      const uxProjects = stage.querySelectorAll('.project1, .project2');
-      const uxHint = stage.querySelector('.click-hint');
-      const uxWindow = stage.querySelector('.browser-window-frame');
-      const screen = stage.querySelector('.screen-shape');
-      const keyboard = stage.querySelector('.keyboard');
-      const aboutNavigation = stage.querySelector('.about-tail-left-navigation');
-      const aiNavigation = stage.querySelector('.about-ai-left-navigation');
-      const uxNavigation = stage.querySelector('.about-ai-ux-left-navigation');
-      const exploreNavigation = stage.querySelector('.about-ai-explore-left-navigation');
-      const contactNavigation = stage.querySelector('.about-ai-contact-left-navigation');
-      const contactCard = stage.querySelector('.contact-card');
-      const baseComputer = { left: -127, top: -36, width: 1517, height: 978 };
-      const targetComputer = { left: -225, top: -94, width: 1730, height: 1115 };
-      const contactComputer = { left: 98, top: 41, width: 1065, height: 767 };
-      const objectOffsets = [
-        [objectLayer.querySelector(':scope > .ai-computer'), -323, -412, 0, 0],
-        [objectLayer.querySelector(':scope > .notebook'), -247, 804, 0, 554],
-        [objectLayer.querySelector(':scope > .pen-cup'), 1632, -54, 1157, 184],
-        [objectLayer.querySelector(':scope > .folder'), 1123, 803, 834, 410],
-        [objectLayer.querySelector(':scope > .coffee'), 972, -354, 938, 0],
-        [objectLayer.querySelector(':scope > .leave'), 375, -412, 396, 0],
-        [objectLayer.querySelector(':scope > .project-open-group'), 43, 800, 72, 380],
-      ];
-      const outgoingObjectOffsets = [
-        [objectLayer.querySelector(':scope > .ai-computer'), -323, -412, 0, 0],
-        [objectLayer.querySelector(':scope > .notebook'), -247, 804, 0, 554],
-        [objectLayer.querySelector(':scope > .pen-cup'), 1632, -54, 1157, 184],
-        [objectLayer.querySelector(':scope > .folder'), 1123, 803, 834, 410],
-        [objectLayer.querySelector(':scope > .coffee'), 972, -354, 938, 0],
-        [objectLayer.querySelector(':scope > .leave'), 375, -412, 396, 0],
-        [objectLayer.querySelector(':scope > .project-open-group'), 43, 800, 72, 380],
-      ];
-
-      gsap.set(fullComputer, { transformOrigin: 'center center', x: 0, y: 0, scaleX: 1, scaleY: 1 });
-      gsap.set(temporaryContent, { autoAlpha: 1 });
-      gsap.set(aboutTitle, { autoAlpha: 1, y: 0 });
-      gsap.set([people, wordCloud], { autoAlpha: 0, y: 144 });
-      gsap.set(detail, { y: 437 });
-      gsap.set(detailSections, { autoAlpha: 0 });
-      gsap.set(objects, { autoAlpha: 0 });
-      gsap.set(titleAi, { autoAlpha: 0, y: 452 });
-      gsap.set(titleUx, { autoAlpha: 0, y: 159 });
-      gsap.set(hints, { autoAlpha: 0 });
-      gsap.set(uxProjects, { autoAlpha: 0, y: 0 });
-      gsap.set(uxHint, { autoAlpha: 0 });
-      gsap.set(uxWindow, { autoAlpha: 0, x: 0, y: 0, scaleX: 1, scaleY: 1, '--window-fade-radius': '-240px' });
-      gsap.set(contactCard, { autoAlpha: 0 });
-      gsap.set([screen, keyboard], { autoAlpha: 0 });
-      gsap.set(aboutNavigation, { autoAlpha: 1 });
-      gsap.set(aiNavigation, { autoAlpha: 0 });
-      gsap.set(uxNavigation, { autoAlpha: 0 });
-      gsap.set(exploreNavigation, { autoAlpha: 0 });
-      gsap.set(contactNavigation, { autoAlpha: 0 });
-      objectOffsets.forEach(([element, startLeft, startTop, endLeft, endTop]) => {
-        if (!element) return;
-        gsap.set(element, { x: startLeft - endLeft, y: startTop - endTop });
-      });
-
-      const wordMotion = gsap.timeline({ paused: true, repeat: -1, yoyo: true })
-        .to(turbulence, { attr: { baseFrequency: '0.018 0.03' }, duration: 3, ease: 'sine.inOut' }, 0)
-        .to(displacement, { attr: { scale: 12 }, duration: 3, ease: 'sine.inOut' }, 0);
-      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      const software = detail.querySelector('.software');
-      const softwareIcons = Array.from(software.querySelectorAll('.image-layer')).sort((a, b) => a.offsetLeft - b.offsetLeft);
-      let softwareWasVisible = false;
-      const softwareMotion = gsap.timeline({ paused: true, repeat: -1, yoyo: true });
-      const softwareEntrance = gsap.timeline({ paused: true, onComplete: () => { if (softwareWasVisible) softwareMotion.resume(); } });
-      if (!reducedMotion) gsap.set(softwareIcons, { autoAlpha: 0, y: 12, scale: 0.35 });
-      [52, 118].forEach((top, row) => {
-        const rowIcons = softwareIcons.filter((icon) => icon.offsetTop === top);
-        if (!reducedMotion) {
-          softwareEntrance.fromTo(rowIcons, { autoAlpha: 0, y: 12, scale: 0.35 }, {
-            autoAlpha: 1,
-            y: 0,
-            scale: 1,
-            duration: 0.4,
-            stagger: 0.09,
-            ease: 'back.out(2.6)',
-            immediateRender: false,
-          }, row * 1.05);
-        }
-        softwareMotion.fromTo(rowIcons, { y: 0, scale: 1 }, {
-          y: -5,
-          scale: 1.035,
-          duration: 1.7,
-          stagger: 0.12,
-          ease: 'sine.inOut',
-          immediateRender: false,
-        }, row * 0.55);
-      });
-      const updateStage = (self) => {
-        preloadAt(self.progress * 6700);
-        const active = self.scroll() >= self.start;
-        gsap.set(section, { clipPath: active ? 'none' : 'inset(0 0 100% 0)' });
-        const wordVisible = active && Number(gsap.getProperty(wordCloud, 'opacity')) > 0 && Number(gsap.getProperty(temporaryContent, 'opacity')) > 0;
-        if (wordVisible && !reducedMotion) wordMotion.resume();
-        else wordMotion.pause();
-        const softwareVisible = active && Number(gsap.getProperty(software, 'opacity')) > 0 && Number(gsap.getProperty(temporaryContent, 'opacity')) > 0;
-        if (softwareVisible && !reducedMotion) {
-          if (!softwareWasVisible) {
-            softwareMotion.pause().progress(0);
-            softwareEntrance.restart();
-          }
-          softwareWasVisible = true;
-          if (softwareEntrance.progress() === 1) softwareMotion.resume();
-        } else {
-          softwareWasVisible = false;
-          softwareEntrance.pause();
-          softwareMotion.pause();
-        }
-      };
-      const master = gsap.timeline({
-        defaults: { ease: 'none' },
-        onUpdate: () => {
-          if (master.scrollTrigger) updateStage(master.scrollTrigger);
-        },
-        scrollTrigger: {
-          trigger: section,
-          start: 'top top',
-          end: '+=6700',
-          scrub: 1,
-          snap: {
-            snapTo: 'labels',
-            directional: false,
-            inertia: false,
-            delay: 0.3,
-            duration: { min: 0.25, max: 0.7 },
-            ease: 'power2.inOut',
-          },
-          pin: stage,
-          pinSpacing: false,
-          invalidateOnRefresh: true,
-          onUpdate: updateStage,
-          onRefresh: updateStage,
-        },
-      });
-
-      const aboutReveal = gsap.timeline({ defaults: { ease: 'none' } })
-        .to(aboutTitle, { y: -444, duration: 0.6 }, 0)
-        .to(aboutTitle, { autoAlpha: 0, duration: 0.45 }, 0.15)
-        .to(wordCloud, { y: 0, autoAlpha: 1, duration: 0.25 }, 0.6)
-        .to(people, { y: 0, autoAlpha: 1, duration: 0.25 }, 0.8)
-        .to(detail, { y: 0, duration: 0.55 }, 1.05)
-        .to(detailSections, { autoAlpha: 1, duration: 0.15, stagger: 0.1 }, 1.05);
-      const tl = gsap.timeline({ defaults: { ease: 'none' } });
-
-      tl.to(temporaryContent, { autoAlpha: 0, duration: 0.15 }, 0.1)
-        .to([screen, keyboard], { opacity: 0, duration: 1 }, 0)
-        .to(fullComputer, { ...rectTweenVars(targetComputer, baseComputer), duration: 0.15 }, 0.1)
-        .set(objects, { autoAlpha: 1 }, 0.25)
-        .to(objects, { x: 0, y: 0, duration: 0.75 }, 0.25)
-        .to(titleAi, { autoAlpha: 1, duration: 0.5 }, 0.5)
-        .to(titleAi, { y: 0, duration: 0.25 }, 0.75)
-        .to(hints, { autoAlpha: 1, duration: 0.25 }, 0.75)
-        .set([screen, keyboard], { opacity: 0, visibility: 'hidden' }, 0.95)
-        .set(aboutNavigation, { autoAlpha: 0 }, 0.95)
-        .set(aiNavigation, { autoAlpha: 1 }, 0.95);
-
-      outgoingObjectOffsets.forEach(([element, outLeft, outTop, baseLeft, baseTop]) => {
-        if (!element) return;
-        tl.to(element, { x: outLeft - baseLeft, y: outTop - baseTop, duration: 0.2 }, 1.3);
-      });
-
-      tl.to(hints, { autoAlpha: 0, duration: 0.2 }, 1.3)
-        .to(titleAi, { autoAlpha: 0, y: -155, duration: 0.3 }, 1.3)
-        .to(objects, { autoAlpha: 0, duration: 0.05 }, 1.45)
-        .set(objects, { visibility: 'hidden' }, 1.5)
-        .to(titleUx, { autoAlpha: 1, y: 0, duration: 0.3 }, 1.7)
-        .set(aiNavigation, { autoAlpha: 0 }, 1.95)
-        .set(uxNavigation, { autoAlpha: 1 }, 1.95)
-        .to(titleUx, { y: -339, autoAlpha: 0, duration: 0.6 }, 2)
-        .to(uxProjects, { y: -92, autoAlpha: 1, duration: 0.3 }, 2.6)
-        .to(uxHint, { autoAlpha: 1, duration: 0.15 }, 2.9)
-        .to(uxWindow, { y: -102, autoAlpha: 1, duration: 0.15 }, 2.95)
-        .to(uxProjects, { autoAlpha: 0, duration: 0.2 }, 3.4)
-        .to(uxHint, { autoAlpha: 0, duration: 0.2 }, 3.4)
-        .to(uxWindow, { x: -763, y: -697, duration: 0.7 }, 3.4)
-        .set(uxProjects, { visibility: 'hidden' }, 3.6)
-        .set(uxHint, { visibility: 'hidden' }, 3.6)
-        .set(uxNavigation, { autoAlpha: 0 }, 4.05)
-        .set(exploreNavigation, { autoAlpha: 1 }, 4.05)
-        .to(uxWindow, { '--window-fade-radius': '1600px', duration: 0.2 }, 4.3)
-        .set(uxWindow, { autoAlpha: 0 }, 4.5)
-        .set([screen, keyboard], { visibility: 'visible' }, 4.5)
-        .to([screen, keyboard], { opacity: 1, duration: 0.4 }, 4.5)
-        .to(fullComputer, { ...rectTweenVars(contactComputer, baseComputer), duration: 0.4 }, 4.5)
-        .set(exploreNavigation, { autoAlpha: 0 }, 4.9)
-        .set(contactNavigation, { autoAlpha: 1 }, 4.9)
-        .to(contactCard, { autoAlpha: 1, duration: 0.2 }, 4.9);
-
-      master.add(aboutReveal, 0).add(tl, 1.6);
-      master.addLabel('about-first-screen', 0)
-        .addLabel('about-introduction-visible', 1.2)
-        .addLabel('about-reveal-complete', 1.6)
-        .addLabel('ai-first-screen', 2.6)
-        .addLabel('ux-first-screen', 3.6)
-        .addLabel('ux-reveal-complete', 4.7)
-        .addLabel('explore-first-screen', 5.7)
-        .addLabel('contact-first-screen', 6.7);
-      resourceTriggerRef.current = master.scrollTrigger;
-    }, stage);
-
-    return () => { resourceTriggerRef.current = null; ctx.revert(); };
-  }, []);
-
-  return (
-    <StagedResourcesContext.Provider value={imagePreloader}>
-    <section id="about" ref={sectionRef} className="about-ai-scroll-section frame-shell" data-frame="转场“关于我-AI/运营”">
-      <div id="about-ai" className="about-ai-anchor" aria-hidden="true" />
-      <div id="ai-ux" className="about-ai-ux-anchor" aria-hidden="true" />
-      <div id="explore" className="about-ai-explore-anchor" aria-hidden="true" />
-      <div id="explore-contact" className="about-ai-contact-anchor" aria-hidden="true" />
-      <div ref={stageRef} className="about-ai-pin-viewport">
-        <div className="figma-frame about-ai-transition-stage">
-          <FullComputer variant="about-ai-transition" style={{ left: -127, top: -36, width: 1517, height: 978 }} />
-          <AboutTailTemporaryContent />
-          <TextLayer name="title-关于我" className="section-title about-internal-title" style={{ left: 430, top: 307, width: 420 }}>关于我</TextLayer>
-          <div className="about-ai-object-layer">
-            <DeskObjectLayers onOpenProject={onOpenProject} onOpenFolder={onOpenFolder} />
-          </div>
-          <TextLayer name="title-ai" className="section-title" style={{ left: 395, top: 309, width: 490 }}>
-            AI/运营
-          </TextLayer>
-          <TextLayer name="title-ux/ui" className="section-title" style={{ left: 290, top: 309, width: 700 }}>
-            UX/UI项目
-          </TextLayer>
-          <BrowserWindowFrame style={{ left: 795, top: 733 }}>
-            <TextLayer name="title-个人探索" className="window-title" style={{ left: 329, top: 136 }}>
-              个人探索
-            </TextLayer>
-            <Folder name="small-folder1" style={{ left: 329, top: 242 }} label="账号笔记" onClick={onOpenExploreSecond} interactiveOpen />
-            <Folder name="small-folder2" style={{ left: 580, top: 242 }} label="摄影随拍" onClick={onOpenExploreWaterfall} interactiveOpen />
-          </BrowserWindowFrame>
-          <Layer name="project1" className="ux-explore-project project1" style={{ left: 95, top: 148 }} {...projectIntent('ux')} onClick={onOpenUxUiSecond} role="button" tabIndex={0} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') onOpenUxUiSecond?.(); }}>
-            <ImageLayer name="styleA" src={assets.uxStyleA} style={{ left: 12, top: 12, width: 328, height: 184 }} />
-            <TextLayer name="颐养生活消费季" className="ux-explore-project-title" style={{ left: 16, top: 216 }}>颐养生活消费季</TextLayer>
-          </Layer>
-          <Layer name="project2" className="ux-explore-project project2" style={{ left: 464, top: 148 }}>
-            <div className="ux-explore-project-default" />
-            <ImageLayer name="default1" src={assets.uxDefault1} style={{ left: 95, top: 35, width: 150, height: 150 }} />
-            <TextLayer name="项目更新中" className="ux-explore-project-title" style={{ left: 15, top: 216 }}>项目更新中...</TextLayer>
-          </Layer>
-          <ArrowHint name="arrow3" label="继续滚动查看" x={879} y={583} arrowY={10} />
-          <button
-            type="button"
-            className="layer more-label project-open-trigger"
-            style={{ left: 231, top: 369 }}
-            onClick={onOpenProject}
-            data-layer="点击探索更多"
-            {...projectIntent('ai')}
-          >
-            {primaryText('点击探索更多', english)}
-          </button>
-          <button
-            type="button"
-            className="layer image-button"
-            style={{ left: 253, top: 384, width: 67, height: 22 }}
-            onClick={onOpenProject}
-            data-layer="arrow1-trigger"
-            aria-label={primaryText('打开AI/运营2-1', english)}
-            {...projectIntent('ai')}
-          >
-            <ResourceImage src={assets.arrow1} alt="arrow1" draggable="false" />
-          </button>
-          <TextLayer name="点击探索更多" className="more-label" style={{ left: 1002, top: 445 }}>
-            点击探索更多
-          </TextLayer>
-          <ImageLayer name="arrow2" src={assets.arrow2} style={{ left: 955, top: 455, width: 94, height: 37.28 }} />
-          <Layer name="contact me" className="contact-card">
-            <ImageLayer name="message" src={assets.message} />
-            <TextLayer name="联系我" className="contact-title">联系我</TextLayer>
-            <Layer name="mail" className="contact-line mail">
-              <span>{primaryText('邮箱', english)}</span>
-              <CopyContactValue value="monsters_y@163.com" english={english} />
-            </Layer>
-            <Layer name="tel" className="contact-line tel">
-              <span>{primaryText('联系电话', english)}</span>
-              <CopyContactValue value="13506516670" english={english} />
-            </Layer>
-            <div className="qr-code" data-layer="QR code" />
-          </Layer>
-          <LeftNavigation active="关于我" className="about-tail-left-navigation" />
-          <LeftNavigation active="AI/运营" className="about-ai-left-navigation" />
-          <LeftNavigation active="UX/UI" className="about-ai-ux-left-navigation" />
-          <LeftNavigation active="个人探索" className="about-ai-explore-left-navigation" />
-          <LeftNavigation active="联系我" className="about-ai-contact-left-navigation" />
-        </div>
-      </div>
-    </section>
-    </StagedResourcesContext.Provider>
+    <DesignFrame id="about-ai" frameName="转场“关于我-AI/运营”">
+      <ImageLayer
+        name="computer-screen"
+        src={assets.computerScreen}
+        style={{
+          left: 'calc(50% - 1557.19px / 2 - 5.6px)',
+          top: 'calc(50% - 910.31px / 2 - 5.5px)',
+          width: 1557.19,
+          height: 910.31,
+        }}
+      />
+      <DeskObjectLayers onOpenProject={onOpenProject} onOpenFolder={onOpenFolder} />
+      <TextLayer name="title-ai" className="section-title" style={{ left: 395, top: 309, width: 490 }}>
+        AI/运营
+      </TextLayer>
+      <button
+        type="button"
+        className="layer more-label project-open-trigger"
+        style={{ left: 231, top: 369 }}
+        onClick={onOpenProject}
+        data-layer="点击探索更多"
+      >
+        点击探索更多
+      </button>
+      <button
+        type="button"
+        className="layer image-button"
+        style={{ left: 253, top: 384, width: 67, height: 22 }}
+        onClick={onOpenProject}
+        data-layer="arrow1-trigger"
+        aria-label="打开AI/运营2-1"
+      >
+        <img src={assets.arrow1} alt="arrow1" draggable="false" />
+      </button>
+      <TextLayer name="点击探索更多" className="more-label" style={{ left: 1002, top: 445 }}>
+        点击探索更多
+      </TextLayer>
+      <ImageLayer name="arrow2" src={assets.arrow2} style={{ left: 955, top: 455, width: 94, height: 37.28 }} />
+      <LeftNavigation active="AI/运营" />
+    </DesignFrame>
   );
 }
 
@@ -1249,9 +684,9 @@ function ModalCanvas({ children }) {
   );
 }
 
-function ProjectPaper({ name, className = '', index, stage, step, image, imageClass, children, topLayer = false, ...props }) {
+function ProjectPaper({ name, className = '', index, stage, step, image, imageClass, topLayer = false }) {
   return (
-    <div {...props} className={`modal-layer project-paper ${topLayer ? 'top-paper' : 'stack-paper'} ${className}`} data-layer={name}>
+    <div className={`modal-layer project-paper ${topLayer ? 'top-paper' : 'stack-paper'} ${className}`} data-layer={name}>
       <ModalImage name="paper" src={assets.paper2} className="project-paper-image" style={{ left: 0, top: 0, width: 518, height: 398 }} />
       <ModalText name={`${name}-index`} className="paper-index">{index}</ModalText>
       <ModalText name={`${name}-stage`} className="paper-stage">{stage}</ModalText>
@@ -1259,72 +694,19 @@ function ProjectPaper({ name, className = '', index, stage, step, image, imageCl
         <span aria-hidden="true">›</span>
         {step}
       </ModalText>
-      {image ? <button type="button" className={`paper-preview paper-preview-trigger ${imageClass || ''}`} data-paper-preview="" data-preview-src={image} data-preview-title={name} aria-label={`放大${name}图片`}>
-        <img src={image} alt={name} draggable="false" />
-      </button> : null}
-      {children}
+      {image ? <img className={`paper-preview ${imageClass || ''}`} src={image} alt={name} draggable="false" /> : null}
     </div>
   );
 }
 
-function FunctionMappingChart() {
-  const rows = [
-    ['痛点', '主要产品功能映射'],
-    ['不知道有什么可尝试', '“测一测”适合什么兴趣+兴趣推荐'],
-    ['担心投入过高浪费钱', '费用分级（入门档/进阶档）+ 分阶段装备推荐'],
-    ['教程资源分散', '精选教程链接（B站/小红书/抖音）+用户自主添加'],
-    ['跟踪反馈', '状态追踪（想尝试→进行中→已体验）+ 轻量打卡'],
-  ];
-  return <div className="function-chart" data-layer="function-chart" role="table" aria-label="主要产品功能映射">
-    {rows.map((row, index) => <div className="function-chart-row" role="row" key={row[0]}>
-      {row.map((text) => <span role={index === 0 ? 'columnheader' : 'cell'} key={text}>{text}</span>)}
-    </div>)}
-  </div>;
-}
-
-function PainPointTwoPaper(props) {
-  return (
-    <div {...props} className="modal-layer project-paper stack-paper stack-card stack-card-1 pain-paper-two" data-layer="用户痛点2">
-      <ModalImage name="paper" src={assets.paper2} className="project-paper-image" style={{ left: 0, top: 0, width: 518, height: 398 }} />
-      <ModalText name="1" className="paper-index">1</ModalText>
-      <ModalText name="产品分析" className="paper-stage">产品分析</ModalText>
-      <ModalImage name="icon-right" src={assets.iconRight} className="pain-two-icon-right" style={{ left: 74, top: 61, width: 10, height: 14 }} />
-      <ModalText name="STEP 1 用户痛点" className="pain-two-step">STEP 1&nbsp;&nbsp;用户痛点</ModalText>
-      <ModalText name="pain-two-intro" className="pain-two-intro">
-        场景还原：<br />
-        •&nbsp;&nbsp;被种草网球，搜了一下发现球拍、球鞋、场地卡零零散散加起来要3000+，开始犹豫<br />
-        •&nbsp;&nbsp;想起之前买的吉他、Kindle、健身卡都闲置了，自我怀疑“可能又会重蹈覆辙”<br />
-        •&nbsp;&nbsp;最终放弃，甚至产生“我不配拥有爱好”的消极心理
-      </ModalText>
-      <div className="modal-layer pain-two-highlight" data-layer="痛点三提示条">
-        <div className="pain-two-highlight-bar" />
-        <div>痛点三：教程资源分散，存了很多都在收藏夹吃灰</div>
-      </div>
-      <ModalText name="pain-two-detail" className="pain-two-detail">
-        用户原话：“网上教程太多了，收藏了很多不知道该跟哪个。”<br />
-        场景还原：<br />
-        •&nbsp;&nbsp;决定自学某项兴趣，打开B站/小红书搜索教程<br />
-        •&nbsp;&nbsp;结果页出现几十甚至上百个视频<br />
-        •&nbsp;&nbsp;花了大量时间筛选，还没开始学就已经疲惫
-      </ModalText>
-    </div>
-  );
-}
-
-function AiOperationProjectCanvas({ onPreview }) {
-  const demoScale = 236 / demoResources.ai.width;
-  const [demoLoaded, setDemoLoaded] = useState(false);
+function AiOperationProjectCanvas() {
   return (
     <ModalCanvas>
       <ModalImage name="ai-computer" src={assets.aiComputer} style={{ left: -146, top: -226, width: 385, height: 412 }} />
       <ModalImage name="notebook" src={assets.notebook} style={{ left: -85, top: 541, width: 300, height: 203 }} />
       <div className="modal-layer vibe-coding" data-layer="vibe-coding">
-        <div className="modal-layer interest-demo-screen" data-layer="html" style={{ left: 214, top: 100, width: 236, height: 513, overflow: 'hidden', zIndex: 1 }}>
-          <iframe className="interest-demo-preview" src={demoResources.ai.src} title="兴趣探索 Demo" onLoad={() => setDemoLoaded(true)} style={{ display: 'block', width: demoResources.ai.width, height: 513 / demoScale, border: 0, transform: `scale(${demoScale})`, transformOrigin: 'top left', opacity: demoLoaded ? 1 : 0 }} />
-        </div>
-        <ModalImage name="iphone" src={assets.iphone2} style={{ left: 190, top: 79, width: 284, height: 560, zIndex: 2, pointerEvents: 'none' }} />
+        <ModalImage name="iphone" src={assets.iphone2} style={{ left: 190, top: 79, width: 284, height: 560 }} />
         <div className="modal-layer paper-deck" data-layer="paper-deck">
-          <PaperStack onPreview={onPreview}>
           <ProjectPaper name="demo" className="stack-card stack-card-9" index="3" stage="高保真设计" step="STEP 2 DEMO制作" image={assets.demo} />
           <ProjectPaper name="设计风格" className="stack-card stack-card-8" index="3" stage="高保真设计" step="STEP 1 设计风格确定" image={assets.design} />
           <ProjectPaper name="线框图" className="stack-card stack-card-7" index="2" stage="原型设计" step="STEP 2 ASCII线框图" image={assets.wireframe} />
@@ -1332,11 +714,8 @@ function AiOperationProjectCanvas({ onPreview }) {
           <ProjectPaper name="用户旅程" className="stack-card stack-card-5" index="1" stage="产品分析" step="STEP 4 用户旅程图" image={assets.userJourney} imageClass="journey-preview" />
           <ProjectPaper name="功能架构" className="stack-card stack-card-4" index="1" stage="产品分析" step="STEP 3 主要功能模块架构图" image={assets.chart} imageClass="chart-preview" />
           <ProjectPaper name="功能流程" className="stack-card stack-card-3" index="1" stage="产品分析" step="STEP 3 主要功能流程图" image={assets.flow} imageClass="flow-preview" />
-          <ProjectPaper name="功能映射" className="stack-card stack-card-2" index="1" stage="产品分析" step="STEP 2 功能映射">
-            <FunctionMappingChart />
-            <ModalImage name="icon-down" src={assets.iconDown} style={{ left: 253, top: 349, width: 12, height: 12 }} />
-          </ProjectPaper>
-          <PainPointTwoPaper />
+          <ProjectPaper name="功能映射" className="stack-card stack-card-2" index="1" stage="产品分析" step="STEP 2 功能映射" image={assets.chart} imageClass="chart-preview" />
+          <ProjectPaper name="用户痛点2" className="stack-card stack-card-1" index="1" stage="产品分析" step="STEP 1 用户痛点" />
           <div className="modal-layer project-paper top-paper pain-paper" data-layer="用户痛点1">
             <ModalImage name="paper" src={assets.paper2} className="project-paper-image" style={{ left: 0, top: 0, width: 518, height: 398 }} />
             <ModalText name="1" className="paper-index">1</ModalText>
@@ -1366,41 +745,30 @@ function AiOperationProjectCanvas({ onPreview }) {
               <p>用户原话：“我怕买了装备后坚持不下来，最后东西吃灰，钱也花了，还觉得自己很失败。”</p>
             </div>
           </div>
-          </PaperStack>
         </div>
       </div>
     </ModalCanvas>
   );
 }
 
-function ProjectCloseButton({ onClose }) {
-  const { language } = useContext(LanguageContext);
-  return (
-    <button className="project-modal-close" type="button" onClick={onClose} aria-label={language === 'en' ? 'Close project' : '关闭项目'}>
-      <img src={assets.iconClose} alt="" draggable="false" />
-    </button>
-  );
-}
-
 function AiOperationProjectPage({ onClose }) {
-  const [preview, setPreview] = useState(null);
   return (
-    <section className="spa-project-page ai-operation-project-page" data-frame="AI/运营2-1" aria-label="AI/运营2-1">
-      <ProjectCloseButton onClose={onClose} />
-      <AiOperationProjectCanvas onPreview={setPreview} />
-      {preview ? <ProjectImagePreview image={preview} onClose={() => setPreview(null)} /> : null}
+    <section className="spa-project-page" data-frame="AI/运营2-1" aria-label="AI/运营2-1">
+      <button className="project-modal-close" type="button" onClick={onClose} aria-label="关闭AI/运营2-1">
+        <img src={assets.iconClose} alt="关闭" draggable="false" />
+      </button>
+      <AiOperationProjectCanvas />
     </section>
   );
 }
 
-function FolderSection({ name, imageName = name, src, style, zIndex, onClick, preload, children }) {
+function FolderSection({ name, imageName = name, src, style, zIndex, onClick, children }) {
   return (
     <div
       className={`modal-layer folder-section ${name}-group ${onClick ? 'folder-section-clickable' : ''}`}
       data-layer={name}
       style={{ ...style, zIndex }}
       onClick={onClick}
-      {...(preload ? projectIntent(preload) : {})}
       role={onClick ? 'button' : undefined}
       tabIndex={onClick ? 0 : undefined}
       onKeyDown={onClick ? (event) => { if (event.key === 'Enter' || event.key === ' ') onClick(event); } : undefined}
@@ -1423,22 +791,24 @@ function FolderTitle({ number, title, style }) {
 function AiOperationFolderPage({ onClose, onOpenBrand, onOpenPoster, onOpenCoffee }) {
   return (
     <section className="spa-project-page project-folder-page" data-frame="AI/运营2-2" aria-label="AI/运营2-2">
-      <ProjectCloseButton onClose={onClose} />
+      <button className="project-modal-close" type="button" onClick={onClose} aria-label="关闭AI/运营2-2">
+        <img src={assets.iconClose} alt="关闭" draggable="false" />
+      </button>
       <ModalCanvas>
         <FolderSection name="folder5" imageName="folder-page5" src={assets.folderPage5} style={{ left: 0, top: 169, width: 1280, height: 548 }} zIndex={1}>
           <ModalImage name="IP-thumbnail" src={assets.ipThumbnail} style={{ left: 476, top: -9.91, width: 245, height: 313, transform: 'rotate(4deg)' }} />
           <FolderTitle number="04" title="IP形象设计" style={{ left: 118, top: 52, gap: 16 }} />
         </FolderSection>
-        <FolderSection name="folder4" imageName="folder-page4" src={assets.folderPage4} style={{ left: 0, top: 244, width: 1280, height: 473 }} zIndex={2} onClick={onOpenCoffee} preload="coffee">
+        <FolderSection name="folder4" imageName="folder-page4" src={assets.folderPage4} style={{ left: 0, top: 244, width: 1280, height: 473 }} zIndex={2} onClick={onOpenCoffee}>
           <ModalImage name="brand-thumbnail" src={assets.brandThumbnail} style={{ left: 311, top: 44, width: 388, height: 234 }} />
           <FolderTitle number="03" title="品牌运营设计" style={{ left: 844, top: 54 }} />
         </FolderSection>
-        <FolderSection name="folder3" imageName="folder-page3" src={assets.folderPage3} style={{ left: 0, top: 342, width: 1280, height: 375 }} zIndex={3} onClick={onOpenPoster} preload="poster">
+        <FolderSection name="folder3" imageName="folder-page3" src={assets.folderPage3} style={{ left: 0, top: 342, width: 1280, height: 375 }} zIndex={3} onClick={onOpenPoster}>
           <ModalImage name="poster-thumbnail1" src={assets.posterThumbnail1} style={{ left: 459, top: 80.41, width: 271, height: 321, transform: 'rotate(-10deg)' }} />
           <ModalImage name="poster-thumbnail2" src={assets.posterThumbnail2} style={{ left: 741.77, top: 0, width: 262, height: 341, transform: 'rotate(12deg)' }} />
           <FolderTitle number="02" title="活动海报" style={{ left: 181, top: 47 }} />
         </FolderSection>
-        <FolderSection name="folder2" imageName="folder-page2" src={assets.folderPage2} style={{ left: 0, top: 432, width: 1280, height: 285 }} zIndex={4} onClick={onOpenBrand} preload="brand">
+        <FolderSection name="folder2" imageName="folder-page2" src={assets.folderPage2} style={{ left: 0, top: 432, width: 1280, height: 285 }} zIndex={4} onClick={onOpenBrand}>
           <ModalImage name="beatuy-thumbnail" src={assets.beautyThumbnail} style={{ left: 299, top: 108, width: 632, height: 318 }} />
           <FolderTitle number="01" title="运营视觉重构" style={{ left: 24, top: 55 }} />
         </FolderSection>
@@ -1488,8 +858,8 @@ function PosterPlaceholder({ name, left, top, width = 235, height = 313 }) {
   return <div className="poster-placeholder" data-layer={name} style={{ left, top, width, height }} />;
 }
 
-function SynchronizedPosterGif({ name, src, left, top }) {
-  return <PosterImage name={name} src={src} className="poster-gif" left={left} top={top} width={235} height={313} />;
+function SynchronizedPosterGif({ name, src, left, top, syncToken }) {
+  return <PosterImage name={name} src={`${src}?sync=${syncToken}`} className="poster-gif" left={left} top={top} width={235} height={313} />;
 }
 
 function PosterStepFrame({ left, top, width, height, titleWidth, titleLeft, titleTop, textLeft, textTop, textWidth, title }) {
@@ -1505,10 +875,13 @@ function PosterStepFrame({ left, top, width, height, titleWidth, titleLeft, titl
 function PosterOperationPage({ onClose }) {
   const scale = useCanvasScale();
   const totalHeight = 3646;
+  const [gifSyncToken] = useState(() => Date.now());
 
   return (
     <section className="spa-project-page poster-operation-page" data-frame="AI/运营3-2" aria-label="AI/运营3-2">
-      <ProjectCloseButton onClose={onClose} />
+      <button className="project-modal-close" type="button" onClick={onClose} aria-label="关闭AI/运营3-2">
+        <img src={assets.iconClose} alt="关闭" draggable="false" />
+      </button>
       <div className="brand-page-scroll poster-page-scroll">
         <div className="brand-page-viewport poster-page-viewport" style={{ height: px(totalHeight * scale) }}>
           <div className="brand-page-frame poster-page-frame" style={{ transform: `translateX(-50%) scale(${scale})`, height: totalHeight }}>
@@ -1545,9 +918,9 @@ function PosterOperationPage({ onClose }) {
             <BrandText name="老式夏天系列" className="poster-memory-series" style={{ left: 349, top: 1237 }}>
               ——“老式夏天”系列
             </BrandText>
-            <SynchronizedPosterGif name="watermelon-gif" src={assets.watermelonGif} left={506} top={940} />
-            <SynchronizedPosterGif name="cola-gif" src={assets.colaGif} left={745} top={940} />
-            <SynchronizedPosterGif name="chair-gif" src={assets.chairGif} left={985} top={940} />
+            <SynchronizedPosterGif name="watermelon-gif" src={assets.watermelonGif} left={506} top={940} syncToken={gifSyncToken} />
+            <SynchronizedPosterGif name="cola-gif" src={assets.colaGif} left={745} top={940} syncToken={gifSyncToken} />
+            <SynchronizedPosterGif name="chair-gif" src={assets.chairGif} left={985} top={940} syncToken={gifSyncToken} />
 
             <PosterSectionHeading title="互动H5—摇奖机" top={1324} />
             <BrandText name="营销运用" className="poster-copy poster-description" style={{ left: 288, top: 1324 }}>
@@ -1560,7 +933,7 @@ function PosterOperationPage({ onClose }) {
             <BrandText name="应用工具" className="poster-step-label" style={{ left: 68, top: 1605, width: 70, height: 14 }}>应用工具：</BrandText>
             <BrandText name="GEMINI+PHOTOSHO" className="poster-step-copy" style={{ left: 138, top: 1605, width: 149, height: 14 }}>GEMINI+PHOTOSHO</BrandText>
 
-            <PosterStepFrame left={294} top={1387} width={248} height={244} titleWidth={154} textWidth={140} titleLeft={302} titleTop={1393} textLeft={306} textTop={1399} title="•STEP 2：素材处理" />
+            <PosterStepFrame left={294} top={1387} width={248} titleWidth={154} textWidth={140} titleLeft={302} titleTop={1393} textLeft={306} textTop={1399} title="•STEP 2：素材处理" />
             <PosterImage name="prompt2" src={assets.prompt2} left={302} top={1425} width={232} height={130} />
             <BrandText name="处理内容2" className="poster-step-copy" style={{ left: 302, top: 1558, width: 230, height: 40 }}>处理内容：创建素材处理skill，批量处理素材组</BrandText>
             <BrandText name="应用工具2" className="poster-step-label" style={{ left: 302, top: 1605, width: 70, height: 14 }}>应用工具：</BrandText>
@@ -1573,18 +946,13 @@ function PosterOperationPage({ onClose }) {
             <BrandText name="应用工具3" className="poster-step-label" style={{ left: 68, top: 1931, width: 70, height: 14 }}>应用工具：</BrandText>
             <BrandText name="CHATGPT+CODEX" className="poster-step-copy poster-single-line" style={{ left: 138, top: 1931, width: 124, height: 14 }}>CHATGPT+CODEX</BrandText>
 
-            <div className="brand-layer poster-section-c-preview" data-layer="sectionC" style={{ left: 60, top: 1324, width: 1160, height: 667 }}>
-              <BrandText name="try it！" className="poster-try-it" style={{ left: 1106, top: 71, width: 48, height: 10 }}>try it！</BrandText>
-              <BrandImage name="arrow6" src={assets.arrow6} style={{ left: '92.67%', right: '1.64%', top: '7.58%', bottom: '87.2%', width: '5.69%', height: '5.22%' }} />
-              <iframe
-                className="poster-html-preview"
-                data-layer="html"
-                src={demoResources.poster.src}
-                loading="lazy"
-                title="摇奖机项目"
-                style={{ left: 498, top: 97, width: 662, height: 536 }}
-              />
-            </div>
+            <iframe
+              className="poster-html-preview"
+              data-layer="html"
+              src="http://localhost:5188/"
+              title="摇奖机项目"
+              style={{ left: 558, top: 1387, width: 662, height: 570 }}
+            />
 
             <PosterSectionHeading title="活动海报" top={2029} />
             <PosterStepFrame left={60} top={2073} width={497} height={210} titleWidth={176} titleLeft={68} titleTop={2081} textLeft={76} textTop={2087} title="风格海报生成步骤拆解" />
@@ -1596,8 +964,8 @@ function PosterOperationPage({ onClose }) {
             <PosterImage name="flower1" src={assets.posterFlower1} left={347} top={2081} width={161} height={194} />
             <PosterImage name="flower2" src={assets.posterFlower2} left={471.19} top={2167} width={51.42} height={108} />
             <PosterImage name="arrow5" src={assets.arrow5} left={507.5} top={2135} width={37} height={81} />
-            <SynchronizedPosterGif name="flower-gif" src={assets.flowerGif} left={746} top={2073} />
-            <SynchronizedPosterGif name="city-food-gif" src={assets.cityFoodGif} left={985} top={2073} />
+            <SynchronizedPosterGif name="flower-gif" src={assets.flowerGif} left={746} top={2073} syncToken={gifSyncToken} />
+            <SynchronizedPosterGif name="city-food-gif" src={assets.cityFoodGif} left={985} top={2073} syncToken={gifSyncToken} />
 
             <PosterSectionHeading title="其他主题衍生" top={2458} />
             <PosterImage name="donatebook" src={assets.posterDonatebook} left={60} top={2502} width={378} height={504} />
@@ -1618,8 +986,7 @@ function BrandText({ name, children, style, className = '' }) {
 }
 
 function BrandImage({ name, src, style, className = '' }) {
-  const hero = ['beauty-top-bg', 'poster-top-bg', 'brand-top-bg', 'nourish-top-bg', 'xhs-top-bg'].includes(name);
-  return <img className={`brand-layer brand-image ${className}`} data-layer={name} src={src} alt={name} style={style} draggable="false" loading={hero ? 'eager' : 'lazy'} fetchPriority={hero ? 'high' : 'auto'} decoding="async" />;
+  return <img className={`brand-layer brand-image ${className}`} data-layer={name} src={src} alt={name} style={style} draggable="false" />;
 }
 
 function BrandSectionHeading({ number, title, top, titleTop = top + 68, numberLeft = 72 }) {
@@ -1637,11 +1004,13 @@ function BrandOperationPage({ onClose }) {
 
   return (
     <section className="spa-project-page brand-operation-page" data-frame="AI/运营3-1" aria-label="AI/运营3-1">
-      <ProjectCloseButton onClose={onClose} />
+      <button className="project-modal-close" type="button" onClick={onClose} aria-label="关闭AI/运营3-1">
+        <img src={assets.iconClose} alt="关闭" draggable="false" />
+      </button>
       <div className="brand-page-scroll">
         <div className="brand-page-viewport" style={{ height: px(totalHeight * scale), background: '#fbfbf9' }}>
           <div className="brand-page-frame" style={{ transform: `translateX(-50%) scale(${scale})`, height: totalHeight }}>
-            <BrandImage name="beauty-top-bg" src={assets.beautyTopBg} style={{ left: 0, top: 0, width: 1280, height: 590 }} />
+            <BrandImage name="brand-top-bg" src={assets.brandTopBg} style={{ left: 0, top: 0, width: 1280, height: 590 }} />
             <BrandText name="coa:ya" className="brand-kicker" style={{ left: 111, top: 107 }}>co : aya</BrandText>
             <BrandText name="运营视觉策略重构" className="brand-hero-title" style={{ left: 111, top: 167 }}>运营视觉策略重构</BrandText>
             {[
@@ -1911,158 +1280,15 @@ function BrandOperationPage({ onClose }) {
   );
 }
 
-function TransitionAiUx({ onOpenProject, onOpenFolder, onOpenUxUiSecond }) {
-  const sectionRef = useRef(null);
-  const stageRef = useRef(null);
-
-  useEffect(() => {
-    const section = sectionRef.current;
-    const stage = stageRef.current;
-    if (!section || !stage) return undefined;
-
-    const ctx = gsap.context(() => {
-      const objectLayer = stage.querySelector('.ai-ux-object-layer');
-      const outgoingObjects = objectLayer.querySelectorAll(':scope > .ai-computer, :scope > .notebook, :scope > .pen-cup, :scope > .folder, :scope > .coffee, :scope > .leave, :scope > .project-open-group');
-      const titleAi = stage.querySelector('.title-ai');
-      const titleUx = stage.querySelector('.title-ux\\/ui');
-      const hints = stage.querySelectorAll('.more-label, .image-button, .arrow2');
-      const uxProjects = stage.querySelectorAll('.project1, .project2');
-      const uxHint = stage.querySelector('.click-hint');
-      const uxWindow = stage.querySelector('.browser-window-frame');
-      const screen = stage.querySelector('.screen-shape');
-      const keyboard = stage.querySelector('.keyboard');
-      const aiNavigation = stage.querySelector('.ai-ux-ai-left-navigation');
-      const uxNavigation = stage.querySelector('.ai-ux-left-navigation');
-      const exploreNavigation = stage.querySelector('.ai-ux-explore-left-navigation');
-      const objectOffsets = [
-        [objectLayer.querySelector(':scope > .ai-computer'), 0, 0, -323, -412, 0, 0],
-        [objectLayer.querySelector(':scope > .notebook'), 0, 554, -247, 804, 0, 554],
-        [objectLayer.querySelector(':scope > .pen-cup'), 1157, 184, 1632, -54, 1157, 184],
-        [objectLayer.querySelector(':scope > .folder'), 834, 410, 1123, 803, 834, 410],
-        [objectLayer.querySelector(':scope > .coffee'), 938, 0, 972, -354, 938, 0],
-        [objectLayer.querySelector(':scope > .leave'), 396, 0, 375, -412, 396, 0],
-        [objectLayer.querySelector(':scope > .project-open-group'), 74.96, 381.17, 43, 800, 72, 380],
-      ];
-
-      gsap.set(stage.querySelector('.full-computer'), { transformOrigin: 'center center', x: 0, y: 0, scaleX: 1, scaleY: 1 });
-      gsap.set([screen, keyboard], { autoAlpha: 0 });
-      gsap.set(outgoingObjects, { autoAlpha: 1 });
-      gsap.set(titleAi, { autoAlpha: 1, y: 0 });
-      gsap.set(titleUx, { autoAlpha: 0, y: 159 });
-      gsap.set(hints, { autoAlpha: 1 });
-      gsap.set(uxProjects, { autoAlpha: 0, y: 0 });
-      gsap.set(uxHint, { autoAlpha: 0 });
-      gsap.set(uxWindow, { autoAlpha: 0, y: 0 });
-      gsap.set(aiNavigation, { autoAlpha: 1 });
-      gsap.set(uxNavigation, { autoAlpha: 0 });
-      gsap.set(exploreNavigation, { autoAlpha: 0 });
-      objectOffsets.forEach(([element, startLeft, startTop, , , baseLeft, baseTop]) => {
-        if (!element) return;
-        gsap.set(element, { x: startLeft - baseLeft, y: startTop - baseTop });
-      });
-
-      const tl = gsap.timeline({
-        defaults: { ease: 'none' },
-        scrollTrigger: {
-          trigger: section,
-          start: 'top top',
-          end: '+=3100',
-          scrub: 1,
-          pin: stage,
-          pinSpacing: false,
-          invalidateOnRefresh: true,
-        },
-      });
-
-      objectOffsets.forEach(([element, , , endLeft, endTop, baseLeft, baseTop]) => {
-        if (!element) return;
-        tl.to(element, { x: endLeft - baseLeft, y: endTop - baseTop, duration: 0.2 }, 0.3);
-      });
-
-      tl.to(hints, { autoAlpha: 0, duration: 0.2 }, 0.3)
-        .to(titleAi, { autoAlpha: 0, y: -155, duration: 0.3 }, 0.3)
-        .to(outgoingObjects, { autoAlpha: 0, duration: 0.05 }, 0.45)
-        .set(outgoingObjects, { visibility: 'hidden' }, 0.5)
-        .to(titleUx, { autoAlpha: 1, y: 0, duration: 0.3 }, 0.7)
-        .set(aiNavigation, { autoAlpha: 0 }, 0.95)
-        .set(uxNavigation, { autoAlpha: 1 }, 0.95)
-        .to(titleUx, { y: -339, autoAlpha: 0, duration: 0.6 }, 1)
-        .to(uxProjects, { y: -92, autoAlpha: 1, duration: 0.3 }, 1.6)
-        .to(uxHint, { autoAlpha: 1, duration: 0.15 }, 1.9)
-        .to(uxWindow, { y: -102, autoAlpha: 1, duration: 0.15 }, 1.95)
-        .to(uxProjects, { autoAlpha: 0, duration: 0.2 }, 2.4)
-        .to(uxHint, { autoAlpha: 0, duration: 0.2 }, 2.4)
-        .to(uxWindow, { x: -763, y: -697, duration: 0.7 }, 2.4)
-        .set(uxProjects, { visibility: 'hidden' }, 2.6)
-        .set(uxHint, { visibility: 'hidden' }, 2.6)
-        .set(uxNavigation, { autoAlpha: 0 }, 3.05)
-        .set(exploreNavigation, { autoAlpha: 1 }, 3.05);
-    }, stage);
-
-    return () => ctx.revert();
-  }, []);
-
+function TransitionAiUx() {
   return (
-    <section ref={sectionRef} className="ai-ux-scroll-section frame-shell" data-frame="转场“AI/运营-UX/UI项目”">
-      <div id="ai-ux" className="ai-ux-anchor" aria-hidden="true" />
-      <div ref={stageRef} className="ai-ux-pin-viewport">
-        <div className="figma-frame ai-ux-transition-stage">
-          <FullComputer variant="ai-ux-transition" style={{ left: -225, top: -94, width: 1730, height: 1115 }} />
-          <div className="ai-ux-object-layer">
-            <DeskObjectLayers onOpenProject={onOpenProject} onOpenFolder={onOpenFolder} />
-          </div>
-          <TextLayer name="title-ai" className="section-title" style={{ left: 395, top: 309, width: 490 }}>
-            AI/运营
-          </TextLayer>
-          <TextLayer name="title-ux/ui" className="section-title" style={{ left: 290, top: 309, width: 700 }}>
-            UX/UI项目
-          </TextLayer>
-          <BrowserWindowFrame style={{ left: 795, top: 733 }}>
-            <TextLayer name="title-个人探索" className="window-title" style={{ left: 329, top: 136 }}>
-              个人探索
-            </TextLayer>
-            <Folder name="small-folder1" style={{ left: 329, top: 242 }} label="账号笔记" />
-            <Folder name="small-folder2" style={{ left: 580, top: 242 }} label="摄影随拍" />
-          </BrowserWindowFrame>
-          <Layer name="project1" className="ux-explore-project project1" style={{ left: 95, top: 148 }} onClick={onOpenUxUiSecond} role="button" tabIndex={0} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') onOpenUxUiSecond?.(); }}>
-            <ImageLayer name="styleA" src={assets.uxStyleA} style={{ left: 12, top: 12, width: 328, height: 184 }} />
-            <TextLayer name="颐养生活消费季" className="ux-explore-project-title" style={{ left: 16, top: 216 }}>颐养生活消费季</TextLayer>
-          </Layer>
-          <Layer name="project2" className="ux-explore-project project2" style={{ left: 464, top: 148 }}>
-            <div className="ux-explore-project-default" />
-            <ImageLayer name="default1" src={assets.uxDefault1} style={{ left: 95, top: 35, width: 150, height: 150 }} />
-            <TextLayer name="项目更新中" className="ux-explore-project-title" style={{ left: 15, top: 216 }}>项目更新中...</TextLayer>
-          </Layer>
-          <ArrowHint name="arrow3" label="继续滚动查看" x={879} y={583} arrowY={10} />
-          <button
-            type="button"
-            className="layer more-label project-open-trigger"
-            style={{ left: 231, top: 369 }}
-            onClick={onOpenProject}
-            data-layer="点击探索更多"
-          >
-            点击探索更多
-          </button>
-          <button
-            type="button"
-            className="layer image-button"
-            style={{ left: 253, top: 384, width: 67, height: 22 }}
-            onClick={onOpenProject}
-            data-layer="arrow1-trigger"
-            aria-label="打开AI/运营2-1"
-          >
-            <img src={assets.arrow1} alt="arrow1" draggable="false" />
-          </button>
-          <TextLayer name="点击探索更多" className="more-label" style={{ left: 1002, top: 445 }}>
-            点击探索更多
-          </TextLayer>
-          <ImageLayer name="arrow2" src={assets.arrow2} style={{ left: 955, top: 455, width: 94, height: 37.28 }} />
-          <LeftNavigation active="AI/运营" className="ai-ux-ai-left-navigation" />
-          <LeftNavigation active="UX/UI" className="ai-ux-left-navigation" />
-          <LeftNavigation active="个人探索" className="ai-ux-explore-left-navigation" />
-        </div>
-      </div>
-    </section>
+    <DesignFrame id="ai-ux" frameName="转场“AI/运营-UX/UI项目”">
+      <ImageLayer name="computer-screen" className="giant-screen ai-ux-screen" src={assets.computerScreen} />
+      <TextLayer name="title-ux/ui" className="section-title" style={{ left: 290, top: 309, width: 700 }}>
+        UX/UI项目
+      </TextLayer>
+      <LeftNavigation active="UX/UI" />
+    </DesignFrame>
   );
 }
 
@@ -2070,29 +1296,22 @@ function BrowserWindow({ className = '', style }) {
   return <ImageLayer name="window" className={`browser-window ${className}`} src={assets.window} style={{ ...style, width: 1216, height: 713 }} />;
 }
 
-function BrowserWindowFrame({ className = '', style, children }) {
-  return (
-    <Layer name="window" className={`browser-window-frame ${className}`} style={{ ...style, width: 1216, height: 713 }}>
-      <BrowserWindow style={{ left: 0, top: 0 }} />
-      {children}
-    </Layer>
-  );
-}
-
 function Folder({ name, style, label, onClick, interactiveOpen = false }) {
-  const thumbnailPrefix = name.includes('2') ? 'photo' : 'xhs';
+  const isFolder2 = name === 'small-folder2' && interactiveOpen;
   const src = name.includes('2') ? assets.smallFolder2 : assets.smallFolder1;
 
   return (
-    <Layer name={name} className={`small-folder ${interactiveOpen ? 'small-folder2-interactive' : ''}`} style={style} {...(onClick ? projectIntent(name.includes('2') ? 'photography' : 'notes') : {})} onClick={onClick} role={onClick ? 'button' : undefined} tabIndex={onClick ? 0 : undefined} onKeyDown={onClick ? (event) => { if (event.key === 'Enter' || event.key === ' ') onClick(); } : undefined}>
-      <ImageLayer name={name} className={interactiveOpen ? 'small-folder2-default' : ''} src={src} style={{ left: 0, top: 0, width: 155, height: 126.5 }} />
-      {interactiveOpen ? (
+    <Layer name={name} className={`small-folder ${isFolder2 ? 'small-folder2-interactive' : ''}`} style={style} onClick={onClick} role={onClick ? 'button' : undefined} tabIndex={onClick ? 0 : undefined} onKeyDown={onClick ? (event) => { if (event.key === 'Enter' || event.key === ' ') onClick(); } : undefined}>
+      <ImageLayer name={name} className={isFolder2 ? 'small-folder2-default' : ''} src={src} style={{ left: 0, top: 0, width: 155, height: 126.5 }} />
+      {isFolder2 ? (
         <>
-          <ImageLayer name={`${name}-front`} className="small-folder2-open-front" src={assets.smallFolder2Front} />
+          <ImageLayer name="small-folder2-front" className="small-folder2-open-front" src={assets.smallFolder2Front} />
           <div className="small-folder2-photo-stack">
-            {[1, 2, 3].map((index) => <ImageLayer key={index} name={`${thumbnailPrefix}-thumbnail${index}`} className={`small-folder2-photo photo-thumbnail${index}`} src={assets[`${thumbnailPrefix}Thumbnail${index}`]} />)}
+            <ImageLayer name="photo-thumbnail1" className="small-folder2-photo photo-thumbnail1" src={assets.photoThumbnail1} />
+            <ImageLayer name="photo-thumbnail2" className="small-folder2-photo photo-thumbnail2" src={assets.photoThumbnail2} />
+            <ImageLayer name="photo-thumbnail3" className="small-folder2-photo photo-thumbnail3" src={assets.photoThumbnail3} />
           </div>
-          <ImageLayer name={`${name}-back`} className="small-folder2-open-back" src={assets.smallFolder2Back} />
+          <ImageLayer name="small-folder2-back" className="small-folder2-open-back" src={assets.smallFolder2Back} />
         </>
       ) : null}
       {label ? <TextLayer name={label} className="folder-label">{label}</TextLayer> : null}
@@ -2101,100 +1320,50 @@ function Folder({ name, style, label, onClick, interactiveOpen = false }) {
 }
 
 function TransitionUxExplore({ onOpenUxUiSecond }) {
-  const sectionRef = useRef(null);
-  const stageRef = useRef(null);
-
-  useEffect(() => {
-    const section = sectionRef.current;
-    const stage = stageRef.current;
-    if (!section || !stage) return undefined;
-
-    const ctx = gsap.context(() => {
-      const titleUx = stage.querySelector('.title-ux\\/ui');
-      const projects = stage.querySelectorAll('.project1, .project2');
-      const hint = stage.querySelector('.click-hint');
-      const windowFrame = stage.querySelector('.browser-window-frame');
-      const screen = stage.querySelector('.screen-shape');
-      const keyboard = stage.querySelector('.keyboard');
-
-      gsap.set([screen, keyboard], { autoAlpha: 0 });
-      gsap.set(titleUx, { autoAlpha: 1, y: 0 });
-      gsap.set(projects, { autoAlpha: 0, y: 0 });
-      gsap.set(hint, { autoAlpha: 0 });
-      gsap.set(windowFrame, { autoAlpha: 0, y: 0 });
-
-      const tl = gsap.timeline({
-        defaults: { ease: 'none' },
-        scrollTrigger: {
-          trigger: section,
-          start: 'top top',
-          end: '+=1600',
-          scrub: 1,
-          pin: stage,
-          pinSpacing: false,
-          invalidateOnRefresh: true,
-        },
-      });
-
-      tl.to(titleUx, { y: -339, autoAlpha: 0, duration: 0.6 }, 0)
-        .to(projects, { y: -92, autoAlpha: 1, duration: 0.3 }, 0.6)
-        .to(hint, { autoAlpha: 1, duration: 0.15 }, 0.9)
-        .to(windowFrame, { y: -102, autoAlpha: 1, duration: 0.15 }, 0.95)
-        .to({}, { duration: 0.5 }, 1.1);
-    }, stage);
-
-    return () => ctx.revert();
-  }, []);
-
   return (
-    <section ref={sectionRef} id="ux-explore" className="ux-explore-internal-scroll-section frame-shell" data-frame="转场“UX/UI项目-个人探索”">
-      <div ref={stageRef} className="ux-explore-pin-viewport">
-        <div className="figma-frame ux-explore-internal-stage">
-          <FullComputer variant="ux-explore" style={{ left: -225, top: -94, width: 1730, height: 1115 }} />
-          <TextLayer name="title-ux/ui" className="section-title" style={{ left: 290, top: 309, width: 700 }}>
-            UX/UI项目
-          </TextLayer>
-          <BrowserWindowFrame style={{ left: 795, top: 733 }}>
-            <TextLayer name="title-个人探索" className="window-title" style={{ left: 329, top: 136 }}>
-              个人探索
-            </TextLayer>
-            <Folder name="small-folder1" style={{ left: 329, top: 242 }} label="账号笔记" />
-            <Folder name="small-folder2" style={{ left: 580, top: 242 }} label="摄影随拍" />
-          </BrowserWindowFrame>
-          <LeftNavigation active="UX/UI" />
-          <Layer name="project1" className="ux-explore-project project1" style={{ left: 95, top: 148 }} onClick={onOpenUxUiSecond} role="button" tabIndex={0} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') onOpenUxUiSecond?.(); }}>
-            <ImageLayer name="styleA" src={assets.uxStyleA} style={{ left: 12, top: 12, width: 328, height: 184 }} />
-            <TextLayer name="颐养生活消费季" className="ux-explore-project-title" style={{ left: 16, top: 216 }}>颐养生活消费季</TextLayer>
-          </Layer>
-          <Layer name="project2" className="ux-explore-project project2" style={{ left: 464, top: 148 }}>
-            <div className="ux-explore-project-default" />
-            <ImageLayer name="default1" src={assets.uxDefault1} style={{ left: 95, top: 35, width: 150, height: 150 }} />
-            <TextLayer name="项目更新中" className="ux-explore-project-title" style={{ left: 15, top: 216 }}>项目更新中...</TextLayer>
-          </Layer>
-          <ArrowHint name="arrow3" label="继续滚动查看" x={879} y={583} arrowY={10} />
-        </div>
-      </div>
-    </section>
+    <DesignFrame id="ux-explore" frameName="转场“UX/UI项目-个人探索”">
+      <Layer name="computer-screen" className="transition-screen-group">
+        <div className="screen-white" />
+        <ImageLayer name="computer-screen" src={assets.computerScreen} />
+      </Layer>
+      <LeftNavigation active="UX/UI" />
+      <Layer name="project1" className="ux-explore-project project1" onClick={onOpenUxUiSecond} role="button" tabIndex={0} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') onOpenUxUiSecond?.(); }}>
+        <ImageLayer name="styleA" src={assets.uxStyleA} style={{ left: 12, top: 12, width: 328, height: 184 }} />
+        <TextLayer name="颐养生活消费季" className="ux-explore-project-title" style={{ left: 16, top: 216 }}>颐养生活消费季</TextLayer>
+      </Layer>
+      <Layer name="project2" className="ux-explore-project project2">
+        <div className="ux-explore-project-default" />
+        <ImageLayer name="default1" src={assets.uxDefault1} style={{ left: 95, top: 35, width: 150, height: 150 }} />
+        <TextLayer name="项目更新中" className="ux-explore-project-title" style={{ left: 15, top: 216 }}>项目更新中...</TextLayer>
+      </Layer>
+      <BrowserWindow style={{ left: 795, top: 631 }} />
+      <TextLayer name="title-个人探索" className="window-title" style={{ left: 1124, top: 767 }}>
+        个人探索
+      </TextLayer>
+      <Folder name="small-folder1" style={{ left: 1124, top: 873 }} label="账号笔记" />
+      <Folder name="small-folder2" style={{ left: 1375, top: 873 }} label="摄影随拍" />
+      <ArrowHint name="arrow3" label="点击此处" x={879} y={583} arrowY={10} />
+    </DesignFrame>
   );
 }
 
-function Explore({ onOpenExploreSecond }) {
+function Explore({ onOpenExploreSecond, onOpenExploreWaterfall }) {
   return (
     <DesignFrame id="explore" frameName="个人探索">
-      <FullComputer variant="explore" style={{ left: -225, top: -94, width: 1730, height: 1115 }} />
-      <BrowserWindowFrame style={{ left: 32, top: 36 }}>
-        <Folder name="small-folder1" style={{ left: 329, top: 242 }} label="账号笔记" onClick={onOpenExploreSecond} interactiveOpen />
-        <TextLayer name="title-个人探索" className="window-title" style={{ left: 329, top: 136 }}>
-          个人探索
-        </TextLayer>
-      </BrowserWindowFrame>
+      <FullComputer variant="explore" />
+      <BrowserWindow style={{ left: 32, top: 36 }} />
+      <Folder name="small-folder1" style={{ left: 361, top: 278 }} label="账号笔记" onClick={onOpenExploreSecond} />
+      <Folder name="small-folder2" style={{ left: 612, top: 278 }} label="摄影随拍" onClick={onOpenExploreWaterfall} interactiveOpen />
+      <TextLayer name="title-个人探索" className="window-title" style={{ left: 361, top: 172 }}>
+        个人探索
+      </TextLayer>
       <LeftNavigation active="个人探索" />
     </DesignFrame>
   );
 }
 
-function XhsNav({ active, onSelect }) {
-  return <nav className="xhs-nav" aria-label="账号笔记章节导航">{['确定账号定位', '对标博主账号拆解', '内容规划', '笔记发布', '数据复盘'].map((item, index) => <React.Fragment key={item}><button type="button" className={`xhs-nav-item ${index === active ? 'active' : ''}`} disabled={index === 4} aria-controls={index < 4 ? `xhs-section-${'bcde'[index]}` : undefined} aria-current={index === active ? 'location' : undefined} onClick={() => onSelect(index)}>{item}</button>{index < 4 ? <img src={assets.iconDown} alt="" /> : null}</React.Fragment>)}</nav>;
+function XhsNav({ active }) {
+  return <div className="xhs-nav">{['确定账号定位', '对标博主账号拆解', '内容规划', '笔记发布', '数据复盘'].map((item, index) => <React.Fragment key={item}><div className={index === active ? 'active' : ''}>{item}</div>{index < 4 ? <img src={assets.iconDown} alt="" /> : null}</React.Fragment>)}</div>;
 }
 
 function XhsTable({ className = '', firstHeader = '', headers, rows }) {
@@ -2204,35 +1373,6 @@ function XhsTable({ className = '', firstHeader = '', headers, rows }) {
 function ExploreSecondPage({ onClose }) {
   const scale = useCanvasScale();
   const totalHeight = 3524;
-  const scrollRef = useRef(null);
-  const sectionRefs = useRef([]);
-  const [activeSection, setActiveSection] = useState(0);
-
-  useLayoutEffect(() => {
-    const scroll = scrollRef.current;
-    const sectionTops = sectionRefs.current.map((section) => section.offsetTop * scale);
-    let previousActive = -1;
-    const updateNavigation = () => {
-      let active = 0;
-      sectionTops.forEach((top, index) => { if (top <= scroll.scrollTop + 37) active = index; });
-      if (active !== previousActive) {
-        previousActive = active;
-        setActiveSection(active);
-      }
-    };
-    updateNavigation();
-    scroll.addEventListener('scroll', updateNavigation, { passive: true });
-    return () => scroll.removeEventListener('scroll', updateNavigation);
-  }, [scale]);
-
-  const scrollToSection = (index) => {
-    const section = sectionRefs.current[index];
-    if (!section) return;
-    scrollRef.current.scrollTo({
-      top: section.offsetTop * scale - 36,
-      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',
-    });
-  };
   const directionRows = [
     ['定位', '轻体验城市探索', '成长型实验记录', '……'],
     ['一句话简介', '出行不只有打卡，更有节奏、体感和情绪设计。', '记录一个“三分钟热度”，如何收获每一次实践的快乐与收获。', '……'],
@@ -2256,19 +1396,14 @@ function ExploreSecondPage({ onClose }) {
   ];
 
   return <section className="project-modal explore-second-page" aria-label="个人探索2-1">
-    <ProjectCloseButton onClose={onClose} />
-    <div className="brand-page-scroll explore-second-scroll" ref={scrollRef}><div className="brand-page-viewport" style={{ height: px(totalHeight * scale) }}><div className="brand-page-frame explore-second-frame" style={{ transform: `translateX(-50%) scale(${scale})`, height: totalHeight }}>
+    <button className="project-modal-close" type="button" onClick={onClose} aria-label="关闭个人探索2-1"><img src={assets.iconClose} alt="关闭" draggable="false" /></button>
+    <div className="brand-page-scroll explore-second-scroll"><div className="brand-page-viewport" style={{ height: px(totalHeight * scale) }}><div className="brand-page-frame explore-second-frame" style={{ transform: `translateX(-50%) scale(${scale})`, height: totalHeight }}>
       <BrandImage name="xhs-top-bg" src={assets.xhsTopBg} style={{ left: 0, top: 0, width: 1280, height: 526 }} />
       <TextLayer name="0-1起号方法论" className="xhs-hero-title" style={{ left: 112, top: 235 }}>0-1起号方法论</TextLayer>
-      <div className="xhs-nav-track"><XhsNav active={activeSection} onSelect={scrollToSection} /></div>
-      <section id="xhs-section-b" className="xhs-section xhs-section-b" ref={(node) => { sectionRefs.current[0] = node; }}><BrandImage name="prompt11" src={assets.xhsPrompt11} style={{ left: 245.09, top: 0, width: 914.74, height: 216 }} /><div className="xhs-down">……</div><img className="xhs-big-down" src={assets.iconDown} alt="" /><XhsTable className="xhs-direction-table" headers={['方向一', '方向二', '方向三']} rows={directionRows} /></section>
-      <section id="xhs-section-c" className="xhs-section xhs-section-c" ref={(node) => { sectionRefs.current[1] = node; }}><XhsTable className="xhs-blogger-table" firstHeader="博主账号" headers={['@木木花下班后', '@罗OK不想上班', '@凑活活']} rows={bloggerRows} /></section>
-      <section id="xhs-section-d" className="xhs-section xhs-section-d" ref={(node) => { sectionRefs.current[2] = node; }}><XhsTable className="xhs-content-table" firstHeader="体验生活" headers={['吃喝探店', '自我成长']} rows={contentRows} /></section>
-      <section id="xhs-section-e" className="xhs-section xhs-section-e" ref={(node) => { sectionRefs.current[3] = node; }}>
-        <BrandImage name="note1" src={assets.xhsNote1} style={{ left: 244, top: 0, width: 292, height: 635 }} />
-        <BrandImage name="note2" src={assets.xhsNote2} style={{ left: 556, top: 0, width: 292, height: 635 }} />
-        <BrandImage name="note3" src={assets.xhsNote3} style={{ left: 868, top: 0, width: 292, height: 635 }} />
-      </section>
+      <section className="xhs-section xhs-section-b"><XhsNav active={0} /><BrandImage name="prompt11" src={assets.xhsPrompt11} style={{ left: 245.09, top: 0, width: 914.74, height: 216 }} /><div className="xhs-down">……</div><img className="xhs-big-down" src={assets.iconDown} alt="" /><XhsTable className="xhs-direction-table" headers={['方向一', '方向二', '方向三']} rows={directionRows} /></section>
+      <section className="xhs-section xhs-section-c"><XhsNav active={1} /><XhsTable className="xhs-blogger-table" firstHeader="博主账号" headers={['@木木花下班后', '@罗OK不想上班', '@凑活活']} rows={bloggerRows} /></section>
+      <section className="xhs-section xhs-section-d"><XhsNav active={2} /><XhsTable className="xhs-content-table" firstHeader="体验生活" headers={['吃喝探店', '自我成长']} rows={contentRows} /></section>
+      <section className="xhs-section xhs-section-e"><XhsNav active={3} /><div className="xhs-placeholder-column" /><div className="xhs-placeholder-column" /><div className="xhs-placeholder-column" /></section>
     </div></div></div>
   </section>;
 }
@@ -2365,7 +1500,9 @@ function ExploreWaterfallPage({ onClose }) {
 
   return (
     <section className="spa-project-page explore-waterfall-page" data-frame="个人探索2-2" aria-label="个人探索2-2">
-      <ProjectCloseButton onClose={onClose} />
+      <button className="project-modal-close" type="button" onClick={onClose} aria-label="关闭个人探索2-2">
+        <img src={assets.iconClose} alt="关闭" draggable="false" />
+      </button>
       <div className="brand-page-scroll personal-waterfall-scroll">
         <div className="brand-page-viewport" style={{ height: px(totalHeight * scale) }}>
           <div ref={frameRef} className="brand-page-frame personal-waterfall-frame" style={{ transform: `translateX(-50%) scale(${scale})`, height: totalHeight }}>
@@ -2374,6 +1511,28 @@ function ExploreWaterfallPage({ onClose }) {
         </div>
       </div>
     </section>
+  );
+}
+
+function ContactTransition() {
+  return (
+    <DesignFrame id="explore-contact" frameName="转场“个人探索-联系我”">
+      <FullComputer variant="contact" />
+      <LeftNavigation active="联系我" />
+      <Layer name="contact me" className="contact-card">
+        <ImageLayer name="message" src={assets.message} />
+        <TextLayer name="联系我" className="contact-title">联系我</TextLayer>
+        <Layer name="mail" className="contact-line mail">
+          <span>邮箱</span>
+          <strong>monsters_y@163.com</strong>
+        </Layer>
+        <Layer name="tel" className="contact-line tel">
+          <span>联系电话</span>
+          <strong>13506516670</strong>
+        </Layer>
+        <div className="qr-code" data-layer="QR code" />
+      </Layer>
+    </DesignFrame>
   );
 }
 
@@ -2398,61 +1557,17 @@ function CoffeeStepCard({ className, title, children }) {
 
 function CoffeeBrandOperationPage({ onClose }) {
   const scale = useCanvasScale();
-  const scrollRef = useRef(null);
-  const holdDistance = 200;
-  let totalHeight = 4282;
-  const sceneLayout = [
-    ['D', 'coffeescene2', assets.coffeeScene2, 717],
-    ['E', 'coffeescene3', assets.coffeeScene3, 1606],
-    ['F', 'coffeescene4', assets.coffeeScene4, 1606],
-    ['G', 'coffeescene5', assets.coffeeScene5, 717],
-    ['H', 'coffeescene6', assets.coffeeScene6, 717],
-  ].map(([section, name, src, height], index) => {
-    const top = totalHeight;
-    totalHeight += height + (index < 4 ? holdDistance : 0);
-    return { section, name, src, height, top };
-  });
-
-  useLayoutEffect(() => {
-    const scroller = scrollRef.current;
-    const updateViewport = () => scroller.style.setProperty('--coffee-viewport-height', px(scroller.clientHeight / scale));
-    updateViewport();
-    const observer = new ResizeObserver(updateViewport);
-    observer.observe(scroller);
-    const media = gsap.matchMedia();
-    media.add('(prefers-reduced-motion: no-preference)', () => {
-      const scenes = [...scroller.querySelectorAll('.coffee-scene-section')];
-      scenes.slice(0, -1).forEach((scene, index) => {
-        const nextTop = Number(scenes[index + 1].dataset.scrollTop) * scale;
-        // Native sticky holds the section; the image alone gets a small, immediate drift.
-        gsap.to(scene.querySelector('.coffee-scene-content'), {
-          y: -48,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: scroller.querySelector('.coffee-page-frame'),
-            scroller,
-            start: () => nextTop - scroller.clientHeight,
-            end: nextTop,
-            scrub: true,
-            invalidateOnRefresh: true,
-          },
-        });
-      });
-    });
-    return () => {
-      observer.disconnect();
-      media.revert();
-      scroller.style.removeProperty('--coffee-viewport-height');
-    };
-  }, [scale]);
+  const totalHeight = 9645;
 
   return (
     <section className="spa-project-page coffee-operation-page" data-frame="AI/运营3-3" aria-label="AI/运营3-3">
-      <ProjectCloseButton onClose={onClose} />
-      <div className="brand-page-scroll coffee-page-scroll" ref={scrollRef}>
+      <button className="project-modal-close" type="button" onClick={onClose} aria-label="关闭AI/运营3-3">
+        <img src={assets.iconClose} alt="关闭" draggable="false" />
+      </button>
+      <div className="brand-page-scroll coffee-page-scroll">
         <div className="brand-page-viewport coffee-page-viewport" style={{ height: px(totalHeight * scale) }}>
           <div className="brand-page-frame coffee-page-frame" style={{ transform: `translateX(-50%) scale(${scale})`, height: totalHeight }}>
-            <BrandImage name="brand-top-bg" src={assets.brandTopBg} style={{ left: 0, top: 0, width: 1280, height: 717 }} />
+            <BrandImage name="brand-top-bg" src={assets.coffeeBrandTopBg} style={{ left: 0, top: 0, width: 1280, height: 717 }} />
 
             <section className="coffee-section-a">
               <CoffeeSectionHeading number="1" title="策略和洞察" step="STEP 1   用户洞察" left={0} top={0} />
@@ -2503,19 +1618,11 @@ function CoffeeBrandOperationPage({ onClose }) {
               <BrandImage name="bag" src={assets.coffeeBag} style={{ left: 723, top: 709, width: 351.75, height: 497 }} />
             </section>
 
-            <div className="coffee-scene-stack">
-              {sceneLayout.map(({ section, name, src, height, top }, index) => (
-                <React.Fragment key={name}>
-                  <section className={`coffee-scene-section coffee-section-${section.toLowerCase()}`} data-layer={`section${section}`} data-scroll-top={top} aria-label={`场景应用 ${section}`} style={{ height, '--coffee-scene-height': px(height), zIndex: index + 1 }}>
-                    <div className="coffee-scene-content">
-                      <BrandImage name={name} src={src} style={{ left: 0, top: 0, width: 1280, height }} />
-                      {index === 0 ? <div className="coffee-scene-label" style={{ top: 40 }}><img src={assets.iconRight} alt="" />场景应用</div> : null}
-                    </div>
-                  </section>
-                  {index < sceneLayout.length - 1 ? <div aria-hidden="true" style={{ height: holdDistance }} /> : null}
-                </React.Fragment>
-              ))}
-            </div>
+            {[
+              ['coffeescene2', assets.coffeeScene2, 4282, 717], ['coffeescene3', assets.coffeeScene3, 4999, 1606],
+              ['coffeescene4', assets.coffeeScene4, 6605, 1606], ['coffeescene5', assets.coffeeScene5, 8211, 717], ['coffeescene6', assets.coffeeScene6, 8928, 717],
+            ].map(([name, src, top, height]) => <BrandImage key={name} name={name} src={src} style={{ left: 0, top, width: 1280, height }} />)}
+            <div className="coffee-scene-label" style={{ top: 4322 }}><img src={assets.iconRight} alt="" />场景应用</div>
           </div>
         </div>
       </div>
@@ -2563,7 +1670,7 @@ function UxUiSecondPage({ onClose }) {
 
   return (
     <section className="spa-project-page ux-ui-second-page" data-frame="UX/UI 2-1" aria-label="UX/UI 2-1">
-      <ProjectCloseButton onClose={onClose} />
+      <button className="project-modal-close" type="button" onClick={onClose} aria-label="关闭UX/UI 2-1"><img src={assets.iconClose} alt="关闭" draggable="false" /></button>
       <div className="brand-page-scroll ux-ui-page-scroll">
         <div className="brand-page-viewport ux-ui-page-viewport" style={{ height: px(totalHeight * scale) }}>
           <div className="brand-page-frame ux-ui-page-frame" style={{ transform: `translateX(-50%) scale(${scale})`, height: totalHeight }}>
@@ -2618,12 +1725,6 @@ function UxUiSecondPage({ onClose }) {
 }
 
 function App() {
-  const [homeResourcesReady, setHomeResourcesReady] = useState(false);
-  const [loadingComplete, setLoadingComplete] = useState(false);
-  const [language, setLanguage] = useState(() => {
-    try { return localStorage.getItem('portfolio-language') === 'en' ? 'en' : 'zh'; }
-    catch { return 'zh'; }
-  });
   const [isAiOperationPageOpen, setIsAiOperationPageOpen] = useState(false);
   const [isAiOperationFolderOpen, setIsAiOperationFolderOpen] = useState(false);
   const [isAiOperationBrandOpen, setIsAiOperationBrandOpen] = useState(false);
@@ -2632,21 +1733,6 @@ function App() {
   const [isUxUiSecondOpen, setIsUxUiSecondOpen] = useState(false);
   const [isExploreSecondOpen, setIsExploreSecondOpen] = useState(false);
   const [isExploreWaterfallOpen, setIsExploreWaterfallOpen] = useState(false);
-
-  useEffect(() => {
-    if (!loadingComplete) return undefined;
-    const frame = requestAnimationFrame(() => ScrollTrigger.refresh());
-    return () => cancelAnimationFrame(frame);
-  }, [loadingComplete]);
-
-  useEffect(() => {
-    document.documentElement.lang = language === 'en' ? 'en' : 'zh-CN';
-    document.documentElement.dataset.language = language;
-    document.title = language === 'en' ? 'YUYIMIAO | Portfolio' : '个人作品集';
-    document.querySelector('meta[name="description"]').content = language === 'en' ? 'YUYIMIAO portfolio: product operations, UX/UI design and personal exploration.' : '个人作品集网站';
-    try { localStorage.setItem('portfolio-language', language); }
-    catch { /* Language switching still works when storage is unavailable. */ }
-  }, [language]);
 
   useEffect(() => {
     if (!isAiOperationPageOpen && !isAiOperationFolderOpen && !isAiOperationBrandOpen && !isAiOperationPosterOpen && !isAiOperationCoffeeOpen && !isUxUiSecondOpen && !isExploreSecondOpen && !isExploreWaterfallOpen) return undefined;
@@ -2660,12 +1746,11 @@ function App() {
   }, [isAiOperationPageOpen, isAiOperationFolderOpen, isAiOperationBrandOpen, isAiOperationPosterOpen, isAiOperationCoffeeOpen, isUxUiSecondOpen, isExploreSecondOpen, isExploreWaterfallOpen]);
 
   const pages = useMemo(
-    () => [Home, TransitionAboutAi],
+    () => [Home, About, TransitionAboutAi, TransitionAiUx, TransitionUxExplore, Explore, ContactTransition],
     [],
   );
 
   const openAiOperationProject = () => {
-    preloadProject('ai');
     setIsAiOperationPageOpen(true);
   };
 
@@ -2674,30 +1759,26 @@ function App() {
   };
 
   return (
-    <LanguageContext.Provider value={{ language, toggleLanguage: () => setLanguage((value) => value === 'zh' ? 'en' : 'zh') }}>
-    {!loadingComplete ? <LoadingScreen images={homeLoadingImages} onReady={setHomeResourcesReady} onComplete={setLoadingComplete} /> : null}
-    <main data-loading={!homeResourcesReady} inert={!loadingComplete}>
-      <CustomCursor />
-      <PrimaryTextContext.Provider value={language === 'en'}>
+    <main>
+      <OnlyHomeFrame />
+      <HomeAboutComputerTransition />
       {pages.map((Page, index) => (
         <Page
-          key={Page.name || pageMap[index].id}
-          ready={loadingComplete}
+          key={pageMap[index].id}
           onOpenProject={openAiOperationProject}
-          onOpenFolder={() => { preloadProject('folder'); setIsAiOperationFolderOpen(true); }}
-          onOpenUxUiSecond={() => { preloadProject('ux'); setIsUxUiSecondOpen(true); }}
-          onOpenExploreSecond={() => { preloadProject('notes'); setIsExploreSecondOpen(true); }}
-          onOpenExploreWaterfall={() => { preloadProject('photography'); setIsExploreWaterfallOpen(true); }}
+          onOpenFolder={() => setIsAiOperationFolderOpen(true)}
+          onOpenUxUiSecond={() => setIsUxUiSecondOpen(true)}
+          onOpenExploreSecond={() => setIsExploreSecondOpen(true)}
+          onOpenExploreWaterfall={() => setIsExploreWaterfallOpen(true)}
         />
       ))}
-      </PrimaryTextContext.Provider>
       {isAiOperationPageOpen ? <AiOperationProjectPage onClose={closeAiOperationProject} /> : null}
       {isAiOperationFolderOpen ? (
         <AiOperationFolderPage
           onClose={() => setIsAiOperationFolderOpen(false)}
-          onOpenBrand={() => { preloadProject('brand'); setIsAiOperationBrandOpen(true); }}
-          onOpenPoster={() => { preloadProject('poster'); setIsAiOperationPosterOpen(true); }}
-          onOpenCoffee={() => { preloadProject('coffee'); setIsAiOperationCoffeeOpen(true); }}
+          onOpenBrand={() => setIsAiOperationBrandOpen(true)}
+          onOpenPoster={() => setIsAiOperationPosterOpen(true)}
+          onOpenCoffee={() => setIsAiOperationCoffeeOpen(true)}
         />
       ) : null}
       {isAiOperationBrandOpen ? <BrandOperationPage onClose={() => setIsAiOperationBrandOpen(false)} /> : null}
@@ -2707,7 +1788,6 @@ function App() {
       {isExploreSecondOpen ? <ExploreSecondPage onClose={() => setIsExploreSecondOpen(false)} /> : null}
       {isExploreWaterfallOpen ? <ExploreWaterfallPage onClose={() => setIsExploreWaterfallOpen(false)} /> : null}
     </main>
-    </LanguageContext.Provider>
   );
 }
 
