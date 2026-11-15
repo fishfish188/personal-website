@@ -11,7 +11,6 @@ export function stagesToPreload(distance) {
 
 export const demoResources = {
   ai: { src: (import.meta.env?.DEV && import.meta.env?.VITE_INTEREST_DEMO_URL) || 'https://interest-tool-demo.pages.dev', width: 430, height: 943 },
-  poster: { src: 'https://lottery-h5.netlify.app', width: 662, height: 536 },
 };
 
 export function createDemoPreloader({

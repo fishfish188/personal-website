@@ -1,0 +1,116 @@
+.idc-case-page {
+  overscroll-behavior: contain;
+}
+
+@media (min-width: 1280px) {
+  .idc-case-page {
+    overflow-x: hidden;
+  }
+}
+
+.idc-case-frame {
+  position: relative;
+  width: 1280px;
+  height: 8105px;
+  margin-inline: auto;
+  overflow: clip;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: "JiangChengYuanTi", "PingFang SC", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.idc-case-cover {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 590px;
+  padding-inline: 64px;
+  color: #192b5b;
+  background: #eaf1ff;
+}
+
+.idc-case-cover h1 {
+  margin: 0;
+  font-size: 56px;
+  font-weight: 600;
+}
+
+.idc-case-cover img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.idc-case-cover-title-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+.idc-case-layer {
+  position: absolute;
+  box-sizing: border-box;
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.idc-case-image {
+  object-fit: contain;
+}
+
+ul.idc-case-layer {
+  padding-inline-start: 16px;
+}
+
+.idc-case-workbench-entry {
+  position: sticky;
+  top: 118px;
+  z-index: 1;
+  width: 80px;
+  margin-top: 36px;
+  margin-left: min(1200px, calc(100vw - 80px));
+}
+
+.idc-case-workbench-button {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 124px;
+  padding: 0;
+  border: 0;
+  overflow: visible;
+  background: transparent;
+  cursor: pointer;
+}
+
+.idc-case-workbench-button img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  max-width: none;
+  transition: transform 200ms ease-out;
+}
+
+.idc-case-workbench-button:is(:hover, :focus-visible) img {
+  transform: translateX(-50px);
+}
+
+.idc-case-workbench-button:focus-visible {
+  outline: none;
+}
+
+.idc-case-workbench-button:focus-visible img {
+  filter: drop-shadow(0 0 3px #4479f5);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .idc-case-workbench-button img {
+    transition: none;
+  }
+}

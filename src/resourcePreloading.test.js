@@ -2,6 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createDemoPreloader, createImagePreloader, demoResources, stagesToPreload } from './resourcePreloading.js';
 
+const secondDemo = { ...demoResources.ai, src: '/another-demo.html' };
+
 function mockFrames() {
   const frames = [];
   return {
@@ -20,7 +22,7 @@ test('demo preloads warm each URL once, remain noninteractive and clean up on lo
   const preloader = createDemoPreloader(mocks);
   const first = preloader.preload(demoResources.ai);
   assert.equal(preloader.preload(demoResources.ai), first);
-  const second = preloader.preload(demoResources.poster);
+  const second = preloader.preload(secondDemo);
   assert.equal(mocks.frames.length, 2);
   for (const frame of mocks.frames) {
     assert.equal(frame.loading, 'eager');
@@ -41,7 +43,7 @@ test('demo preload errors and timeouts release hidden frames without blocking en
   const preloader = createDemoPreloader({ ...mocks, timeout: 15 });
   const failed = preloader.preload(demoResources.ai);
   mocks.frames[0].onerror();
-  const stalled = preloader.preload(demoResources.poster);
+  const stalled = preloader.preload(secondDemo);
   assert.deepEqual(await Promise.all([failed, stalled]), [false, false]);
   assert.ok(mocks.frames.every((frame) => frame.removed));
 });

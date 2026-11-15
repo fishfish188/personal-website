@@ -1,0 +1,23 @@
+import React, { useState } from 'react';
+import { useWorkbench, TextButton, Tag, KV, Logs, Actions, Field, ErrorText } from './ui';
+import { stage, nextTask } from './domain';
+export default function DemandDetail({ record: r }) {
+  const { state: s, run, open, openRecord, locate } = useWorkbench();
+  const [error, setError] = useState('');
+  const command = action => { const out = run({ ...action, id: r.id }); setError(out.error || ''); return out; };
+  if (r.businessId) return <><div className="current"><h3>已转业务 {r.businessId}</h3><p>确认后的信息在业务台账继续维护，原需求保留追溯。</p><TextButton onClick={() => openRecord(r.businessId)}>查看业务 →</TextButton></div><Logs items={r.logs} /></>;
+  const check = r.check;
+  const recommendation = r.kind === '整柜' ? '可评估整柜托管，先确认可用柜位与功率。' : r.quantity.includes('12') ? '12–14U 可同时考虑U位与整柜，结合功率和报价进一步比较。' : '可先评估U位托管；如需要独立空间或扩容预留，也可加入整柜比较。';
+  return <><div className="current"><div className="row"><h3>{stage(s, r)}</h3><Tag>运营处理</Tag></div><p>{nextTask(s, r)}</p>{r.request?.pending && <p className="muted">补充请求已记录，接收人 {r.request.recipient}。等待回复。</p>}<div className="actions"><button type="button" className="primary" onClick={() => open('editDemand', r.id)}>补录需求</button>{r.request?.pending ? <button type="button" onClick={() => open('editDemand', r.id, { reply: true })}>录入商务回复</button> : <button type="button" onClick={() => open('request', r.id)}>请商务补充</button>}</div></div>
+    <nav className="stages" aria-label="详情分区跳转">{[['base', '需求信息'], ['resource', '资源条件'], ['plans', '候选方案与资费'], ['activity', '处理记录']].map(([id, title]) => <a key={id} href={'#demand-' + r.id + '-' + id} onClick={e => { e.preventDefault(); e.currentTarget.closest('.dialogbody').querySelector('#demand-' + r.id + '-' + id)?.scrollIntoView({ block: 'start' }); }}>{title}</a>)}</nav>
+    <section className="drawerblock" id={'demand-' + r.id + '-base'}><div className="row"><h3>需求信息与客户偏好</h3><button type="button" className="small" onClick={() => open('editDemand', r.id)}>编辑</button></div><KV items={[
+      ['租用意向／数量', r.kind + ' / ' + (r.quantity || '待确认')], ['所需功率', r.power ? r.power + ' kW · ' + r.powerMode : '待确认'], ['预计租期', r.term || '待确认'], ['带宽', r.bandwidth + ' ' + r.bandwidthSpec], ['IP', r.ip + ' ' + r.ipSpec], ['同柜偏好', r.placement], ['信息来源', r.source],
+    ]} />{r.request && <div className="feedback"><b>最近补充请求 · {r.request.pending ? '待回复' : '已补齐'}</b><p>向 {r.request.recipient} 确认 {r.request.fields.join('、')}</p><p>{r.request.message || '无补充说明'}</p></div>}</section>
+    <section className="drawerblock" id={'demand-' + r.id + '-resource'}><h3>资源条件与机房核实</h3><div className="feedback"><div className="row"><b>预分配机柜位置</b><button type="button" className="small" onClick={() => open('allocate', r.id)}>{r.allocations.length ? '重新选择柜位' : '查询并预分配'}</button></div>{r.allocations.length ? <><p>{r.allocations.map(a => <React.Fragment key={a.id}>{a.id}柜 · {a.units === null ? '整柜' : a.units + 'U'} · {a.power.toFixed(1)} kW<br /></React.Fragment>)}</p><TextButton onClick={() => locate(r.allocations[0].id)}>在平面图中查看 →</TextButton></> : <p className="muted">选择台账中空闲柜位，再发起资源核实。</p>}</div>
+      <div className="feedback resource-check-card"><div className="resource-check-heading"><b>网络部核实反馈</b><Tag>{check ? '资源已核实' : '资源待核实'}</Tag></div><dl className="kv resource-check-kv"><dt>需求摘要</dt><dd>{r.quantity || '数量待确认'}，{r.power ? r.power + ' kW（' + r.powerMode + '）' : '功率待确认'}；{r.placement}。</dd><dt>反馈结果</dt><dd>{check?.result || '需分柜承接'}</dd></dl>{check?.state === '已反馈' && <><p>{check.detail}</p><small>网络部反馈 · {check.stamp} · 本次核实未执行资源预留</small></>}</div>
+      <Actions><button type="button" onClick={() => open('consult', r.id)}>发起资源核实</button></Actions></section>
+    <section className="drawerblock" id={'demand-' + r.id + '-plans'}><div className="row"><h3>候选方案与资费</h3><button type="button" className="small" onClick={() => open('candidates', r.id)}>选择候选产品</button></div><p className="note">选型提示：{recommendation}</p>{r.candidates.length ? r.candidates.map(p => <div className="feedback" key={p}><div className="row"><b>{p}</b><TextButton onClick={() => open('product', '001')}>查看产品详情</TextButton></div><p>资源条件：{check?.state === '已反馈' ? check.result + '（' + check.type + '）' : '待核实'}</p><p>报价按所需功率匹配，带宽、IP一般另计；具体单价与计价单位待确认。</p></div>) : <p className="muted">尚未加入候选产品。</p>}<p className="muted">报价前需确认适用资费、资源条件及客户偏好。</p><div className="actions"><TextButton onClick={() => open('comparison', r.id)}>查看两种方案比较</TextButton><button type="button" disabled={!r.candidates.length} onClick={() => open('summary', r.id)}>预览商务沟通摘要</button></div></section>
+    <ErrorText>{error}</ErrorText>
+    <section className="drawerblock" id={'demand-' + r.id + '-activity'}><h3>处理记录</h3><Logs items={r.logs} /></section>
+  </>;
+}

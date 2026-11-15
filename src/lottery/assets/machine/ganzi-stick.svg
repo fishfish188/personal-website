@@ -1,0 +1,10 @@
+<svg width="8" height="104" viewBox="0 0 8 104" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path id="ganzi-stick" d="M0 0H8V100C8 102.209 6.20914 104 4 104H0V0Z" fill="url(#paint0_radial_2045_18)"/>
+<defs>
+<radialGradient id="paint0_radial_2045_18" cx="0" cy="0" r="1" gradientTransform="matrix(1.45455 82.5882 -8.94822 0.309754 2.90909 2.80087e-06)" gradientUnits="userSpaceOnUse">
+<stop stop-color="#E5E3E0"/>
+<stop offset="0.45404" stop-color="#F3F2F1"/>
+<stop offset="1" stop-color="#E7E6E3"/>
+</radialGradient>
+</defs>
+</svg>

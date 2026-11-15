@@ -1647,7 +1647,7 @@ html[data-language="en"] .frame-shell .skill > .text-layer[style*="font-size: 18
   pointer-events: none;
 }
 
-.poster-section-c-preview .poster-html-preview {
+.poster-section-c-preview .poster-lottery-demo {
   pointer-events: auto;
 }
 
@@ -1839,10 +1839,10 @@ html[data-language="en"] .frame-shell .skill > .text-layer[style*="font-size: 18
   box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
 }
 
-.poster-html-preview {
+.poster-lottery-demo {
   position: absolute;
-  display: block;
-  border: 0;
+  container-type: size;
+  overflow: hidden;
   border-radius: 3px;
   background: #d9d9d9;
 }

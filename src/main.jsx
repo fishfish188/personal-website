@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
+import React, { Suspense, createContext, lazy, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import { createRoot } from 'react-dom/client';
 import { createPortal } from 'react-dom';
 import { gsap } from 'gsap';
@@ -13,6 +13,9 @@ import { createDemoPreloader, createImagePreloader, demoResources, primaryResour
 gsap.registerPlugin(ScrollTrigger);
 
 const CDN = 'https://hardhardfish.dpdns.org';
+const IdcCaseStudy = lazy(() => import('./idc/IdcCaseStudy'));
+const loadLotteryDemo = () => import('./lottery/LotteryDrinkPage');
+const LotteryDrinkPage = lazy(loadLotteryDemo);
 
 const assets = {
   arrow1: `${CDN}/arrow1.svg`,
@@ -31,6 +34,7 @@ const assets = {
   folderPage4: `${CDN}/folder-page4.webp`,
   folderPage5: `${CDN}/folder-page5.webp`,
   iconClose: `${CDN}/icon-close.svg`,
+  idcTopBg: `${CDN}/idc-top-bg.webp`,
   iconRight: `${CDN}/icon-right.svg`,
   iconDown: `${CDN}/icon-down.svg`,
   braces: `${CDN}/braces%E2%80%8C.svg`,
@@ -240,6 +244,7 @@ const demoPreloader = createDemoPreloader();
 const StagedResourcesContext = createContext(null);
 const projectEntryImages = {
   ai: [assets.paper2, assets.iphone2, assets.iconClose],
+  idc: [assets.idcTopBg, assets.iconClose],
   folder: [assets.folder1, assets.folderPage2, assets.folderPage3, assets.folderPage4, assets.folderPage5, assets.beautyThumbnail, assets.posterThumbnail1, assets.posterThumbnail2, assets.brandThumbnail, assets.ipThumbnail, assets.iconClose],
   brand: [assets.beautyTopBg, assets.iconClose],
   poster: [assets.posterTopBg, assets.iconClose],
@@ -248,8 +253,14 @@ const projectEntryImages = {
   notes: [assets.xhsTopBg, assets.iconClose],
   photography: [assets.waterfall1_1, assets.waterfall2_1, assets.waterfall3_1, assets.waterfall4_1, assets.waterfall5_1, assets.waterfall6_1, assets.waterfall7_1, assets.iconClose],
 };
+const preloadLotteryDemo = () => {
+  void loadLotteryDemo().then(({ lotteryPreviewImages }) => {
+    imagePreloader.preload(lotteryPreviewImages);
+  }, () => {});
+};
 const preloadProject = (name) => {
   if (demoResources[name]) demoPreloader.preload(demoResources[name]);
+  if (name === 'poster') preloadLotteryDemo();
   return imagePreloader.preload(projectEntryImages[name], { priority: true });
 };
 const projectIntent = (name) => ({ onPointerEnter: () => preloadProject(name), onFocus: () => preloadProject(name) });
@@ -262,7 +273,10 @@ function preloadPrimaryGroup(name, root = document.querySelector('.about-ai-tran
   const sources = images.map((image) => image.dataset.resourceSrc).filter(Boolean);
   if (name === 'about') sources.push(assets.peopleMotion);
   imagePreloader.preload(sources, { priority });
-  if (name === 'ai') Object.values(demoResources).forEach((demo) => demoPreloader.preload(demo));
+  if (name === 'ai') {
+    demoPreloader.preload(demoResources.ai);
+    preloadLotteryDemo();
+  }
 }
 
 function preloadNavigationTarget(id) {
@@ -290,6 +304,7 @@ const englishText = {
   '联系电话': 'Phone',
   '打开AI/运营2-1': 'Open AI / Operations project',
   '打开AI/运营2-2': 'Open design portfolio',
+  '打开AI/运营2-3': 'Open IDC product operations case study',
   '工作经历': 'Experience',
   '中国联通温州市分公司': 'China Unicom, Wenzhou',
   '产品运营/交互设计': 'Product Ops / UX Design',
@@ -759,11 +774,17 @@ function About() {
   );
 }
 
-function DeskObjectLayers({ onOpenProject, onOpenFolder }) {
+function DeskObjectLayers({ onOpenProject, onOpenFolder, onOpenIdc }) {
   return (
     <>
-      <Layer name="ai-computer" className="mask-group" style={{ left: 0, top: 0, width: 385, height: 412 }}>
-        <ImageLayer name="ai-computer" src={assets.aiComputer} style={{ left: 0, top: 0, width: 385, height: 412 }} />
+      <Layer
+        name="ai-computer"
+        className={onOpenIdc ? 'mask-group project-open-group' : 'mask-group'}
+        style={{ left: 0, top: 0, width: 385, height: 412 }}
+        as={onOpenIdc ? 'button' : 'div'}
+        {...(onOpenIdc && { type: 'button', onClick: onOpenIdc, 'aria-label': '打开AI/运营2-3', ...projectIntent('idc') })}
+      >
+        <ImageLayer name="ai-computer" src={assets.aiComputer} aria-hidden="true" style={{ left: 0, top: 0, width: 385, height: 412 }} />
       </Layer>
       <Layer name="notebook" className="mask-group" style={{ left: 0, top: 554, width: 247, height: 163 }}>
         <ImageLayer name="notebook" src={assets.notebook} style={{ left: 0, top: 0, width: 247, height: 163 }} />
@@ -887,7 +908,7 @@ function CopyContactValue({ value, english }) {
   );
 }
 
-function TransitionAboutAi({ ready, onOpenProject, onOpenFolder, onOpenUxUiSecond, onOpenExploreSecond, onOpenExploreWaterfall }) {
+function TransitionAboutAi({ ready, onOpenProject, onOpenFolder, onOpenIdc, onOpenUxUiSecond, onOpenExploreSecond, onOpenExploreWaterfall }) {
   const english = useContext(PrimaryTextContext);
   const sectionRef = useRef(null);
   const stageRef = useRef(null);
@@ -953,7 +974,7 @@ function TransitionAboutAi({ ready, onOpenProject, onOpenFolder, onOpenUxUiSecon
         [objectLayer.querySelector(':scope > .folder'), 1123, 803, 834, 410],
         [objectLayer.querySelector(':scope > .coffee'), 972, -354, 938, 0],
         [objectLayer.querySelector(':scope > .leave'), 375, -412, 396, 0],
-        [objectLayer.querySelector(':scope > .project-open-group'), 43, 800, 72, 380],
+        [objectLayer.querySelector(':scope > [data-layer="iphone+paper"]'), 43, 800, 72, 380],
       ];
       const outgoingObjectOffsets = [
         [objectLayer.querySelector(':scope > .ai-computer'), -323, -412, 0, 0],
@@ -962,7 +983,7 @@ function TransitionAboutAi({ ready, onOpenProject, onOpenFolder, onOpenUxUiSecon
         [objectLayer.querySelector(':scope > .folder'), 1123, 803, 834, 410],
         [objectLayer.querySelector(':scope > .coffee'), 972, -354, 938, 0],
         [objectLayer.querySelector(':scope > .leave'), 375, -412, 396, 0],
-        [objectLayer.querySelector(':scope > .project-open-group'), 43, 800, 72, 380],
+        [objectLayer.querySelector(':scope > [data-layer="iphone+paper"]'), 43, 800, 72, 380],
       ];
 
       gsap.set(fullComputer, { transformOrigin: 'center center', x: 0, y: 0, scaleX: 1, scaleY: 1 });
@@ -1166,7 +1187,7 @@ function TransitionAboutAi({ ready, onOpenProject, onOpenFolder, onOpenUxUiSecon
           <AboutTailTemporaryContent />
           <TextLayer name="title-关于我" className="section-title about-internal-title" style={{ left: 430, top: 307, width: 420 }}>关于我</TextLayer>
           <div className="about-ai-object-layer">
-            <DeskObjectLayers onOpenProject={onOpenProject} onOpenFolder={onOpenFolder} />
+            <DeskObjectLayers onOpenProject={onOpenProject} onOpenFolder={onOpenFolder} onOpenIdc={onOpenIdc} />
           </div>
           <TextLayer name="title-ai" className="section-title" style={{ left: 395, top: 309, width: 490 }}>
             AI/运营
@@ -1592,14 +1613,13 @@ function PosterOperationPage({ onClose }) {
             <div className="brand-layer poster-section-c-preview" data-layer="sectionC" style={{ left: 60, top: 1324, width: 1160, height: 667 }}>
               <BrandText name="try it！" className="poster-try-it" style={{ left: 1106, top: 71, width: 48, height: 10 }}>try it！</BrandText>
               <BrandImage name="arrow6" src={assets.arrow6} style={{ left: '92.67%', right: '1.64%', top: '7.58%', bottom: '87.2%', width: '5.69%', height: '5.22%' }} />
-              <iframe
-                className="poster-html-preview"
-                data-layer="html"
-                src={demoResources.poster.src}
-                loading="lazy"
-                title="摇奖机项目"
+              <div
+                className="poster-lottery-demo"
+                data-layer="lottery-demo"
                 style={{ left: 498, top: 97, width: 662, height: 536 }}
-              />
+              >
+                <Suspense fallback={null}><LotteryDrinkPage /></Suspense>
+              </div>
             </div>
 
             <PosterSectionHeading title="活动海报" top={2029} />
@@ -2642,6 +2662,8 @@ function App() {
   });
   const [isAiOperationPageOpen, setIsAiOperationPageOpen] = useState(false);
   const [isAiOperationFolderOpen, setIsAiOperationFolderOpen] = useState(false);
+  const [idcTrigger, setIdcTrigger] = useState(null);
+  const idcPageRef = useRef(null);
   const [isAiOperationBrandOpen, setIsAiOperationBrandOpen] = useState(false);
   const [isAiOperationPosterOpen, setIsAiOperationPosterOpen] = useState(false);
   const [isAiOperationCoffeeOpen, setIsAiOperationCoffeeOpen] = useState(false);
@@ -2665,7 +2687,7 @@ function App() {
   }, [language]);
 
   useEffect(() => {
-    if (!isAiOperationPageOpen && !isAiOperationFolderOpen && !isAiOperationBrandOpen && !isAiOperationPosterOpen && !isAiOperationCoffeeOpen && !isUxUiSecondOpen && !isExploreSecondOpen && !isExploreWaterfallOpen) return undefined;
+    if (!isAiOperationPageOpen && !isAiOperationFolderOpen && !idcTrigger && !isAiOperationBrandOpen && !isAiOperationPosterOpen && !isAiOperationCoffeeOpen && !isUxUiSecondOpen && !isExploreSecondOpen && !isExploreWaterfallOpen) return undefined;
 
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
@@ -2673,7 +2695,13 @@ function App() {
     return () => {
       document.body.style.overflow = previousOverflow;
     };
-  }, [isAiOperationPageOpen, isAiOperationFolderOpen, isAiOperationBrandOpen, isAiOperationPosterOpen, isAiOperationCoffeeOpen, isUxUiSecondOpen, isExploreSecondOpen, isExploreWaterfallOpen]);
+  }, [isAiOperationPageOpen, isAiOperationFolderOpen, idcTrigger, isAiOperationBrandOpen, isAiOperationPosterOpen, isAiOperationCoffeeOpen, isUxUiSecondOpen, isExploreSecondOpen, isExploreWaterfallOpen]);
+
+  useLayoutEffect(() => {
+    if (!idcTrigger) return undefined;
+    idcPageRef.current?.focus({ preventScroll: true });
+    return () => idcTrigger.focus({ preventScroll: true });
+  }, [idcTrigger]);
 
   const pages = useMemo(
     () => [Home, TransitionAboutAi],
@@ -2701,6 +2729,7 @@ function App() {
           ready={loadingComplete}
           onOpenProject={openAiOperationProject}
           onOpenFolder={() => { preloadProject('folder'); setIsAiOperationFolderOpen(true); }}
+          onOpenIdc={(event) => { preloadProject('idc'); setIdcTrigger(event.currentTarget); }}
           onOpenUxUiSecond={() => { preloadProject('ux'); setIsUxUiSecondOpen(true); }}
           onOpenExploreSecond={() => { preloadProject('notes'); setIsExploreSecondOpen(true); }}
           onOpenExploreWaterfall={() => { preloadProject('photography'); setIsExploreWaterfallOpen(true); }}
@@ -2708,6 +2737,21 @@ function App() {
       ))}
       </PrimaryTextContext.Provider>
       {isAiOperationPageOpen ? <AiOperationProjectPage onClose={closeAiOperationProject} /> : null}
+      {idcTrigger ? (
+        <section
+          ref={idcPageRef}
+          className="spa-project-page idc-case-page"
+          data-frame="AI/运营2-3"
+          aria-label="AI/运营2-3 IDC产品运营项目"
+          tabIndex={-1}
+          onKeyDown={(event) => {
+            if (event.key === 'Escape' && event.currentTarget.contains(event.target)) setIdcTrigger(null);
+          }}
+        >
+          <ProjectCloseButton onClose={() => setIdcTrigger(null)} />
+          <Suspense fallback={null}><IdcCaseStudy coverSrc={assets.idcTopBg} /></Suspense>
+        </section>
+      ) : null}
       {isAiOperationFolderOpen ? (
         <AiOperationFolderPage
           onClose={() => setIsAiOperationFolderOpen(false)}

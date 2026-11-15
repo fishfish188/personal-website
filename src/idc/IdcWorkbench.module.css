@@ -1,0 +1,22 @@
+.dialog {
+  box-sizing: border-box;
+  position: fixed;
+  inset: 0;
+  width: min(1164px, calc(100vw - 40px));
+  height: min(652px, calc(100dvh - 40px));
+  max-width: none;
+  max-height: none;
+  margin: auto;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid #dfe7f3;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 20px 70px rgb(25 43 91 / 14%);
+  isolation: isolate;
+}
+.dialog::backdrop { background: rgb(25 43 91 / 24%); }
+:global(html.custom-cursor-ready) .dialog,
+:global(html.custom-cursor-ready) .dialog * { cursor: auto !important; }
+:global(html.custom-cursor-ready) .dialog button { cursor: pointer !important; }
+@media (max-width: 800px) { .dialog { width: calc(100vw - 32px); height: calc(100dvh - 32px); overflow: auto; } }

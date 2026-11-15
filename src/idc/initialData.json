@@ -1,0 +1,2569 @@
+{
+  "records": [
+    {
+      "id": "D-001",
+      "customer": "新增客户 A",
+      "owner": "客户经理 A",
+      "kind": "U位",
+      "quantity": "12–14U",
+      "powerMode": "待确认",
+      "power": "",
+      "servers": "",
+      "watts": "",
+      "term": "",
+      "bandwidth": "不需要",
+      "bandwidthSpec": "",
+      "ip": "不需要",
+      "ipSpec": "",
+      "placement": "可接受分柜",
+      "request": null,
+      "check": null,
+      "candidates": [],
+      "logs": [
+        "需求已登记"
+      ],
+      "updated": "2026-11-08 09:00",
+      "source": "需求",
+      "type": "新增",
+      "allocations": [],
+      "feedback": null,
+      "fulfilled": false,
+      "businessId": null
+    },
+    {
+      "id": "D-002",
+      "customer": "新增客户 B",
+      "owner": "客户经理 B",
+      "kind": "U位",
+      "quantity": "6U",
+      "powerMode": "客户提供",
+      "power": "2.2",
+      "servers": "",
+      "watts": "",
+      "term": "12个月",
+      "bandwidth": "不需要",
+      "bandwidthSpec": "",
+      "ip": "不需要",
+      "ipSpec": "",
+      "placement": "可接受分柜",
+      "request": null,
+      "check": {
+        "type": "正式资源核实",
+        "state": "待反馈",
+        "question": "请核实 6U 与 2.2 kW 的同柜可部署资源。",
+        "result": "",
+        "detail": ""
+      },
+      "candidates": [],
+      "logs": [
+        "需求已登记"
+      ],
+      "updated": "2026-11-08 09:00",
+      "source": "需求",
+      "type": "新增",
+      "allocations": [
+        {
+          "id": "2-9",
+          "units": 6,
+          "power": 2.2,
+          "revision": 0
+        }
+      ],
+      "feedback": null,
+      "fulfilled": false,
+      "businessId": null
+    },
+    {
+      "id": "D-003",
+      "customer": "客户C",
+      "owner": "客户经理 A",
+      "kind": "整柜",
+      "quantity": "1柜",
+      "powerMode": "客户提供",
+      "power": "3",
+      "servers": "",
+      "watts": "",
+      "term": "21个月",
+      "bandwidth": "需要",
+      "bandwidthSpec": "100 Mbps",
+      "ip": "需要",
+      "ipSpec": "2个",
+      "placement": "必须同柜",
+      "request": null,
+      "check": {
+        "type": "正式资源核实",
+        "state": "已反馈",
+        "result": "同柜可承接",
+        "detail": "2-10柜空间及功率满足本次需求。",
+        "stamp": "初始反馈"
+      },
+      "candidates": [
+        "整柜托管"
+      ],
+      "logs": [
+        "需求已登记"
+      ],
+      "updated": "2026-11-08 09:00",
+      "source": "需求",
+      "type": "扩容",
+      "allocations": [
+        {
+          "id": "2-10",
+          "units": null,
+          "power": 3,
+          "revision": 0
+        }
+      ],
+      "feedback": null,
+      "fulfilled": false,
+      "businessId": null
+    }
+  ],
+  "businesses": [
+    {
+      "id": "B-001",
+      "requestId": null,
+      "customer": "客户C",
+      "type": "扩容",
+      "productId": "001",
+      "product": "IDC托管",
+      "owner": "客户经理 A",
+      "r": {
+        "id": "B-001",
+        "customer": "客户C",
+        "owner": "客户经理 A",
+        "kind": "整柜",
+        "quantity": "1柜",
+        "powerMode": "客户提供",
+        "power": "3",
+        "servers": "",
+        "watts": "",
+        "term": "21个月",
+        "bandwidth": "需要",
+        "bandwidthSpec": "100 Mbps",
+        "ip": "需要",
+        "ipSpec": "2个",
+        "placement": "必须同柜",
+        "request": null,
+        "check": {
+          "type": "正式资源核实",
+          "state": "已反馈",
+          "result": "同柜可承接",
+          "detail": "2-8柜可承接1柜、3 kW。",
+          "stamp": "初始反馈"
+        },
+        "candidates": [
+          "整柜托管"
+        ],
+        "logs": [
+          "需求已登记"
+        ],
+        "updated": "2026-11-08 09:00",
+        "source": "需求",
+        "type": "扩容",
+        "allocations": [
+          {
+            "id": "2-8",
+            "units": null,
+            "power": 3,
+            "revision": 0
+          }
+        ],
+        "feedback": "客户接受",
+        "fulfilled": false,
+        "businessId": null,
+        "feedbackNote": "已确认整柜方案，签约与资费信息待补齐。",
+        "acceptance": null
+      },
+      "state": "签约中",
+      "contract": {
+        "status": "待签约",
+        "number": "",
+        "signedDate": "",
+        "amount": "48000",
+        "tax": "含税",
+        "reference": ""
+      },
+      "pricing": {
+        "amount": "",
+        "unit": "元/柜/月",
+        "cycle": "按月",
+        "scope": "机柜与电费；带宽和IP另计"
+      },
+      "updated": "2026-11-08 09:30",
+      "ledgerTerm": "12个月",
+      "logs": [
+        "2026-11-08 09:30 · 已确认1柜方案，待补充成交信息并交付"
+      ]
+    },
+    {
+      "id": "B-002",
+      "requestId": null,
+      "customer": "客户F",
+      "type": "止租",
+      "productId": "001",
+      "product": "IDC托管",
+      "owner": "客户经理 B",
+      "r": null,
+      "quantity": "1柜",
+      "term": "24个月",
+      "state": "待终止",
+      "allocations": [
+        {
+          "id": "3-5",
+          "units": null,
+          "power": 3.2
+        }
+      ],
+      "contract": {
+        "status": "待补资料",
+        "number": "",
+        "signedDate": "",
+        "amount": "96000",
+        "tax": "含税",
+        "reference": ""
+      },
+      "pricing": {
+        "amount": "",
+        "unit": "元/柜/月",
+        "cycle": "按月",
+        "scope": "机柜与电费；带宽和IP另计"
+      },
+      "stopDate": "2026-11-08",
+      "stopReason": "客户申请终止3-5柜业务，机柜占用尚待核实更新。",
+      "updated": "2026-11-08 09:40",
+      "logs": [
+        "2026-11-08 09:40 · 业务待终止，待核实3-5柜实际占用"
+      ]
+    },
+    {
+      "id": "B-003",
+      "requestId": null,
+      "customer": "客户C",
+      "type": "止租",
+      "productId": "001",
+      "product": "IDC托管",
+      "owner": "客户经理 A",
+      "r": null,
+      "quantity": "4U",
+      "term": "21个月",
+      "ledgerTerm": "15个月",
+      "state": "待终止",
+      "allocations": [
+        {
+          "id": "2-3",
+          "units": 4,
+          "power": 0.5
+        }
+      ],
+      "contract": {
+        "status": "待补资料",
+        "number": "",
+        "signedDate": "",
+        "amount": "20000",
+        "tax": "含税",
+        "reference": ""
+      },
+      "pricing": {
+        "amount": "",
+        "unit": "元/U/月",
+        "cycle": "按月",
+        "scope": "机柜与电费；带宽和IP另计"
+      },
+      "stopDate": "2026-11-08",
+      "stopReason": "客户申请终止2-3柜内4U业务，待机房核实。",
+      "updated": "2026-11-08 09:45",
+      "logs": [
+        "2026-11-08 09:45 · 已登记4U止租，保留同柜客户D的占用"
+      ]
+    }
+  ],
+  "cabinets": [
+    {
+      "id": "1-1",
+      "col": 1,
+      "row": 1,
+      "state": "head",
+      "usage": [],
+      "occupied": null,
+      "power": 0,
+      "mode": "—",
+      "term": "—",
+      "startDate": "—",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "1-2",
+      "col": 1,
+      "row": 2,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户A",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "1-3",
+      "col": 1,
+      "row": 3,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户A",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "1-4",
+      "col": 1,
+      "row": 4,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户A",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "1-5",
+      "col": 1,
+      "row": 5,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户A",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "1-6",
+      "col": 1,
+      "row": 6,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户B",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "1-7",
+      "col": 1,
+      "row": 7,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户B",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "1-8",
+      "col": 1,
+      "row": 8,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户B",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "1-9",
+      "col": 1,
+      "row": 9,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户B",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "2-1",
+      "col": 2,
+      "row": 1,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户A",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "2-2",
+      "col": 2,
+      "row": 2,
+      "state": "shared",
+      "usage": [
+        {
+          "name": "客户A",
+          "units": 4,
+          "power": 0.5,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        },
+        {
+          "name": "客户C",
+          "units": 6,
+          "power": 0.7,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": 10,
+      "power": 1.2,
+      "mode": "U位",
+      "term": "12个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "2-3",
+      "col": 2,
+      "row": 3,
+      "state": "shared",
+      "usage": [
+        {
+          "name": "客户C",
+          "units": 4,
+          "power": 0.5,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        },
+        {
+          "name": "客户D",
+          "units": 6,
+          "power": 0.7,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": 10,
+      "power": 1.2,
+      "mode": "U位",
+      "term": "12个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "2-4",
+      "col": 2,
+      "row": 4,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户A",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "2-5",
+      "col": 2,
+      "row": 5,
+      "state": "empty",
+      "usage": [],
+      "occupied": 0,
+      "power": 0,
+      "mode": "U位",
+      "term": "—",
+      "startDate": "—",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "2-6",
+      "col": 2,
+      "row": 6,
+      "state": "empty",
+      "usage": [],
+      "occupied": 0,
+      "power": 0,
+      "mode": "U位",
+      "term": "—",
+      "startDate": "—",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "2-7",
+      "col": 2,
+      "row": 7,
+      "state": "empty",
+      "usage": [],
+      "occupied": 0,
+      "power": 0,
+      "mode": "U位",
+      "term": "—",
+      "startDate": "—",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "2-8",
+      "col": 2,
+      "row": 8,
+      "state": "empty",
+      "usage": [],
+      "occupied": 0,
+      "power": 0,
+      "mode": "U位",
+      "term": "—",
+      "startDate": "—",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "2-9",
+      "col": 2,
+      "row": 9,
+      "state": "empty",
+      "usage": [],
+      "occupied": 0,
+      "power": 0,
+      "mode": "U位",
+      "term": "—",
+      "startDate": "—",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "2-10",
+      "col": 2,
+      "row": 10,
+      "state": "empty",
+      "usage": [],
+      "occupied": 0,
+      "power": 0,
+      "mode": "U位",
+      "term": "—",
+      "startDate": "—",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "3-1",
+      "col": 3,
+      "row": 1,
+      "state": "head",
+      "usage": [],
+      "occupied": null,
+      "power": 0,
+      "mode": "—",
+      "term": "—",
+      "startDate": "—",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "3-2",
+      "col": 3,
+      "row": 2,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户E",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "3-3",
+      "col": 3,
+      "row": 3,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户E",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "3-4",
+      "col": 3,
+      "row": 4,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户E",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "3-5",
+      "col": 3,
+      "row": 5,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户F",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "3-6",
+      "col": 3,
+      "row": 6,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户G",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "3-7",
+      "col": 3,
+      "row": 7,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户F",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "3-8",
+      "col": 3,
+      "row": 8,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户F",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "3-9",
+      "col": 3,
+      "row": 9,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户H",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "4-1",
+      "col": 4,
+      "row": 1,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户G",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "4-2",
+      "col": 4,
+      "row": 2,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户G",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "4-3",
+      "col": 4,
+      "row": 3,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户G",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "4-4",
+      "col": 4,
+      "row": 4,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户F",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "4-5",
+      "col": 4,
+      "row": 5,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户F",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "4-6",
+      "col": 4,
+      "row": 6,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户F",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "4-7",
+      "col": 4,
+      "row": 7,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户F",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "4-8",
+      "col": 4,
+      "row": 8,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户F",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "4-9",
+      "col": 4,
+      "row": 9,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户G",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "4-10",
+      "col": 4,
+      "row": 10,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户F",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "5-1",
+      "col": 5,
+      "row": 1,
+      "state": "head",
+      "usage": [],
+      "occupied": null,
+      "power": 0,
+      "mode": "—",
+      "term": "—",
+      "startDate": "—",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "5-2",
+      "col": 5,
+      "row": 2,
+      "state": "shared",
+      "usage": [
+        {
+          "name": "客户I",
+          "units": 3,
+          "power": 0.5,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        },
+        {
+          "name": "客户J",
+          "units": 4,
+          "power": 0.7,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        },
+        {
+          "name": "客户K",
+          "units": 3,
+          "power": 0.6,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": 10,
+      "power": 1.8,
+      "mode": "U位",
+      "term": "12个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "5-3",
+      "col": 5,
+      "row": 3,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户G",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "5-4",
+      "col": 5,
+      "row": 4,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户G",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "5-5",
+      "col": 5,
+      "row": 5,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户G",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "5-6",
+      "col": 5,
+      "row": 6,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户G",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "5-7",
+      "col": 5,
+      "row": 7,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户G",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "5-8",
+      "col": 5,
+      "row": 8,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户G",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "5-9",
+      "col": 5,
+      "row": 9,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户G",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "5-10",
+      "col": 5,
+      "row": 10,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户G",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "6-1",
+      "col": 6,
+      "row": 1,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户G",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "6-2",
+      "col": 6,
+      "row": 2,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户G",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "6-3",
+      "col": 6,
+      "row": 3,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户G",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "6-4",
+      "col": 6,
+      "row": 4,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户G",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "6-5",
+      "col": 6,
+      "row": 5,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户G",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "6-6",
+      "col": 6,
+      "row": 6,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户G",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "6-7",
+      "col": 6,
+      "row": 7,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户G",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "6-8",
+      "col": 6,
+      "row": 8,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户G",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "6-9",
+      "col": 6,
+      "row": 9,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户G",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "7-1",
+      "col": 7,
+      "row": 1,
+      "state": "shared",
+      "usage": [
+        {
+          "name": "客户T",
+          "units": 4,
+          "power": 0.7,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        },
+        {
+          "name": "客户U",
+          "units": 6,
+          "power": 1.1,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": 10,
+      "power": 1.8,
+      "mode": "U位",
+      "term": "12个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "7-2",
+      "col": 7,
+      "row": 2,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户U",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "7-3",
+      "col": 7,
+      "row": 3,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户V",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "7-4",
+      "col": 7,
+      "row": 4,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户W",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "7-5",
+      "col": 7,
+      "row": 5,
+      "state": "shared",
+      "usage": [
+        {
+          "name": "客户X",
+          "units": 4,
+          "power": 0.7,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        },
+        {
+          "name": "客户Y",
+          "units": 6,
+          "power": 1.1,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": 10,
+      "power": 1.8,
+      "mode": "U位",
+      "term": "12个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "7-6",
+      "col": 7,
+      "row": 6,
+      "state": "reserved",
+      "usage": [],
+      "occupied": 0,
+      "power": 0,
+      "mode": "U位",
+      "term": "—",
+      "startDate": "—",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "7-7",
+      "col": 7,
+      "row": 7,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户Z",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "7-8",
+      "col": 7,
+      "row": 8,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户L",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "7-9",
+      "col": 7,
+      "row": 9,
+      "state": "shared",
+      "usage": [
+        {
+          "name": "客户M",
+          "units": 4,
+          "power": 0.7,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        },
+        {
+          "name": "客户N",
+          "units": 6,
+          "power": 1.1,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": 10,
+      "power": 1.8,
+      "mode": "U位",
+      "term": "12个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "7-10",
+      "col": 7,
+      "row": 10,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户N",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "8-1",
+      "col": 8,
+      "row": 1,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户U",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "8-2",
+      "col": 8,
+      "row": 2,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户V",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "8-3",
+      "col": 8,
+      "row": 3,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户W",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "8-4",
+      "col": 8,
+      "row": 4,
+      "state": "shared",
+      "usage": [
+        {
+          "name": "客户X",
+          "units": 4,
+          "power": 0.7,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        },
+        {
+          "name": "客户Y",
+          "units": 6,
+          "power": 1.1,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": 10,
+      "power": 1.8,
+      "mode": "U位",
+      "term": "12个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "8-5",
+      "col": 8,
+      "row": 5,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户Y",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "8-6",
+      "col": 8,
+      "row": 6,
+      "state": "shared",
+      "usage": [
+        {
+          "name": "客户Z",
+          "units": 4,
+          "power": 0.7,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        },
+        {
+          "name": "客户L",
+          "units": 6,
+          "power": 1.1,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": 10,
+      "power": 1.8,
+      "mode": "U位",
+      "term": "12个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "8-7",
+      "col": 8,
+      "row": 7,
+      "state": "shared",
+      "usage": [
+        {
+          "name": "客户L",
+          "units": 4,
+          "power": 0.7,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        },
+        {
+          "name": "客户M",
+          "units": 6,
+          "power": 1.1,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": 10,
+      "power": 1.8,
+      "mode": "U位",
+      "term": "12个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "8-8",
+      "col": 8,
+      "row": 8,
+      "state": "shared",
+      "usage": [
+        {
+          "name": "客户M",
+          "units": 4,
+          "power": 0.7,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        },
+        {
+          "name": "客户N",
+          "units": 6,
+          "power": 1.1,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": 10,
+      "power": 1.8,
+      "mode": "U位",
+      "term": "12个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "8-9",
+      "col": 8,
+      "row": 9,
+      "state": "shared",
+      "usage": [
+        {
+          "name": "客户N",
+          "units": 4,
+          "power": 0.7,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        },
+        {
+          "name": "客户O",
+          "units": 6,
+          "power": 1.1,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": 10,
+      "power": 1.8,
+      "mode": "U位",
+      "term": "12个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "8-10",
+      "col": 8,
+      "row": 10,
+      "state": "shared",
+      "usage": [
+        {
+          "name": "客户O",
+          "units": 4,
+          "power": 0.7,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        },
+        {
+          "name": "客户P",
+          "units": 6,
+          "power": 1.1,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": 10,
+      "power": 1.8,
+      "mode": "U位",
+      "term": "12个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "9-1",
+      "col": 9,
+      "row": 1,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户V",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "9-2",
+      "col": 9,
+      "row": 2,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户W",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "9-3",
+      "col": 9,
+      "row": 3,
+      "state": "reserved",
+      "usage": [],
+      "occupied": 0,
+      "power": 0,
+      "mode": "U位",
+      "term": "—",
+      "startDate": "—",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "9-4",
+      "col": 9,
+      "row": 4,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户Y",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "9-5",
+      "col": 9,
+      "row": 5,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户Z",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "9-6",
+      "col": 9,
+      "row": 6,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户L",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "9-7",
+      "col": 9,
+      "row": 7,
+      "state": "shared",
+      "usage": [
+        {
+          "name": "客户M",
+          "units": 4,
+          "power": 0.7,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        },
+        {
+          "name": "客户N",
+          "units": 6,
+          "power": 1.1,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": 10,
+      "power": 1.8,
+      "mode": "U位",
+      "term": "12个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "9-8",
+      "col": 9,
+      "row": 8,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户N",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "10-1",
+      "col": 10,
+      "row": 1,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户W",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "10-2",
+      "col": 10,
+      "row": 2,
+      "state": "shared",
+      "usage": [
+        {
+          "name": "客户X",
+          "units": 4,
+          "power": 0.7,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        },
+        {
+          "name": "客户Y",
+          "units": 6,
+          "power": 1.1,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": 10,
+      "power": 1.8,
+      "mode": "U位",
+      "term": "12个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "10-3",
+      "col": 10,
+      "row": 3,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户Y",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "10-4",
+      "col": 10,
+      "row": 4,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户Z",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "10-5",
+      "col": 10,
+      "row": 5,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户L",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "10-6",
+      "col": 10,
+      "row": 6,
+      "state": "shared",
+      "usage": [
+        {
+          "name": "客户M",
+          "units": 4,
+          "power": 0.7,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        },
+        {
+          "name": "客户N",
+          "units": 6,
+          "power": 1.1,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": 10,
+      "power": 1.8,
+      "mode": "U位",
+      "term": "12个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "10-7",
+      "col": 10,
+      "row": 7,
+      "state": "reserved",
+      "usage": [],
+      "occupied": 0,
+      "power": 0,
+      "mode": "U位",
+      "term": "—",
+      "startDate": "—",
+      "stopDate": "—",
+      "revision": 0
+    },
+    {
+      "id": "10-8",
+      "col": 10,
+      "row": 8,
+      "state": "full",
+      "usage": [
+        {
+          "name": "客户O",
+          "units": null,
+          "power": 3.2,
+          "startDate": "2025-11-06",
+          "stopDate": "—"
+        }
+      ],
+      "occupied": null,
+      "power": 3.2,
+      "mode": "整柜",
+      "term": "24个月",
+      "startDate": "2025-11-06",
+      "stopDate": "—",
+      "revision": 0
+    }
+  ],
+  "terms": [
+    [
+      "客户A",
+      "24个月"
+    ],
+    [
+      "客户B",
+      "24个月"
+    ],
+    [
+      "客户C",
+      "21个月"
+    ],
+    [
+      "客户D",
+      "12个月"
+    ],
+    [
+      "客户E",
+      "24个月"
+    ],
+    [
+      "客户F",
+      "24个月"
+    ],
+    [
+      "客户G",
+      "24个月"
+    ],
+    [
+      "客户H",
+      "24个月"
+    ],
+    [
+      "客户I",
+      "12个月"
+    ],
+    [
+      "客户J",
+      "12个月"
+    ],
+    [
+      "客户K",
+      "12个月"
+    ],
+    [
+      "客户T",
+      "12个月"
+    ],
+    [
+      "客户U",
+      "12个月"
+    ],
+    [
+      "客户V",
+      "24个月"
+    ],
+    [
+      "客户W",
+      "24个月"
+    ],
+    [
+      "客户X",
+      "12个月"
+    ],
+    [
+      "客户Y",
+      "12个月"
+    ],
+    [
+      "客户Z",
+      "24个月"
+    ],
+    [
+      "客户L",
+      "24个月"
+    ],
+    [
+      "客户M",
+      "12个月"
+    ],
+    [
+      "客户N",
+      "12个月"
+    ],
+    [
+      "客户O",
+      "12个月"
+    ],
+    [
+      "客户P",
+      "12个月"
+    ]
+  ],
+  "weeklyMessages": [
+    {
+      "id": "3-6",
+      "type": "使用中",
+      "text": "客户G整柜租用，已更新台账。",
+      "day": "2026-11-05"
+    },
+    {
+      "id": "5-2",
+      "type": "使用中",
+      "text": "客户I、客户J、客户K按U位租用，合计10U。",
+      "day": "2026-11-04"
+    },
+    {
+      "id": "2-2",
+      "type": "使用中",
+      "text": "客户A、客户C按U位租用，合计10U。",
+      "day": "2026-11-03"
+    },
+    {
+      "id": "2-5",
+      "type": "空闲",
+      "text": "柜内资源已核实为空闲，可继续匹配新增需求。",
+      "day": "2026-11-03"
+    },
+    {
+      "id": "4-9",
+      "type": "使用中",
+      "text": "客户G整柜租用，已登记上架功率。",
+      "day": "2026-11-02"
+    },
+    {
+      "id": "2-6",
+      "type": "空闲",
+      "text": "空间与功率已核查，当前暂无客户占用。",
+      "day": "2026-11-02"
+    }
+  ],
+  "stopTasks": [
+    {
+      "id": "T-001",
+      "businessId": "B-002",
+      "customer": "客户F",
+      "cabinetId": "3-5",
+      "mode": "整柜",
+      "units": null,
+      "power": 3.2,
+      "status": "待核实",
+      "date": "2026-11-08",
+      "logs": [
+        "2026-11-08 09:40 · B-002业务待终止，台账仍显示客户占用，待核实"
+      ]
+    },
+    {
+      "id": "T-002",
+      "businessId": "B-003",
+      "customer": "客户C",
+      "cabinetId": "2-3",
+      "mode": "U位",
+      "units": 4,
+      "power": 0.5,
+      "status": "待核实",
+      "date": "2026-11-08",
+      "logs": [
+        "2026-11-08 09:45 · B-003业务待终止，台账仍显示客户占用，待核实"
+      ]
+    }
+  ],
+  "products": [
+    {
+      "id": "001",
+      "name": "IDC托管",
+      "unit": "柜/U位",
+      "spec": "整柜42U；U位按租用数量；标准单柜功率上限4 kW",
+      "audience": "需要IDC设备托管的企业客户，可选择整柜或U位。",
+      "rights": "整柜按柜租用，U位按实际租用数量记录；整柜不推定设备占满42U。",
+      "scope": "托管报价覆盖机柜与电费，按所需功率匹配报价；带宽和IP一般另行计费。",
+      "conditions": "报价及交付需确认数量、功率、租期、带宽、IP，网络部核实柜位和部署条件。",
+      "boundary": "42U表示物理规格，租用整柜与实际用满42U分别记录。具体交付时间在业务落地后继续确认。",
+      "billingUnit": "柜/U位",
+      "category": "IDC托管",
+      "status": "已发布",
+      "owner": "运营A",
+      "updated": "2026-10-08"
+    }
+  ],
+  "activities": [
+    {
+      "id": "D-002",
+      "text": "已发起资源核实",
+      "time": "10:30"
+    },
+    {
+      "id": "D-001",
+      "text": "已补充需求信息",
+      "time": "10:15"
+    },
+    {
+      "id": "D-003",
+      "text": "已更新候选产品",
+      "time": "09:50"
+    }
+  ],
+  "acceptanceItems": [
+    {
+      "id": "product",
+      "title": "产品与需求一致",
+      "hint": "核对最终产品、租用方式、资源数量、功率、租期及同柜／分柜偏好。"
+    },
+    {
+      "id": "resource",
+      "title": "资源与部署条件",
+      "hint": "确认关联柜位、网络部正式反馈及当前空间和功率；核实结果不代表已预留。"
+    },
+    {
+      "id": "commercial",
+      "title": "商务约定与计费条件",
+      "hint": "记录单笔报价或合同依据、费用范围、带宽/IP另计口径及结算周期；产品草稿资费不能代替客户约定。"
+    },
+    {
+      "id": "network",
+      "title": "带宽与IP准备",
+      "hint": "按客户需求核对开通或分配反馈；无需求时可确认不涉及并说明。"
+    },
+    {
+      "id": "delivery",
+      "title": "上架与交付准备",
+      "hint": "记录机房确认、设备清单及上架时间等准备情况，并确认起租日期。"
+    }
+  ]
+}
