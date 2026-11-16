@@ -54,7 +54,7 @@ test('unpublished or deleted catalog blocks new conversion but preserves histori
 });
 test('contract gate rejects incomplete signed contracts and never exposes unsigned delivery', () => {
   const s = createInitialState();
-  assert.deepEqual(s.businesses.filter(b => b.state !== '签约中').map(b => b.id), ['B-002', 'B-003']);
+  assert.deepEqual(s.businesses.filter(b => b.state !== '签约中').map(b => b.id), ['B-001', 'B-002', 'B-003']);
   assert.match(execute(s, acceptance(s, true)).error, /签约/);
   assert.match(execute(s, { type: 'saveBusiness', businessId: 'B-001', contract: { ...findB(s).contract, status: '已签约' }, pricing: findB(s).pricing }).error, /补齐/);
   const signed = sign(s); assert.equal(findB(signed).state, '已签约'); assert.equal(deliveryStatus(signed, findB(signed)), '待上架');

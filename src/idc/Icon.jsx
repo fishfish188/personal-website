@@ -13,5 +13,6 @@ const paths = {
   'analysis': <><path d="M4 20V4M4 20h17M8 16v-5m5 5V7m5 9V4"/></>,
   'menu': <><path d="M3 6h18M3 12h18M3 18h18"/></>,
   'monitor': <><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></>,
+  'link': <><path d="M10 13a5 5 0 0 0 7.07.07l2-2a5 5 0 0 0-7.07-7.07l-1.15 1.15"/><path d="M14 11a5 5 0 0 0-7.07-.07l-2 2A5 5 0 0 0 12 20l1.15-1.15"/></>,
 };
 export default function Icon({ name, className = '' }) { return <svg className={'icon ' + className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.65" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[name] || paths.doc}</svg>; }

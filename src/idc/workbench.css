@@ -141,6 +141,21 @@
 .idc .dialogbody .kv, .idc .dialogbody .kv dt, .idc .dialogbody .kv dd, .idc .dialogbody .business-block p, .idc .dialogbody .product-detail-section dd, .idc .dialogbody .product-detail-section dt { font-size:14px; }
 .idc .dialogbody .kv { grid-template-columns:125px minmax(0,1fr); }
 .idc .dialogbody .business-block h3, .idc .dialogbody .product-detail-section h3, .idc .dialogbody .drawerblock h3 { font-size:16px; font-weight:500; }
+.idc .attachment-row { display:flex; align-items:center; gap:12px; }
+.idc .attachment-row .text-button { display:inline-flex; align-items:center; gap:4px; }
+.idc .attachment-row .icon { width:14px; height:14px; }
+.idc .stop-business-card .kv { margin:14px 0 0; }
+.idc .stop-business-card .actions { margin-top:14px; }
+.idc .stop-business-card { border:0; background:transparent; padding:0; margin:0; }
+.idc .product-meta small { flex:0 0 100%; margin-left:0; text-align:left; }
+.idc .pricing-unit-switch { display:flex; gap:8px; margin:0 0 12px; }
+.idc .pricing-unit-switch button { min-width:72px; padding:6px 16px; border-color:#d7e3f3; color:#5275a9; background:#fff; }
+.idc .pricing-unit-switch button.active { color:#2468f5; border-color:#8eb5f7; background:#eef4ff; }
+.idc .rate-table-wrap { overflow:auto; }
+.idc .rate-table { min-width:520px; table-layout:fixed; border-collapse:collapse; }
+.idc .rate-table th, .idc .rate-table td { padding:10px 8px; border:1px solid #dfe7f3; text-align:center; white-space:nowrap; }
+.idc .rate-table th { width:190px; background:#f5f8fd; color:#60718d; font-weight:500; }
+.idc .rate-table td { color:#2468f5; font-weight:500; }
 .idc .dialogbody .note, .idc .dialogbody .log, .idc .dialogbody .faq p, .idc .dialogbody .acceptance-item p, .idc .dialogbody .help, .idc .dialogbody .product-meta small { font-size:12px; }
 .idc .dialogbody .check input { width:auto; }
 .idc .dialogbody section[id] { scroll-margin-top:20px; }
